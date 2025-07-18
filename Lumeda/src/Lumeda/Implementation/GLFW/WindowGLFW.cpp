@@ -60,7 +60,7 @@ void WindowGLFW::SetVSync(bool enabled)
 	}
 	else
 	{
-		glfwSwapBuffers(0);
+		glfwSwapInterval(0);
 	}
 
 	m_IsVSync = enabled;
