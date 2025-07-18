@@ -1,2 +1,3 @@
 IncludeDir = {}
 IncludeDir["spdlog"] = "%{wks.location}/Lumeda/vendor/spdlog/include"
+IncludeDir["glfw"] = "%{wks.location}/Lumeda/vendor/glfw/include"

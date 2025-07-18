@@ -12,6 +12,10 @@ workspace "Lumeda"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+group "Vendor"
+    include "Lumeda/vendor"
+group ""
+
 project "Lumeda"
     location "Lumeda"
     kind "StaticLib"
@@ -29,7 +33,13 @@ project "Lumeda"
     includedirs
     {
         "Lumeda/src",
-        "%{IncludeDir.spdlog}"
+        "%{IncludeDir.spdlog}",
+        "%{IncludeDir.glfw}"
+    }
+
+    links
+    {
+        "GLFW"
     }
 
     filter "system:windows"
