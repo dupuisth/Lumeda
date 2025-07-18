@@ -1,3 +1,5 @@
+include "dependencies.lua"
+
 workspace "Lumeda"
     architecture "x64"
 
@@ -26,7 +28,8 @@ project "Lumeda"
 
     includedirs
     {
-        "Lumeda/src"
+        "Lumeda/src",
+        "%{IncludeDir.spdlog}"
     }
 
     filter "system:windows"
@@ -68,7 +71,8 @@ project "Sandbox"
 
     includedirs
     {
-        "Lumeda/src"
+        "Lumeda/src",
+        "%{IncludeDir.spdlog}"
     }
 
     links

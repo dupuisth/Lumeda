@@ -18,22 +18,22 @@ public:
 
 	void Initialize() override
 	{ 
-		std::cout << "Initialize" << std::endl;
+		LUMEDA_TRACE("Initialized Sandbox");
 	}
 
 	void Update() override
-	{ 
-		std::cout << "Initialize" << std::endl;
+	{
+		LUMEDA_TRACE("Update Sandbox");
 	}
 
 	void Render() override
 	{
-		std::cout << "Render" << std::endl;
+		LUMEDA_TRACE("Render Sandbox");
 	}
 
 	void Terminate() override
 	{
-		std::cout << "Terminate" << std::endl;
+		LUMEDA_TRACE("Terminate Sandbox");
 	}
 };
 

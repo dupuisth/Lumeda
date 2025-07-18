@@ -7,7 +7,7 @@ namespace Lumeda
 	/// <summary>
 	/// Represent the client application of the engine
 	/// </summary>
-	class LUMEDA_API IApplication
+	class IApplication
 	{
 
 	public:
