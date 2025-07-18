@@ -1,3 +1,6 @@
 [submodule "Lumeda/vendor/spdlog"]
 	path = Lumeda/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "Lumeda/vendor/glfw"]
+	path = Lumeda/vendor/glfw
+	url = https://github.com/glfw/glfw.git
