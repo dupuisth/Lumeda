@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Lumeda/Core/IApplication.h>
+
 #include <string>
 
 namespace Lumeda 
@@ -10,6 +12,9 @@ namespace Lumeda
 		Engine();
 		~Engine();
 
-		void TestPrint(const std::string& text);
+		void Run(IApplication& application);
+
+	private:
+		IApplication* m_Application;
 	};
 }
