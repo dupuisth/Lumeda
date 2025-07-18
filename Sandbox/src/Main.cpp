@@ -23,12 +23,10 @@ public:
 
 	void Update() override
 	{
-		LUMEDA_TRACE("Update Sandbox");
 	}
 
 	void Render() override
 	{
-		LUMEDA_TRACE("Render Sandbox");
 	}
 
 	void Terminate() override

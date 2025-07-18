@@ -3,6 +3,7 @@
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Core/IApplication.h>
 #include <Lumeda/Core/Window.h>
+#include <Lumeda/Renderer/Renderer.h>
 
 #include <string>
 
@@ -22,5 +23,6 @@ namespace Lumeda
 		IApplication* m_Application;
 
 		std::unique_ptr<Window> m_Window;
+		std::unique_ptr<Renderer> m_Renderer;
 	};
 }

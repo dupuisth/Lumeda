@@ -18,6 +18,16 @@ Engine::Engine() : m_Application(nullptr)
 		throw std::runtime_error("Failed to create window");
 	}
 	LUMEDA_CORE_INFO("Window initialized");
+
+	m_Renderer = Renderer::Create();
+	if (m_Renderer == nullptr)
+	{
+		LUMEDA_CORE_CRITICAL("Failed to create renderer");
+		throw std::runtime_error("Failed to create renderer");
+	}
+	m_Renderer->SetViewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
+	m_Renderer->SetClearColor(0.02f, 0.05f, 0.13f, 1.0f);
+	LUMEDA_CORE_INFO("Renderer initialized");
 }
 
 Engine::~Engine() { }
@@ -31,15 +41,21 @@ void Engine::Run(IApplication& application)
 	m_Application->Initialize();
 	while (!m_Window->ShouldClose())
 	{
-		m_Window->Update();
+		m_Renderer->Clear();
 
 		m_Application->Update();
 		m_Application->Render();
+		
+		m_Window->Update();
 	}
 	m_Application->Terminate();
 
+	// Destroy the renderer
+	m_Renderer.reset();
+
 	// Destroy the window
 	m_Window.reset();
+
 
 	LUMEDA_CORE_INFO("Game loop ended");
 }
