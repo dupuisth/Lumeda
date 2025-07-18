@@ -28,6 +28,11 @@ namespace Lumeda
 			void* GetNativeWindow() const override;
 
 		private:
+			WindowGLFW(const WindowGLFW&) = delete;
+			WindowGLFW & operator=(const WindowGLFW&) = delete;
+			WindowGLFW(WindowGLFW&&) = default;
+			WindowGLFW & operator=(WindowGLFW&&) = default;
+
 			GLFWwindow* m_NativeWindow;
 			bool m_IsVSync;
 		};
