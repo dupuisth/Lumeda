@@ -8,7 +8,15 @@ Engine::Engine() { }
 
 Engine::~Engine() { }
 
-void Engine::TestPrint(const std::string& text)
+void Engine::Run(IApplication& application)
 {
-	std::cout << "[ENGINE] " << text << std::endl;
+	m_Application = &application;
+
+	m_Application->Initialize();
+	while (true)
+	{
+		m_Application->Update();
+		m_Application->Render();
+	}
+	m_Application->Terminate();
 }

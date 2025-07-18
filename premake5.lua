@@ -36,7 +36,8 @@ project "Lumeda"
         
         defines 
         {
-            "LUMEDA_PLATFORM_WINDOWS"
+            "LUMEDA_PLATFORM_WINDOWS",
+            "LUMEDA_BUILD_DLL"
         }
     
     filter "configurations:Debug"

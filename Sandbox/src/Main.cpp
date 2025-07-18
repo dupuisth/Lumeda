@@ -1,9 +1,47 @@
 #include <Lumeda.h>
 
-using namespace Lumeda;
+#include <iostream>
+
+class Sandbox : public Lumeda::IApplication
+{
+public:
+	Sandbox() 
+	{
+
+	
+	}
+
+	~Sandbox()
+	{
+
+	}
+
+	void Initialize() override
+	{ 
+		std::cout << "Initialize" << std::endl;
+	}
+
+	void Update() override
+	{ 
+		std::cout << "Initialize" << std::endl;
+	}
+
+	void Render() override
+	{
+		std::cout << "Render" << std::endl;
+	}
+
+	void Terminate() override
+	{
+		std::cout << "Terminate" << std::endl;
+	}
+};
 
 int main() 
 {
-	Engine engine;
-	engine.TestPrint("Hello from the sandbox application !");
+	{
+		Lumeda::Engine engine;
+		Sandbox sandbox;
+		engine.Run(sandbox);
+	}
 }
