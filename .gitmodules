@@ -1,0 +1,3 @@
+[submodule "Lumeda/vendor/spdlog"]
+	path = Lumeda/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git
