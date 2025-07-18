@@ -34,12 +34,14 @@ project "Lumeda"
     {
         "Lumeda/src",
         "%{IncludeDir.spdlog}",
-        "%{IncludeDir.glfw}"
+        "%{IncludeDir.glfw}",
+        "%{IncludeDir.glad}",
     }
 
     links
     {
-        "GLFW"
+        "GLFW",
+        "glad"
     }
 
     filter "system:windows"
