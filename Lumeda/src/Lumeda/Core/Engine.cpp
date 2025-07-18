@@ -24,7 +24,7 @@ void Engine::Run(IApplication& application)
 	LUMEDA_CORE_INFO("Starting the game loop");
 	
 	m_Application->Initialize();
-	for (int i = 0; i < 2; i++) // For now, just run 2 frames to test
+	while (!m_Window->ShouldClose())
 	{
 		m_Window->Update();
 
