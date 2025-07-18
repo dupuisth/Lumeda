@@ -12,6 +12,11 @@ Engine::Engine() : m_Application(nullptr)
 	LUMEDA_CORE_TRACE("Logger initialized");
 
 	m_Window = Window::Create();
+	if (m_Window == nullptr)
+	{
+		LUMEDA_CORE_CRITICAL("Failed to create window");
+		throw std::runtime_error("Failed to create window");
+	}
 	LUMEDA_CORE_INFO("Window initialized");
 }
 
