@@ -60,10 +60,10 @@ void Texture2DOpenGL::SetFiltering(TextureFiltering filtering)
 
 int Texture2DOpenGL::GetWidth() const
 {
-	return 0;
+	return m_Width;
 }
 
 int Texture2DOpenGL::GetHeight() const
 {
-	return 0;
+	return m_Height;
 }
