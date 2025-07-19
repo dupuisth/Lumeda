@@ -24,6 +24,12 @@ RendererOpenGL::~RendererOpenGL()
 	{
 		shader.second.reset();
 	}
+
+	// Force delete all textures
+	for (auto& texture : m_Textures2D)
+	{
+		texture.second.reset();
+	}
 }
 
 void RendererOpenGL::SetClearColor(float r, float g, float b, float a)
