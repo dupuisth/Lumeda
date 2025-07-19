@@ -1,6 +1,7 @@
 #include <Lumeda/Implementation/OpenGL/RendererOpenGL.h>
 
 #include <Lumeda/Implementation/OpenGL/ShaderOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 
 #include <glad/glad.h>
 
@@ -45,4 +46,11 @@ std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& name, co
 	std::shared_ptr<ShaderOpenGL> shader = std::make_shared<ShaderOpenGL>(name, vertexPath, fragmentPath);
 	m_Shaders.insert({ name, shader });
 	return shader;
+}
+
+std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& name, const std::string& path)
+{
+	std::shared_ptr<Texture2DOpenGL> texture2D = std::make_shared<Texture2DOpenGL>(name, path);
+	m_Textures2D.insert({ name, texture2D });
+	return texture2D;
 }

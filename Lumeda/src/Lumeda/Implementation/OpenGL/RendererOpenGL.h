@@ -17,8 +17,10 @@ namespace Lumeda
 		void SetViewport(int x, int y, int width, int height) override;
 
 		std::shared_ptr<Shader> CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) override;
+		std::shared_ptr<Texture2D> CreateTexture2D(const std::string& name, const std::string& path) override;
 
 	private:
 		std::unordered_map<std::string, std::shared_ptr<Shader>> m_Shaders;
+		std::unordered_map<std::string, std::shared_ptr<Texture2D>> m_Textures2D;
 	};
 }
