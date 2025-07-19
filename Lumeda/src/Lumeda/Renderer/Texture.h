@@ -13,6 +13,8 @@ namespace Lumeda
 	class Texture
 	{
 	public:
+		virtual ~Texture() = default;
+
 		virtual void Bind(int slot = 0) = 0;
 		virtual void UnBind() = 0;
 
@@ -26,6 +28,7 @@ namespace Lumeda
 
 	class Texture2D : public Texture
 	{
-
+	public:
+		virtual ~Texture2D() = default;
 	};
 }

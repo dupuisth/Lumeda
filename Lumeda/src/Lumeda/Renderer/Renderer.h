@@ -13,6 +13,8 @@ namespace Lumeda
 	class Renderer
 	{
 	public:
+		virtual ~Renderer() = default;
+
 		virtual void SetClearColor(float r, float g, float b, float a) = 0;
 		virtual void Clear() = 0;
 
