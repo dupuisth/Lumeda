@@ -3,6 +3,7 @@
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Core/IApplication.h>
 #include <Lumeda/Core/Window.h>
+#include <Lumeda/Renderer/Renderer.h>
 
 #include <string>
 
@@ -17,10 +18,13 @@ namespace Lumeda
 		void Run(IApplication& application);
 
 		Window& GetWindow() { return *m_Window; }
+		Renderer& GetRenderer() { return *m_Renderer; }
 
+		static Engine& Get();
 	private:
 		IApplication* m_Application;
 
 		std::unique_ptr<Window> m_Window;
+		std::unique_ptr<Renderer> m_Renderer;
 	};
 }

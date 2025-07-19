@@ -1,6 +1,5 @@
 #include <Lumeda.h>
 
-#include <iostream>
 
 class Sandbox : public Lumeda::IApplication
 {
@@ -19,16 +18,16 @@ public:
 	void Initialize() override
 	{ 
 		LUMEDA_TRACE("Initialized Sandbox");
+
+		std::shared_ptr<Lumeda::Shader> defaultShader = Lumeda::Engine::Get().GetRenderer().CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
 	}
 
 	void Update() override
 	{
-		LUMEDA_TRACE("Update Sandbox");
 	}
 
 	void Render() override
 	{
-		LUMEDA_TRACE("Render Sandbox");
 	}
 
 	void Terminate() override
