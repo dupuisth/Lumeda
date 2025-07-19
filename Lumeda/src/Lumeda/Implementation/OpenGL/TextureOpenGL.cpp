@@ -28,6 +28,11 @@ Texture2DOpenGL::Texture2DOpenGL(const std::string& name, const std::string& pat
 	stbi_image_free(data);
 }
 
+Texture2DOpenGL::~Texture2DOpenGL()
+{
+	glDeleteTextures(1, &m_Handle);
+}
+
 void Texture2DOpenGL::Bind(int slot)
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
