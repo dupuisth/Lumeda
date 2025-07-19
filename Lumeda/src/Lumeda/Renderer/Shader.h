@@ -12,5 +12,7 @@ namespace Lumeda
 
 		virtual void SetFloat(const std::string& uniform, float value) = 0;
 		virtual void SetInt(const std::string& uniform, int value) = 0;
+
+		virtual const std::string& GetName() const = 0;
 	};
 }

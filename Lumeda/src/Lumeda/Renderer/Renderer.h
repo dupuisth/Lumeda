@@ -16,7 +16,7 @@ namespace Lumeda
 
 		virtual void SetViewport(int x, int y, int width, int height)  = 0;
 
-		virtual std::shared_ptr<Shader> CreateShader(const std::string& vertexPath, const std::string& fragmentPath) = 0;
+		virtual std::shared_ptr<Shader> CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) = 0;
 
 		static std::unique_ptr<Renderer> Create();
 	};

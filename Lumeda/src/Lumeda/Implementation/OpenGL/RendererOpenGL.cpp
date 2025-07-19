@@ -18,7 +18,11 @@ RendererOpenGL::RendererOpenGL()
 
 RendererOpenGL::~RendererOpenGL()
 {
-
+	// Force delete all shaders
+	for (auto& shader : m_Shaders)
+	{
+		shader.second.reset();
+	}
 }
 
 void RendererOpenGL::SetClearColor(float r, float g, float b, float a)
@@ -36,8 +40,9 @@ void RendererOpenGL::SetViewport(int x, int y, int width, int height)
 	glViewport(x, y, width, height);
 }
 
-std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& vertexPath, const std::string& fragmentPath)
+std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
 {
-	std::shared_ptr<ShaderOpenGL> shader = std::make_shared<ShaderOpenGL>(vertexPath, fragmentPath);
+	std::shared_ptr<ShaderOpenGL> shader = std::make_shared<ShaderOpenGL>(name, vertexPath, fragmentPath);
+	m_Shaders.insert({ name, shader });
 	return shader;
 }

@@ -6,7 +6,9 @@
 
 using namespace Lumeda;
 
-ShaderOpenGL::ShaderOpenGL(const std::string& vertexPath, const std::string& fragmentPath)
+const int InfoLogSize = 512;
+
+ShaderOpenGL::ShaderOpenGL(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) : m_Name(name)
 {
 	m_Handle = glCreateProgram();
 
@@ -28,6 +30,17 @@ ShaderOpenGL::ShaderOpenGL(const std::string& vertexPath, const std::string& fra
 		glAttachShader(m_Handle, vertexShader);
 		glAttachShader(m_Handle, fragmentShader);
 		glLinkProgram(m_Handle);
+
+		// Check the linking status
+		int success;
+		glGetProgramiv(m_Handle, GL_LINK_STATUS, &success);
+		if (success != GL_TRUE)
+		{
+			char infoLog[InfoLogSize];
+			glGetProgramInfoLog(m_Handle, InfoLogSize, nullptr, infoLog);
+			LUMEDA_CORE_ERROR("Failed to link program ", infoLog);
+			throw std::runtime_error("Failed to link program");
+		}
 	}
 	catch (std::exception& e)
 	{

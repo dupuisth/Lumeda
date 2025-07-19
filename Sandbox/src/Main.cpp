@@ -19,7 +19,7 @@ public:
 	{ 
 		LUMEDA_TRACE("Initialized Sandbox");
 
-		std::shared_ptr<Lumeda::Shader> defaultShader = Lumeda::Engine::Get().GetRenderer().CreateShader("assets/shaders/default.vert", "assets/shaders/default.frag");
+		std::shared_ptr<Lumeda::Shader> defaultShader = Lumeda::Engine::Get().GetRenderer().CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
 	}
 
 	void Update() override
