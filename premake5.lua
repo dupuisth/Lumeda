@@ -28,6 +28,8 @@ project "Lumeda"
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/stb_image/stb_image.h",
+        "%{prj.name}/vendor/stb_image/stb_image.cpp",
     }
 
     includedirs
@@ -36,6 +38,7 @@ project "Lumeda"
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.glfw}",
         "%{IncludeDir.glad}",
+        "%{IncludeDir.stb_image}",
     }
 
     links
