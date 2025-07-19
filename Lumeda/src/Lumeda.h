@@ -7,3 +7,4 @@
 #include <Lumeda/Core/Window.h>
 
 #include <Lumeda/Renderer/Renderer.h>
+#include <Lumeda/Renderer/Shader.h>

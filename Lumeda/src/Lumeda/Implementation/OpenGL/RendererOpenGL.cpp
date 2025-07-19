@@ -1,5 +1,7 @@
 #include <Lumeda/Implementation/OpenGL/RendererOpenGL.h>
 
+#include <Lumeda/Implementation/OpenGL/ShaderOpenGL.h>
+
 #include <glad/glad.h>
 
 using namespace Lumeda;
@@ -32,4 +34,10 @@ void RendererOpenGL::Clear()
 void RendererOpenGL::SetViewport(int x, int y, int width, int height)
 {
 	glViewport(x, y, width, height);
+}
+
+std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& vertexPath, const std::string& fragmentPath)
+{
+	std::shared_ptr<ShaderOpenGL> shader = std::make_shared<ShaderOpenGL>(vertexPath, fragmentPath);
+	return shader;
 }

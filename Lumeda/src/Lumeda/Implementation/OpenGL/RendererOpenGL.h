@@ -15,5 +15,7 @@ namespace Lumeda
 		void Clear() override;
 
 		void SetViewport(int x, int y, int width, int height) override;
+
+		std::shared_ptr<Shader> CreateShader(const std::string& vertexPath, const std::string& fragmentPath) override;
 	};
 }

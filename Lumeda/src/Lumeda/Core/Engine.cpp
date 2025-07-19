@@ -5,8 +5,12 @@
 
 using namespace Lumeda;
 
+Engine* s_Instance = nullptr;
+
 Engine::Engine() : m_Application(nullptr) 
 {
+	s_Instance = this;
+
 	// Initialize the engine
 	Log::Init();
 	LUMEDA_CORE_TRACE("Logger initialized");
@@ -58,4 +62,9 @@ void Engine::Run(IApplication& application)
 
 
 	LUMEDA_CORE_INFO("Game loop ended");
+}
+
+Engine& Engine::Get()
+{
+	return *s_Instance;
 }
