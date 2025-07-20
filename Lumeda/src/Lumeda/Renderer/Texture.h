@@ -4,7 +4,7 @@
 
 namespace Lumeda
 {
-	enum TextureFiltering
+	enum class TextureFiltering
 	{
 		Nearest,
 		Linear
