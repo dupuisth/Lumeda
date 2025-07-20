@@ -8,7 +8,7 @@ namespace Lumeda
 	{
 	public:
 		ShaderOpenGL(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
-		~ShaderOpenGL();
+		virtual ~ShaderOpenGL();
 
 		void Bind() override;
 		void UnBind() override;

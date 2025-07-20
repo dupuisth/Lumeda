@@ -9,7 +9,7 @@ namespace Lumeda
 	{
 	public:
 		RendererOpenGL();
-		~RendererOpenGL();
+		virtual ~RendererOpenGL();
 
 		void SetClearColor(float r, float g, float b, float a) override;
 		void Clear() override;

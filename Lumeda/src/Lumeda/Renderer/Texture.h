@@ -2,6 +2,8 @@
 
 #include <Lumeda/Core/Base.h>
 
+#include <string>
+
 namespace Lumeda
 {
 	enum class TextureFiltering
