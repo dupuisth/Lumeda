@@ -10,7 +10,7 @@ std::string FileReader::ReadFile(const std::string& path) {
 
     if (!file.is_open()) {
         LUMEDA_CORE_ERROR("Could not open file: {0}", path);
-        throw std::runtime_error("Could not open file");
+        throw std::runtime_error("Could not open file: " + path);
     }
 
     std::stringstream ss;
