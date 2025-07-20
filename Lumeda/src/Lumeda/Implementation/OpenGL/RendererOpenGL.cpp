@@ -9,7 +9,7 @@ using namespace Lumeda;
 
 RendererOpenGL::RendererOpenGL()
 {
-	if (gladLoadGL() != GL_TRUE) 
+	if (!gladLoadGL()) 
 	{
 		LUMEDA_CORE_CRITICAL("Failed to initialize glad");
 		throw std::runtime_error("Failed to initialize glad");
