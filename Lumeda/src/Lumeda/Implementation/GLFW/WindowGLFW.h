@@ -13,7 +13,7 @@ namespace Lumeda
 		{
 		public:
 			WindowGLFW();
-			~WindowGLFW() override;
+			virtual ~WindowGLFW() override;
 
 			void Update() override;
 
