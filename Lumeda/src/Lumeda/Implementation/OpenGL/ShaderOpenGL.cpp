@@ -56,7 +56,7 @@ ShaderOpenGL::ShaderOpenGL(const std::string& name, const std::string& vertexPat
 		glLinkProgram(m_Handle);
 
 		// Check the linking status
-		int success;
+		success;
 		glGetProgramiv(m_Handle, GL_LINK_STATUS, &success);
 		if (success != GL_TRUE)
 		{
