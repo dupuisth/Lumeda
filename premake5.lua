@@ -30,6 +30,8 @@ project "Lumeda"
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/vendor/stb_image/stb_image.h",
         "%{prj.name}/vendor/stb_image/stb_image.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
     }
 
     includedirs
@@ -39,6 +41,7 @@ project "Lumeda"
         "%{IncludeDir.glfw}",
         "%{IncludeDir.glad}",
         "%{IncludeDir.stb_image}",
+        "%{IncludeDir.glm}",
     }
 
     links
@@ -95,7 +98,8 @@ project "Sandbox"
     includedirs
     {
         "Lumeda/src",
-        "%{IncludeDir.spdlog}"
+        "%{IncludeDir.spdlog}",
+        "%{IncludeDir.glm}",
     }
 
     links
