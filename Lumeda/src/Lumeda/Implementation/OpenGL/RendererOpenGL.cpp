@@ -2,6 +2,7 @@
 
 #include <Lumeda/Implementation/OpenGL/ShaderOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/MeshOpenGL.h>
 
 #include <glad/glad.h>
 
@@ -29,6 +30,12 @@ RendererOpenGL::~RendererOpenGL()
 	for (auto& texture : m_Textures2D)
 	{
 		texture.second.reset();
+	}
+
+	// Force delete all meshes
+	for (auto& mesh : m_Meshes)
+	{
+		mesh.second.reset();
 	}
 }
 
@@ -59,4 +66,11 @@ std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& na
 	std::shared_ptr<Texture2DOpenGL> texture2D = std::make_shared<Texture2DOpenGL>(name, path);
 	m_Textures2D.insert({ name, texture2D });
 	return texture2D;
+}
+
+std::shared_ptr<Mesh> RendererOpenGL::CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs)
+{
+	std::shared_ptr<MeshOpenGL> mesh = std::make_shared<MeshOpenGL>(name, vertices, indices, attribs);
+	m_Meshes.insert({ name, mesh });
+	return mesh;
 }

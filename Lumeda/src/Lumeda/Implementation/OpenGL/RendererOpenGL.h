@@ -18,9 +18,11 @@ namespace Lumeda
 
 		std::shared_ptr<Shader> CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) override;
 		std::shared_ptr<Texture2D> CreateTexture2D(const std::string& name, const std::string& path) override;
+		std::shared_ptr<Mesh> CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs) override;
 
 	private:
 		std::unordered_map<std::string, std::shared_ptr<Shader>> m_Shaders;
 		std::unordered_map<std::string, std::shared_ptr<Texture2D>> m_Textures2D;
+		std::unordered_map<std::string, std::shared_ptr<Mesh>> m_Meshes;
 	};
 }
