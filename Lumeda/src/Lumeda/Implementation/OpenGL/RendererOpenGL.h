@@ -1,7 +1,11 @@
 #pragma once
 
+#include <Lumeda/Core/Base.h>
 #include <Lumeda/Renderer/Renderer.h>
 #include <Lumeda/Core/Window.h>
+
+#include <memory>
+#include <unordered_map>
 
 namespace Lumeda
 {

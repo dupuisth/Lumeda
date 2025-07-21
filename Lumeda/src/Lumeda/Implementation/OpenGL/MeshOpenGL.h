@@ -5,7 +5,7 @@ namespace Lumeda
 	class MeshOpenGL : public Mesh
 	{
 	public:
-		MeshOpenGL(const std::string& name, std::vector<float> vertices, std::vector<unsigned int> indices, const std::vector<MeshAttrib>& attribs);
+		MeshOpenGL(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs);
 		virtual ~MeshOpenGL();
 
 		void Draw() override;

@@ -1,7 +1,5 @@
 #include <Lumeda/Implementation/OpenGL/MeshOpenGL.h>
 
-#include <typeinfo>
-
 #include <glad/glad.h>
 
 using namespace Lumeda;
@@ -46,7 +44,7 @@ static size_t CalculateStride(const std::vector<MeshAttrib>& attribs)
 	return stride;
 }
 
-MeshOpenGL::MeshOpenGL(const std::string& name, std::vector<float> vertices, std::vector<unsigned int> indices, const std::vector<MeshAttrib>& attribs)
+MeshOpenGL::MeshOpenGL(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs)
 	: m_Vertices(vertices), m_Indices(indices), m_Name(name), m_Attribs(attribs)
 {
 	glGenVertexArrays(1, &m_Vao);
