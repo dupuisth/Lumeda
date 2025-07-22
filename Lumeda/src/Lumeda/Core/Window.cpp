@@ -9,6 +9,7 @@ using namespace Lumeda;
 using namespace Lumeda::GLFW;
 std::unique_ptr<Window> Window::Create()
 {
+	LUMEDA_PROFILE;
 	std::unique_ptr<WindowGLFW> window = std::make_unique<WindowGLFW>();
 	return window;
 }

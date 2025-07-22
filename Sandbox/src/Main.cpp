@@ -6,17 +6,17 @@ class Sandbox : public Lumeda::IApplication
 public:
 	Sandbox() 
 	{
-
-	
+		LUMEDA_PROFILE;
 	}
 
 	~Sandbox()
 	{
-
+		LUMEDA_PROFILE;
 	}
 
 	void Initialize() override
 	{ 
+		LUMEDA_PROFILE;
 		LUMEDA_TRACE("Initialized Sandbox");
 
 		m_Shader = Lumeda::Engine::Get().GetRenderer().CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
@@ -40,16 +40,19 @@ public:
 
 	void Update() override
 	{
+		LUMEDA_PROFILE;
 	}
 
 	void Render() override
 	{
+		LUMEDA_PROFILE;
 		m_Shader->Bind();
 		m_Mesh->Draw();
 	}
 
 	void Terminate() override
 	{
+		LUMEDA_PROFILE;
 		LUMEDA_TRACE("Terminate Sandbox");
 	}
 

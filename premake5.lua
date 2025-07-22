@@ -44,7 +44,7 @@ project "Lumeda"
     links
     {
         "GLFW",
-        "glad"
+        "glad",
     }
 
     filter "system:windows"
@@ -61,6 +61,14 @@ project "Lumeda"
     filter "configurations:Debug"
         defines "LUMEDA_DEBUG"
         symbols "On"
+        includedirs
+        {
+            "%{IncludeDir.tracy}"
+        }    
+        links
+        {
+            "tracy"
+        }
     
     filter "configurations:Staging"
         defines "LUMEDA_STAGING"
@@ -106,6 +114,10 @@ project "Sandbox"
         }
     
     filter "configurations:Debug"
+        includedirs
+        {
+            "%{IncludeDir.tracy}"
+        }  
         defines "LUMEDA_DEBUG"
         symbols "On"
     

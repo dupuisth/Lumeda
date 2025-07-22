@@ -7,6 +7,7 @@ using namespace Lumeda;
 
 Texture2DOpenGL::Texture2DOpenGL(const std::string& name, const std::string& path) : m_Name(name)
 {
+	LUMEDA_PROFILE;
 	glGenTextures(1, &m_Handle);
 	Bind();
 
@@ -30,22 +31,26 @@ Texture2DOpenGL::Texture2DOpenGL(const std::string& name, const std::string& pat
 
 Texture2DOpenGL::~Texture2DOpenGL()
 {
+	LUMEDA_PROFILE;
 	glDeleteTextures(1, &m_Handle);
 }
 
 void Texture2DOpenGL::Bind(int slot)
 {
+	LUMEDA_PROFILE;
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, m_Handle);
 }
 
 void Texture2DOpenGL::UnBind()
 {
+	LUMEDA_PROFILE;
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture2DOpenGL::SetFiltering(TextureFiltering filtering)
-{	
+{
+	LUMEDA_PROFILE;
 	if (filtering == TextureFiltering::Nearest)
 	{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -60,10 +65,12 @@ void Texture2DOpenGL::SetFiltering(TextureFiltering filtering)
 
 int Texture2DOpenGL::GetWidth() const
 {
+	LUMEDA_PROFILE;
 	return m_Width;
 }
 
 int Texture2DOpenGL::GetHeight() const
 {
+	LUMEDA_PROFILE;
 	return m_Height;
 }

@@ -10,6 +10,7 @@ const int InfoLogSize = 512;
 
 ShaderOpenGL::ShaderOpenGL(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) : m_Name(name)
 {
+	LUMEDA_PROFILE;
 	m_Handle = glCreateProgram();
 
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -84,26 +85,31 @@ ShaderOpenGL::ShaderOpenGL(const std::string& name, const std::string& vertexPat
 
 ShaderOpenGL::~ShaderOpenGL()
 {
+	LUMEDA_PROFILE;
 	glDeleteShader(m_Handle);
 }
 
 void ShaderOpenGL::Bind()
 {
+	LUMEDA_PROFILE;
 	glUseProgram(m_Handle);
 }
 
 void ShaderOpenGL::UnBind()
 {
+	LUMEDA_PROFILE;
 	glUseProgram(0);
 }
 
 void ShaderOpenGL::SetFloat(const std::string& uniform, float value)
 {
+	LUMEDA_PROFILE;
 	glUniform1f(glGetUniformLocation(m_Handle, uniform.c_str()), value);
 }
 
 void ShaderOpenGL::SetInt(const std::string& uniform, int value)
 {
+	LUMEDA_PROFILE;
 	glUniform1i(glGetUniformLocation(m_Handle, uniform.c_str()), value);
 
 }

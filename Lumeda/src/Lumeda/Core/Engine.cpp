@@ -9,6 +9,8 @@ Engine* s_Instance = nullptr;
 
 Engine::Engine() : m_Application(nullptr) 
 {
+	LUMEDA_PROFILE;
+
 	s_Instance = this;
 
 	// Initialize the engine
@@ -38,6 +40,7 @@ Engine::~Engine() { }
 
 void Engine::Run(IApplication& application)
 {
+	LUMEDA_PROFILE;
 	m_Application = &application;
 
 	LUMEDA_CORE_INFO("Starting the game loop");
@@ -45,11 +48,13 @@ void Engine::Run(IApplication& application)
 	m_Application->Initialize();
 	while (!m_Window->ShouldClose())
 	{
+		LUMEDA_PROFILE_FRAME;
+
 		m_Renderer->Clear();
 
 		m_Application->Update();
 		m_Application->Render();
-		
+
 		m_Window->Update();
 	}
 	m_Application->Terminate();
@@ -66,5 +71,6 @@ void Engine::Run(IApplication& application)
 
 Engine& Engine::Get()
 {
+	LUMEDA_PROFILE;
 	return *s_Instance;
 }
