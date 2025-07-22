@@ -42,12 +42,14 @@ project "Lumeda"
         "%{IncludeDir.glad}",
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.glm}",
+        "%{IncludeDir.imgui}",
     }
 
     links
     {
         "GLFW",
         "glad",
+        "ImGui",
     }
 
     filter "system:windows"
@@ -100,6 +102,7 @@ project "Sandbox"
         "Lumeda/src",
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.glm}",
+        "%{IncludeDir.imgui}",
     }
 
     links

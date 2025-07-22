@@ -1,8 +1,6 @@
 #include <Lumeda/Core/Engine.h>
 #include <Lumeda/Core/Log.h>
 
-#include <iostream>
-
 using namespace Lumeda;
 
 Engine* s_Instance = nullptr;

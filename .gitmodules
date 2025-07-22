@@ -10,3 +10,6 @@
 [submodule "Lumeda/vendor/glm"]
 	path = Lumeda/vendor/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "Lumeda/vendor/imgui"]
+	path = Lumeda/vendor/imgui
+	url = https://github.com/ocornut/imgui.git
