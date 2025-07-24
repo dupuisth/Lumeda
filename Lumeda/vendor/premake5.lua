@@ -25,7 +25,6 @@ project "GLFW"
     filter "system:windows"
         systemversion "latest"
         staticruntime "On"
-        cppdialect "C++20"
         files
         {
             "glfw/src/win32*.c",
@@ -127,7 +126,6 @@ project "tracy"
     
     filter "system:windows"        
         systemversion "latest"
-        cppdialect "C++20"
         staticruntime "on"
 
     filter "configurations:Debug"
