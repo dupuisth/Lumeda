@@ -25,6 +25,7 @@ project "GLFW"
     filter "system:windows"
         systemversion "latest"
         staticruntime "On"
+        cppdialect "C++20"
         files
         {
             "glfw/src/win32*.c",
@@ -97,6 +98,8 @@ project "glad"
     
     filter "system:windows"
         systemversion "latest"
+        staticruntime "On"
+        cppdialect "C++20"
 
     filter "configurations:Debug"
         runtime "Debug"
@@ -124,11 +127,13 @@ project "tracy"
     
     filter "system:windows"        
         systemversion "latest"
+        cppdialect "C++20"
         staticruntime "on"
 
     filter "configurations:Debug"
         runtime "Debug"
         symbols "on"
+        defines "TRACY_ENABLE"
 
     filter "configurations:Release"
         runtime "Release"
@@ -157,7 +162,7 @@ project "ImGui"
 
 	filter "system:windows"
 		systemversion "latest"
-		cppdialect "C++17"
+        cppdialect "C++20"
 		staticruntime "On"
         
 	filter "configurations:Debug"

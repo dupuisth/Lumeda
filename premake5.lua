@@ -53,7 +53,7 @@ project "Lumeda"
     }
 
     filter "system:windows"
-        cppdialect "C++17"
+        cppdialect "C++20"
         staticruntime "On"
         systemversion "latest"
         
@@ -107,11 +107,11 @@ project "Sandbox"
 
     links
     {
-        "Lumeda"
+        "Lumeda",
     }
     
     filter "system:windows"
-        cppdialect "C++17"
+        cppdialect "C++20"
         staticruntime "On"
         systemversion "latest"
         

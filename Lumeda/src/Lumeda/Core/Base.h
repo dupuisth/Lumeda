@@ -4,7 +4,6 @@
 
 #if LUMEDA_DEBUG
 
-#define TRACY_ENABLE
 #include <tracy/Tracy.hpp>
 #define LUMEDA_PROFILE ZoneScoped
 #define LUMEDA_PROFILE_FRAME FrameMark
