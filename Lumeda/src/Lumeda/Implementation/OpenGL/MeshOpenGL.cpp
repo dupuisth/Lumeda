@@ -47,6 +47,7 @@ static size_t CalculateStride(const std::vector<MeshAttrib>& attribs)
 MeshOpenGL::MeshOpenGL(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs)
 	: m_Vertices(vertices), m_Indices(indices), m_Name(name), m_Attribs(attribs)
 {
+	LUMEDA_PROFILE;
 	glGenVertexArrays(1, &m_Vao);
 	glBindVertexArray(m_Vao);
 
@@ -76,6 +77,7 @@ MeshOpenGL::MeshOpenGL(const std::string& name, const std::vector<float>& vertic
 
 MeshOpenGL::~MeshOpenGL()
 {
+	LUMEDA_PROFILE;
 	glDeleteVertexArrays(1, &m_Vao);
 	glDeleteBuffers(1, &m_Vbo);
 	glDeleteBuffers(1, &m_Ebo);
@@ -83,6 +85,7 @@ MeshOpenGL::~MeshOpenGL()
 
 void MeshOpenGL::Draw()
 {
+	LUMEDA_PROFILE;
 	glBindVertexArray(m_Vao);
 	glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -90,6 +93,7 @@ void MeshOpenGL::Draw()
 
 const std::string& MeshOpenGL::GetName() const
 {
+	LUMEDA_PROFILE;
 	return m_Name;
 }
 

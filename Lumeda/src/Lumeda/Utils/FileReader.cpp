@@ -6,6 +6,7 @@
 using namespace Lumeda;
 
 std::string FileReader::ReadFile(const std::string& path) {
+    LUMEDA_PROFILE;
     std::ifstream file(path);
 
     if (!file.is_open()) {
