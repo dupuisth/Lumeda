@@ -10,6 +10,11 @@ workspace "Lumeda"
         "Release"
     }
 
+    flags
+	{
+		"MultiProcessorCompile"
+	}
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Vendor"
@@ -43,6 +48,7 @@ project "Lumeda"
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.imgui}",
+        "%{IncludeDir.imgui}" .. "/backends",
     }
 
     links

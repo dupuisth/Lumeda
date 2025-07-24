@@ -146,6 +146,12 @@ project "ImGui"
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
+    includedirs
+    {
+        "imgui/",
+        "glfw/include/"
+    }
+
 	files
 	{
 		"imgui/imconfig.h",
@@ -157,13 +163,22 @@ project "ImGui"
 		"imgui/imstb_rectpack.h",
 		"imgui/imstb_textedit.h",
 		"imgui/imstb_truetype.h",
-		"imgui/imgui_demo.cpp"
+		"imgui/imgui_demo.cpp",
+        "imgui/imgui_tables.cpp"
 	}
 
 	filter "system:windows"
 		systemversion "latest"
         cppdialect "C++20"
 		staticruntime "On"
+
+        files
+        {
+            "imgui/backends/imgui_impl_glfw.h",
+            "imgui/backends/imgui_impl_glfw.cpp",
+            "imgui/backends/imgui_impl_opengl3.h",
+            "imgui/backends/imgui_impl_opengl3.cpp",
+        }
         
 	filter "configurations:Debug"
 		runtime "Debug"

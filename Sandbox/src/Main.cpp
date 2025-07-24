@@ -1,7 +1,6 @@
 #include <Lumeda.h>
 
-
-class Sandbox : public Lumeda::IApplication
+class Sandbox : public Lumeda::Layer
 {
 public:
 	Sandbox() 
@@ -48,6 +47,10 @@ public:
 		LUMEDA_PROFILE;
 		m_Shader->Bind();
 		m_Mesh->Draw();
+	}
+
+	void RenderImGui() override
+	{
 	}
 
 	void Terminate() override
