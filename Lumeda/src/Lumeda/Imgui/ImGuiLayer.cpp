@@ -18,14 +18,17 @@ using namespace Lumeda;
 
 ImGuiLayer::ImGuiLayer()
 {
+	LUMEDA_PROFILE;
 }
 
 ImGuiLayer::~ImGuiLayer()
 {
+	LUMEDA_PROFILE;
 }
 
 void ImGuiLayer::Initialize()
 {
+	LUMEDA_PROFILE;
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -39,6 +42,7 @@ void ImGuiLayer::Initialize()
 
 void ImGuiLayer::Terminate()
 {
+	LUMEDA_PROFILE;
 #if LUMEDA_PLATFORM_WINDOWS
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
@@ -49,6 +53,7 @@ void ImGuiLayer::Terminate()
 
 void ImGuiLayer::Begin()
 {
+	LUMEDA_PROFILE;
 #if LUMEDA_PLATFORM_WINDOWS
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -58,6 +63,7 @@ void ImGuiLayer::Begin()
 
 void ImGuiLayer::End()
 {
+	LUMEDA_PROFILE;
 	ImGui::Render();
 #if LUMEDA_PLATFORM_WINDOWS
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

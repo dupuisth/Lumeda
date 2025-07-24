@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Lumeda/Core/Base.h>
 #include <Lumeda/Core/Layer.h>
 
 namespace Lumeda
