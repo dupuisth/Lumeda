@@ -10,6 +10,11 @@ workspace "Lumeda"
         "Release"
     }
 
+    flags
+	{
+		"MultiProcessorCompile"
+	}
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Vendor"
@@ -30,6 +35,8 @@ project "Lumeda"
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/vendor/stb_image/stb_image.h",
         "%{prj.name}/vendor/stb_image/stb_image.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
     }
 
     includedirs
@@ -39,16 +46,20 @@ project "Lumeda"
         "%{IncludeDir.glfw}",
         "%{IncludeDir.glad}",
         "%{IncludeDir.stb_image}",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.imgui}",
+        "%{IncludeDir.imgui}" .. "/backends",
     }
 
     links
     {
         "GLFW",
         "glad",
+        "ImGui",
     }
 
     filter "system:windows"
-        cppdialect "C++17"
+        cppdialect "C++20"
         staticruntime "On"
         systemversion "latest"
         
@@ -95,16 +106,18 @@ project "Sandbox"
     includedirs
     {
         "Lumeda/src",
-        "%{IncludeDir.spdlog}"
+        "%{IncludeDir.spdlog}",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.imgui}",
     }
 
     links
     {
-        "Lumeda"
+        "Lumeda",
     }
     
     filter "system:windows"
-        cppdialect "C++17"
+        cppdialect "C++20"
         staticruntime "On"
         systemversion "latest"
         

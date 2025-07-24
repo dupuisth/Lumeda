@@ -1,8 +1,6 @@
 #include <Lumeda/Core/Engine.h>
 #include <Lumeda/Core/Log.h>
 
-#include <iostream>
-
 using namespace Lumeda;
 
 Engine* s_Instance = nullptr;
@@ -13,10 +11,11 @@ Engine::Engine() : m_Application(nullptr)
 
 	s_Instance = this;
 
-	// Initialize the engine
+	// Initialize the Logger
 	Log::Init();
 	LUMEDA_CORE_TRACE("Logger initialized");
 
+	// Initialize the Window
 	m_Window = Window::Create();
 	if (m_Window == nullptr)
 	{
@@ -25,6 +24,7 @@ Engine::Engine() : m_Application(nullptr)
 	}
 	LUMEDA_CORE_INFO("Window initialized");
 
+	// Initialize the Renderer
 	m_Renderer = Renderer::Create();
 	if (m_Renderer == nullptr)
 	{
@@ -34,11 +34,16 @@ Engine::Engine() : m_Application(nullptr)
 	m_Renderer->SetViewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	m_Renderer->SetClearColor(0.02f, 0.05f, 0.13f, 1.0f);
 	LUMEDA_CORE_INFO("Renderer initialized");
+
+	// Initialize ImGui
+	m_ImGuiLayer = std::make_unique<ImGuiLayer>();
+	m_ImGuiLayer->Initialize();
+	LUMEDA_CORE_INFO("ImGui initialized");
 }
 
 Engine::~Engine() { }
 
-void Engine::Run(IApplication& application)
+void Engine::Run(Layer& application)
 {
 	LUMEDA_PROFILE;
 	m_Application = &application;
@@ -55,16 +60,23 @@ void Engine::Run(IApplication& application)
 		m_Application->Update();
 		m_Application->Render();
 
+		m_ImGuiLayer->Begin();
+		m_Application->RenderImGui();
+		m_ImGuiLayer->End();
+
 		m_Window->Update();
 	}
 	m_Application->Terminate();
+
+	// Destroy ImGui
+	m_ImGuiLayer->Terminate();
+	m_ImGuiLayer.reset();
 
 	// Destroy the renderer
 	m_Renderer.reset();
 
 	// Destroy the window
 	m_Window.reset();
-
 
 	LUMEDA_CORE_INFO("Game loop ended");
 }
