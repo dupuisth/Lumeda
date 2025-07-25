@@ -23,24 +23,33 @@ public:
 		LUMEDA_TRACE("Initialized Sandbox");
 
 		Lumeda::Camera::SetCurrent(m_Camera);
+
+		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
+
 		m_Camera.GetTransform().SetPosition(glm::vec3(0.0f, 0.0f, -0.2f));
-		m_Shader = Lumeda::Engine::Get().GetRenderer().CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
-		m_Mesh = Lumeda::Engine::Get().GetRenderer().CreateMesh(
+		m_Shader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
+		m_Mesh = renderer.CreateMesh(
 			"quad",
 			{
-				-0.5f, -0.5f, 0.0f, // Top Left
-				-0.5f, 0.5f, 0.0f, // Bottom Left
-				0.5f, -0.5f, 0.0f, // Top Right
-				0.5f, 0.5f, 0.0f, // Bottom Right
+				-0.5f, -0.5f, 0.0f, -1.0f, 1.0f, // Top Left
+				-0.5f, 0.5f, 0.0f, -1.0f, 0.0f,  // Bottom Left
+				0.5f, -0.5f, 0.0f, 1.0f, 1.0f,   // Top Right
+				0.5f, 0.5f, 0.0f, 1.0f, 0.0f     // Bottom Right
 			},
 			{
 				0, 1, 2,
 				1, 2, 3
 			},
 			{
-				{ 0, 3, Lumeda::MeshAttribType::FLOAT }
+				{ 0, 3, Lumeda::MeshAttribType::FLOAT },
+				{ 1, 2, Lumeda::MeshAttribType::FLOAT }
 			}
 		);
+		m_Texture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
+
+		m_Material = renderer.CreateMaterial("default");
+		m_Material->SetShader(m_Shader);
+		m_Material->SetUniform("u_Color", m_Texture);
 	}
 
 	void Update() override
@@ -51,8 +60,8 @@ public:
 	void Render() override
 	{
 		LUMEDA_PROFILE;
-		m_Shader->Bind();
-		m_Shader->SetUniform("u_Camera", m_Camera.GetProjectionView());
+		m_Material->SetUniform("u_Camera", m_Camera.GetProjectionView());
+		m_Material->Use();
 		m_Mesh->Draw();
 	}
 
@@ -107,8 +116,10 @@ public:
 		LUMEDA_TRACE("Terminate Sandbox");
 	}
 
+	std::shared_ptr<Lumeda::Material> m_Material;
 	std::shared_ptr<Lumeda::Shader> m_Shader;
 	std::shared_ptr<Lumeda::Mesh> m_Mesh;
+	std::shared_ptr<Lumeda::Texture2D> m_Texture;
 	Lumeda::Camera m_Camera;
 };
 

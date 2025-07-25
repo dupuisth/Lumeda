@@ -11,3 +11,4 @@
 #include <Lumeda/Renderer/Texture.h>
 #include <Lumeda/Renderer/Mesh.h>
 #include <Lumeda/Renderer/Camera.h>
+#include <Lumeda/Renderer/Material.h>

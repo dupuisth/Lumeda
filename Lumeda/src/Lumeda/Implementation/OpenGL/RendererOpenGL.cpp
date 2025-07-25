@@ -4,6 +4,7 @@
 #include <Lumeda/Implementation/OpenGL/ShaderOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/MeshOpenGL.h>
+#include <Lumeda/Renderer/Material.h>
 
 #include <glad/glad.h>
 
@@ -26,6 +27,13 @@ RendererOpenGL::RendererOpenGL()
 RendererOpenGL::~RendererOpenGL()
 {
 	LUMEDA_PROFILE;
+
+	// Force delete all materials
+	for (auto& material : m_Materials)
+	{
+		material.second.reset();
+	}
+
 	// Force delete all shaders
 	for (auto& shader : m_Shaders)
 	{
@@ -87,6 +95,14 @@ std::shared_ptr<Mesh> RendererOpenGL::CreateMesh(const std::string& name, const 
 	std::shared_ptr<MeshOpenGL> mesh = std::make_shared<MeshOpenGL>(name, vertices, indices, attribs);
 	m_Meshes.insert({ name, mesh });
 	return mesh;
+}
+
+std::shared_ptr<Material> Lumeda::RendererOpenGL::CreateMaterial(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	std::shared_ptr<Material> material = std::make_shared<Material>(name);
+	m_Materials.insert({ name, material });
+	return material;
 }
 
 void RendererOpenGL::OnWindowResize(Window& window, int width, int height)
