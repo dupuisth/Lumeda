@@ -7,36 +7,37 @@
 
 namespace Lumeda
 {
-	namespace GLFW
+	class WindowGLFW : public Window
 	{
-		class WindowGLFW : public Window
-		{
-		public:
-			WindowGLFW();
-			virtual ~WindowGLFW() override;
+	public:
+		WindowGLFW();
+		virtual ~WindowGLFW() override;
 
-			void Update() override;
+		void Update() override;
 
-			int GetWidth() const override;
-			int GetHeight() const override;
-			const glm::ivec2& GetSize() const override;
-			float GetAspectRatio() const override;
+		int GetWidth() const override;
+		int GetHeight() const override;
+		const glm::ivec2& GetSize() const override;
+		float GetAspectRatio() const override;
 
-			void SetVSync(bool enabled) override;
-			bool IsVSync() const override;
+		void SetVSync(bool enabled) override;
+		bool IsVSync() const override;
 
-			bool ShouldClose() const override;
+		bool ShouldClose() const override;
 
-			void* GetNativeWindow() const override;
+		void* GetNativeWindow() const override;
 
-		private:
-			WindowGLFW(const WindowGLFW&) = delete;
-			WindowGLFW & operator=(const WindowGLFW&) = delete;
-			WindowGLFW(WindowGLFW&&) = default;
-			WindowGLFW & operator=(WindowGLFW&&) = default;
+	private:
+		WindowGLFW(const WindowGLFW&) = delete;
+		WindowGLFW& operator=(const WindowGLFW&) = delete;
+		WindowGLFW(WindowGLFW&&) = default;
+		WindowGLFW& operator=(WindowGLFW&&) = default;
 
-			GLFWwindow* m_NativeWindow;
-			bool m_IsVSync;
-		};
-	}
+		static void GlfwWindowSizeCallback(GLFWwindow* window, int width, int height);
+	private:
+		GLFWwindow* m_NativeWindow;
+		bool m_IsVSync;
+
+		static std::unordered_map<GLFWwindow*, WindowGLFW*> s_Windows;
+	};
 }

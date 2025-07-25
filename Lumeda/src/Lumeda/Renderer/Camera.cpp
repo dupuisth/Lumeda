@@ -15,11 +15,17 @@ Camera::Camera() : m_ProjectionView(1.0f), m_IsDirty(true)
 	SetFOV(60.0f);
 	SetZNear(0.01f);
 	SetZFar(1000.0f);
+	SetAspectRatio(Engine::Get().GetWindow().GetAspectRatio());
+
+	m_WindowResizeCallbackToken = Engine::Get().GetWindow().AddResizeCallback(
+		std::bind(&Camera::OnWindowResized, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
+	);
 }
 
 Camera::~Camera()
 {
 	LUMEDA_PROFILE;
+	Engine::Get().GetWindow().RemoveResizeCallback(m_WindowResizeCallbackToken);
 }
 
 const glm::mat4& Camera::GetProjectionView()
@@ -27,7 +33,7 @@ const glm::mat4& Camera::GetProjectionView()
 	LUMEDA_PROFILE;
 	if (m_IsDirty)
 	{
-		glm::mat4 projection = glm::perspective(glm::radians(m_FOV), Engine::Get().GetWindow().GetAspectRatio(), m_ZNear, m_ZFar);
+		glm::mat4 projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_ZNear, m_ZFar);
 		glm::mat4 view = glm::lookAt(m_Transform.GetPositionRef(), m_Transform.GetPosition() + m_Transform.GetForward(), m_Transform.GetUp());
 		m_ProjectionView = projection * view;
 		m_IsDirty = false;
@@ -54,6 +60,13 @@ void Camera::SetCurrent()
 	s_Instance = nullptr;
 }
 
+void Camera::SetAspectRatio(float aspectRatio)
+{
+	LUMEDA_PROFILE;
+	m_IsDirty = true;
+	m_AspectRatio = aspectRatio;
+}
+
 void Camera::SetFOV(float fov)
 {
 	LUMEDA_PROFILE;
@@ -73,4 +86,10 @@ void Camera::SetZFar(float zFar)
 	LUMEDA_PROFILE;
 	m_IsDirty = true;
 	m_ZFar = zFar;
+}
+
+void Camera::OnWindowResized(Window& window, int width, int height)
+{
+	LUMEDA_PROFILE;
+	SetAspectRatio((float)width / (float)height);
 }

@@ -23,6 +23,7 @@ public:
 		LUMEDA_TRACE("Initialized Sandbox");
 
 		Lumeda::Camera::SetCurrent(m_Camera);
+		m_Camera.GetTransform().SetPosition(glm::vec3(0.0f, 0.0f, -0.2f));
 		m_Shader = Lumeda::Engine::Get().GetRenderer().CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
 		m_Mesh = Lumeda::Engine::Get().GetRenderer().CreateMesh(
 			"quad",
@@ -115,7 +116,6 @@ int main()
 {
 	{
 		Lumeda::Engine engine;
-		Sandbox sandbox;
-		engine.Run(sandbox);
+		engine.Run(std::make_unique<Sandbox>());
 	}
 }

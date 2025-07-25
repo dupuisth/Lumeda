@@ -25,8 +25,13 @@ namespace Lumeda
 		std::shared_ptr<Mesh> CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs) override;
 
 	private:
+		void OnWindowResize(Window& window, int width, int height);
+
+	private:
 		std::unordered_map<std::string, std::shared_ptr<Shader>> m_Shaders;
 		std::unordered_map<std::string, std::shared_ptr<Texture2D>> m_Textures2D;
 		std::unordered_map<std::string, std::shared_ptr<Mesh>> m_Meshes;
+
+		WindowCallbackToken m_WindowResizeCallbackToken;
 	};
 }

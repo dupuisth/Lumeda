@@ -2,9 +2,11 @@
 
 #include <exception>
 
-using namespace Lumeda::GLFW;
+using namespace Lumeda;
 
-WindowGLFW::WindowGLFW() : m_IsVSync(true)
+std::unordered_map<GLFWwindow*, WindowGLFW*> WindowGLFW::s_Windows;
+
+WindowGLFW::WindowGLFW()
 {
 	LUMEDA_PROFILE;
 	if (glfwInit() != GLFW_TRUE) 
@@ -21,13 +23,19 @@ WindowGLFW::WindowGLFW() : m_IsVSync(true)
 	}
 
 	glfwMakeContextCurrent(m_NativeWindow);
+	glfwSetWindowSizeCallback(m_NativeWindow, GlfwWindowSizeCallback);
 
 	SetVSync(true);
+
+	s_Windows.insert({ m_NativeWindow, this });
 }
 
 WindowGLFW::~WindowGLFW()
 {
 	LUMEDA_PROFILE;
+
+	s_Windows.erase(m_NativeWindow);
+
 	glfwDestroyWindow(m_NativeWindow);
 	m_NativeWindow = nullptr;
 
@@ -103,4 +111,17 @@ void* WindowGLFW::GetNativeWindow() const
 {
 	LUMEDA_PROFILE;
 	return m_NativeWindow;
+}
+
+void WindowGLFW::GlfwWindowSizeCallback(GLFWwindow* window, int width, int height)
+{
+	LUMEDA_PROFILE;
+	WindowGLFW* target = s_Windows.at(window);
+	if (target != nullptr)
+	{
+		for (const auto& [token, callback] : target->m_ResizeCallbacks)
+		{
+			callback(*target, width, height);
+		}
+	}
 }
