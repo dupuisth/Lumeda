@@ -5,7 +5,7 @@ using namespace Lumeda;
 
 Engine* s_Instance = nullptr;
 
-Engine::Engine() : m_Application(nullptr) 
+Engine::Engine() : m_Application() 
 {
 	LUMEDA_PROFILE;
 
@@ -43,10 +43,10 @@ Engine::Engine() : m_Application(nullptr)
 
 Engine::~Engine() { }
 
-void Engine::Run(Layer& application)
+void Engine::Run(std::unique_ptr<Layer> application)
 {
 	LUMEDA_PROFILE;
-	m_Application = &application;
+	m_Application = std::move(application);
 
 	LUMEDA_CORE_INFO("Starting the game loop");
 	
@@ -68,6 +68,10 @@ void Engine::Run(Layer& application)
 	}
 	m_Application->Terminate();
 
+	// Destroy Application
+	m_Application->Terminate();
+	m_Application.reset();
+
 	// Destroy ImGui
 	m_ImGuiLayer->Terminate();
 	m_ImGuiLayer.reset();
@@ -79,6 +83,18 @@ void Engine::Run(Layer& application)
 	m_Window.reset();
 
 	LUMEDA_CORE_INFO("Game loop ended");
+}
+
+Window& Engine::GetWindow()
+{
+	LUMEDA_PROFILE;
+	return *m_Window;
+}
+
+Renderer& Engine::GetRenderer()
+{
+	LUMEDA_PROFILE;
+	return *m_Renderer;
 }
 
 Engine& Engine::Get()

@@ -3,6 +3,7 @@
 #include <Lumeda/Utils/FileReader.h>
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace Lumeda;
 
@@ -101,15 +102,50 @@ void ShaderOpenGL::UnBind()
 	glUseProgram(0);
 }
 
-void ShaderOpenGL::SetFloat(const std::string& uniform, float value)
+void ShaderOpenGL::SetUniform(const std::string& uniform, int value)
+{
+	LUMEDA_PROFILE;
+	glUniform1i(glGetUniformLocation(m_Handle, uniform.c_str()), value);
+}
+
+void ShaderOpenGL::SetUniform(const std::string& uniform, float value)
 {
 	LUMEDA_PROFILE;
 	glUniform1f(glGetUniformLocation(m_Handle, uniform.c_str()), value);
 }
 
-void ShaderOpenGL::SetInt(const std::string& uniform, int value)
+void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::vec2& value)
 {
 	LUMEDA_PROFILE;
-	glUniform1i(glGetUniformLocation(m_Handle, uniform.c_str()), value);
+	glUniform2fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, glm::value_ptr(value));
+}
 
+void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::vec3& value)
+{
+	LUMEDA_PROFILE;
+	glUniform3fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, glm::value_ptr(value));
+}
+
+void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::vec4& value)
+{
+	LUMEDA_PROFILE;
+	glUniform4fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, glm::value_ptr(value));
+}
+
+void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::mat2& value)
+{
+	LUMEDA_PROFILE;
+	glUniformMatrix2fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, false, glm::value_ptr(value));
+}
+
+void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::mat3& value)
+{
+	LUMEDA_PROFILE;
+	glUniformMatrix3fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, false, glm::value_ptr(value));
+}
+
+void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::mat4& value)
+{
+	LUMEDA_PROFILE;
+	glUniformMatrix4fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, false, glm::value_ptr(value));
 }

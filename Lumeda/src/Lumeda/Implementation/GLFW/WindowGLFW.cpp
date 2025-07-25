@@ -2,9 +2,11 @@
 
 #include <exception>
 
-using namespace Lumeda::GLFW;
+using namespace Lumeda;
 
-WindowGLFW::WindowGLFW() : m_IsVSync(true)
+std::unordered_map<GLFWwindow*, WindowGLFW*> WindowGLFW::s_Windows;
+
+WindowGLFW::WindowGLFW()
 {
 	LUMEDA_PROFILE;
 	if (glfwInit() != GLFW_TRUE) 
@@ -21,13 +23,19 @@ WindowGLFW::WindowGLFW() : m_IsVSync(true)
 	}
 
 	glfwMakeContextCurrent(m_NativeWindow);
+	glfwSetWindowSizeCallback(m_NativeWindow, GlfwWindowSizeCallback);
 
 	SetVSync(true);
+
+	s_Windows.insert({ m_NativeWindow, this });
 }
 
 WindowGLFW::~WindowGLFW()
 {
 	LUMEDA_PROFILE;
+
+	s_Windows.erase(m_NativeWindow);
+
 	glfwDestroyWindow(m_NativeWindow);
 	m_NativeWindow = nullptr;
 
@@ -55,6 +63,21 @@ int WindowGLFW::GetHeight() const
 	int width, height;
 	glfwGetWindowSize(m_NativeWindow, &width, &height);
 	return height;
+}
+
+glm::ivec2 WindowGLFW::GetSize() const
+{
+	LUMEDA_PROFILE;
+	int width, height;
+	glfwGetWindowSize(m_NativeWindow, &width, &height);
+	return glm::ivec2(width, height);
+}
+
+float WindowGLFW::GetAspectRatio() const
+{
+	LUMEDA_PROFILE;
+	const glm::ivec2& size = GetSize();
+	return (float)size.x / (float)size.y;
 }
 
 void WindowGLFW::SetVSync(bool enabled)
@@ -88,4 +111,22 @@ void* WindowGLFW::GetNativeWindow() const
 {
 	LUMEDA_PROFILE;
 	return m_NativeWindow;
+}
+
+void WindowGLFW::GlfwWindowSizeCallback(GLFWwindow* window, int width, int height)
+{
+	LUMEDA_PROFILE;
+	auto iterator = s_Windows.find(window);
+	if (iterator != s_Windows.end())
+	{
+		WindowGLFW* window = iterator->second;
+		for (const auto& [token, callback] : window->m_ResizeCallbacks)
+		{
+			callback(*window, width, height);
+		}
+	}
+	else
+	{
+		LUMEDA_CORE_WARN("[WindowGLFW] The given window was not found for the size callback ({0})", (void*)window);
+	}
 }

@@ -13,8 +13,15 @@ namespace Lumeda
 		void Bind() override;
 		void UnBind() override;
 
-		void SetFloat(const std::string& uniform, float value) override;
-		void SetInt(const std::string& uniform, int value) override;
+		void SetUniform(const std::string& uniform, int value) override;
+		void SetUniform(const std::string& uniform, float value) override;
+		void SetUniform(const std::string& uniform, const glm::vec2& value) override;
+		void SetUniform(const std::string& uniform, const glm::vec3& value) override;
+		void SetUniform(const std::string& uniform, const glm::vec4& value) override;
+		void SetUniform(const std::string& uniform, const glm::mat2& value) override;
+		void SetUniform(const std::string& uniform, const glm::mat3& value) override;
+		void SetUniform(const std::string& uniform, const glm::mat4& value) override;
+
 
 		const std::string& GetName() const override { return m_Name; }
 

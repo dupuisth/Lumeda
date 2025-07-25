@@ -16,14 +16,14 @@ namespace Lumeda
 		Engine();
 		~Engine();
 
-		void Run(Layer& application);
+		void Run(std::unique_ptr<Layer> application);
 
-		Window& GetWindow() { return *m_Window; }
-		Renderer& GetRenderer() { return *m_Renderer; }
+		Window& GetWindow();
+		Renderer& GetRenderer();
 
 		static Engine& Get();
 	private:
-		Layer* m_Application;
+		std::unique_ptr<Layer> m_Application;
 
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<Renderer> m_Renderer;

@@ -1,5 +1,6 @@
 #include <Lumeda/Implementation/OpenGL/RendererOpenGL.h>
 
+#include <Lumeda/Core/Engine.h>
 #include <Lumeda/Implementation/OpenGL/ShaderOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/MeshOpenGL.h>
@@ -17,6 +18,9 @@ RendererOpenGL::RendererOpenGL()
 		throw std::runtime_error("Failed to initialize glad");
 	}
 
+	m_WindowResizeCallbackToken = Engine::Get().GetWindow().AddResizeCallback(
+		std::bind(&RendererOpenGL::OnWindowResize, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
+	);
 }
 
 RendererOpenGL::~RendererOpenGL()
@@ -39,6 +43,8 @@ RendererOpenGL::~RendererOpenGL()
 	{
 		mesh.second.reset();
 	}
+
+	Engine::Get().GetWindow().RemoveResizeCallback(m_WindowResizeCallbackToken);
 }
 
 void RendererOpenGL::SetClearColor(float r, float g, float b, float a)
@@ -81,4 +87,10 @@ std::shared_ptr<Mesh> RendererOpenGL::CreateMesh(const std::string& name, const 
 	std::shared_ptr<MeshOpenGL> mesh = std::make_shared<MeshOpenGL>(name, vertices, indices, attribs);
 	m_Meshes.insert({ name, mesh });
 	return mesh;
+}
+
+void RendererOpenGL::OnWindowResize(Window& window, int width, int height)
+{
+	LUMEDA_PROFILE;
+	SetViewport(0, 0, width, height);
 }
