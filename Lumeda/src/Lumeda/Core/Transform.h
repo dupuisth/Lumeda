@@ -29,7 +29,7 @@ namespace Lumeda
 		void SetPosition(const glm::vec3& position);
 		void SetRotation(const glm::vec3& rotation);
 		void SetScale(const glm::vec3& scale);
-		void SetDirty(bool dirty = false) { m_IsDirty = dirty; }
+		void SetDirty(bool dirty = true) { m_IsDirty = dirty; }
 
 	private:
 		glm::vec3 m_Position;
