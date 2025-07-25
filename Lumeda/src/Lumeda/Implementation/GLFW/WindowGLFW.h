@@ -17,7 +17,7 @@ namespace Lumeda
 
 		int GetWidth() const override;
 		int GetHeight() const override;
-		const glm::ivec2& GetSize() const override;
+		glm::ivec2 GetSize() const override;
 		float GetAspectRatio() const override;
 
 		void SetVSync(bool enabled) override;

@@ -22,7 +22,7 @@ namespace Lumeda
 
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
-		virtual const glm::ivec2& GetSize() const = 0;
+		virtual glm::ivec2 GetSize() const = 0;
 		virtual float GetAspectRatio() const = 0;
 
 		virtual void SetVSync(bool enabled) = 0;

@@ -65,7 +65,7 @@ int WindowGLFW::GetHeight() const
 	return height;
 }
 
-const glm::ivec2& WindowGLFW::GetSize() const
+glm::ivec2 WindowGLFW::GetSize() const
 {
 	LUMEDA_PROFILE;
 	int width, height;
