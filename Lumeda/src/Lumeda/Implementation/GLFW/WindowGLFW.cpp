@@ -116,12 +116,17 @@ void* WindowGLFW::GetNativeWindow() const
 void WindowGLFW::GlfwWindowSizeCallback(GLFWwindow* window, int width, int height)
 {
 	LUMEDA_PROFILE;
-	WindowGLFW* target = s_Windows.at(window);
-	if (target != nullptr)
+	auto iterator = s_Windows.find(window);
+	if (iterator != s_Windows.end())
 	{
-		for (const auto& [token, callback] : target->m_ResizeCallbacks)
+		WindowGLFW* window = iterator->second;
+		for (const auto& [token, callback] : window->m_ResizeCallbacks)
 		{
-			callback(*target, width, height);
+			callback(*window, width, height);
 		}
+	}
+	else
+	{
+		LUMEDA_CORE_WARN("[WindowGLFW] The given window was not found for the size callback ({0})", (void*)window);
 	}
 }
