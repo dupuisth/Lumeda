@@ -30,8 +30,8 @@ namespace Lumeda
 	private:
 		WindowGLFW(const WindowGLFW&) = delete;
 		WindowGLFW& operator=(const WindowGLFW&) = delete;
-		WindowGLFW(WindowGLFW&&) = default;
-		WindowGLFW& operator=(WindowGLFW&&) = default;
+		WindowGLFW(WindowGLFW&&) = delete;
+		WindowGLFW& operator=(WindowGLFW&&) = delete;
 
 		static void GlfwWindowSizeCallback(GLFWwindow* window, int width, int height);
 	private:
