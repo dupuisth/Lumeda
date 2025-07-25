@@ -42,10 +42,10 @@ const glm::mat4& Camera::GetProjectionView()
 	return m_ProjectionView;
 }
 
-Camera& Camera::GetCurrent()
+Camera* Camera::GetCurrent()
 {
 	LUMEDA_PROFILE;
-	return *s_Instance;
+	return s_Instance;
 }
 
 void Camera::SetCurrent(Camera& camera)

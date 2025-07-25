@@ -29,7 +29,7 @@ namespace Lumeda
 		void SetZFar(float zFar);
 		void SetDirty(bool dirty = true) { m_IsDirty = dirty; }
 
-		static Camera& GetCurrent();
+		static Camera* GetCurrent();
 		static void SetCurrent(Camera& camera);
 		static void SetCurrent();
 
