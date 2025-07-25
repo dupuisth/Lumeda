@@ -12,7 +12,7 @@ namespace Lumeda
 		Transform();
 		virtual ~Transform();
 
-		void BuildWord();
+		void BuildWorld();
 
 		const glm::vec3& GetPosition() { return m_Position; }
 		const glm::vec3& GetRotation() { return m_Rotation; }

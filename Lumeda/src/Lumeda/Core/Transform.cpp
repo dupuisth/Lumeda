@@ -17,7 +17,7 @@ Transform::~Transform()
 	LUMEDA_PROFILE;
 }
 
-void Transform::BuildWord()
+void Transform::BuildWorld()
 {
 	LUMEDA_PROFILE;
 	m_World = glm::mat4(1.0f);
@@ -40,7 +40,7 @@ const glm::mat4& Lumeda::Transform::GetWorld()
 	LUMEDA_PROFILE;
 	if (m_IsDirty)
 	{
-		BuildWord();
+		BuildWorld();
 	}
 
 	return m_World;
@@ -51,7 +51,7 @@ const glm::vec3& Transform::GetRight()
 	LUMEDA_PROFILE;
 	if (m_IsDirty)
 	{
-		BuildWord();
+		BuildWorld();
 	}
 
 	return m_Right;
@@ -62,7 +62,7 @@ const glm::vec3& Transform::GetUp()
 	LUMEDA_PROFILE;
 	if (m_IsDirty)
 	{
-		BuildWord();
+		BuildWorld();
 	}
 
 	return m_Up;
@@ -73,7 +73,7 @@ const glm::vec3& Transform::GetForward()
 	LUMEDA_PROFILE;
 	if (m_IsDirty)
 	{
-		BuildWord();
+		BuildWorld();
 	}
 
 	return m_Forward;
