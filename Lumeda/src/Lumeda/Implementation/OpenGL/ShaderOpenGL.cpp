@@ -33,7 +33,7 @@ ShaderOpenGL::ShaderOpenGL(const std::string& name, const std::string& vertexPat
 		{
 			char infoLog[InfoLogSize];
 			glGetShaderInfoLog(vertexShader, InfoLogSize, nullptr, infoLog);
-			LUMEDA_CORE_ERROR("Vertex shader compilatop, failed: {0}", infoLog);
+			LUMEDA_CORE_ERROR("Vertex shader compilation, failed: {0}", infoLog);
 			throw std::runtime_error("Vertex shader compilation failed");
 		}
 
@@ -48,7 +48,7 @@ ShaderOpenGL::ShaderOpenGL(const std::string& name, const std::string& vertexPat
 		{
 			char infoLog[InfoLogSize];
 			glGetShaderInfoLog(fragmentShader, InfoLogSize, nullptr, infoLog);
-			LUMEDA_CORE_ERROR("Fragment shader compilatop, failed: {0}", infoLog);
+			LUMEDA_CORE_ERROR("Fragment shader compilation, failed: {0}", infoLog);
 			throw std::runtime_error("Fragment shader compilation failed");
 		}
 
