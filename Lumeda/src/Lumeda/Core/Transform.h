@@ -22,8 +22,17 @@ namespace Lumeda
 		const glm::vec3& GetUp();
 		const glm::vec3& GetForward();
 
+		/// <summary>
+		/// Get the reference of the Position, the Dirty flag will not be set so be careful when using it
+		/// </summary>
 		glm::vec3& GetPositionRef() { return m_Position; }
+		/// <summary>
+		/// Get the reference of the Rotation, the Dirty flag will not be set so be careful when using it
+		/// </summary>
 		glm::vec3& GetRotationRef() { return m_Rotation; }
+		/// <summary>
+		/// Get the reference of the Scale, the Dirty flag will not be set so be careful when using it
+		/// </summary>
 		glm::vec3& GetScaleRef() { return m_Scale; }
 
 		void SetPosition(const glm::vec3& position);
