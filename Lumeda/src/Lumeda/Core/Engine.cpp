@@ -81,6 +81,18 @@ void Engine::Run(Layer& application)
 	LUMEDA_CORE_INFO("Game loop ended");
 }
 
+Window& Engine::GetWindow()
+{
+	LUMEDA_PROFILE;
+	return *m_Window;
+}
+
+Renderer& Engine::GetRenderer()
+{
+	LUMEDA_PROFILE;
+	return *m_Renderer;
+}
+
 Engine& Engine::Get()
 {
 	LUMEDA_PROFILE;

@@ -57,6 +57,21 @@ int WindowGLFW::GetHeight() const
 	return height;
 }
 
+const glm::ivec2& WindowGLFW::GetSize() const
+{
+	LUMEDA_PROFILE;
+	int width, height;
+	glfwGetWindowSize(m_NativeWindow, &width, &height);
+	return glm::ivec2(width, height);
+}
+
+float WindowGLFW::GetAspectRatio() const
+{
+	LUMEDA_PROFILE;
+	const glm::ivec2& size = GetSize();
+	return (float)size.x / (float)size.y;
+}
+
 void WindowGLFW::SetVSync(bool enabled)
 {
 	LUMEDA_PROFILE;

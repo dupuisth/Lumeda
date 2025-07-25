@@ -2,6 +2,8 @@
 
 #include <Lumeda/Core/Base.h>
 
+#include <glm/glm.hpp>
+
 #include <memory>
 
 namespace Lumeda
@@ -14,7 +16,9 @@ namespace Lumeda
 		virtual void Update() = 0;
 
 		virtual int GetWidth() const = 0;
-		virtual int GetHeight() const = 0 ;
+		virtual int GetHeight() const = 0;
+		virtual const glm::ivec2& GetSize() const = 0;
+		virtual float GetAspectRatio() const = 0;
 
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;

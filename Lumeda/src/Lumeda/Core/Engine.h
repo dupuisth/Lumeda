@@ -18,8 +18,8 @@ namespace Lumeda
 
 		void Run(Layer& application);
 
-		Window& GetWindow() { return *m_Window; }
-		Renderer& GetRenderer() { return *m_Renderer; }
+		Window& GetWindow();
+		Renderer& GetRenderer();
 
 		static Engine& Get();
 	private:
