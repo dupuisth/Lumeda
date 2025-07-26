@@ -74,6 +74,75 @@ void RendererOpenGL::SetViewport(int x, int y, int width, int height)
 	glViewport(x, y, width, height);
 }
 
+const std::unordered_map<std::string, std::shared_ptr<Shader>>& Lumeda::RendererOpenGL::ListShaders()
+{
+	LUMEDA_PROFILE;
+	return m_Shaders;
+}
+
+const std::unordered_map<std::string, std::shared_ptr<Texture2D>>& Lumeda::RendererOpenGL::ListTextures2D()
+{
+	LUMEDA_PROFILE;
+	return m_Textures2D;
+}
+
+const std::unordered_map<std::string, std::shared_ptr<Mesh>>& Lumeda::RendererOpenGL::ListMeshes()
+{
+	LUMEDA_PROFILE;
+	return m_Meshes;
+}
+
+const std::unordered_map<std::string, std::shared_ptr<Material>>& Lumeda::RendererOpenGL::ListMaterials()
+{
+	LUMEDA_PROFILE;
+	return m_Materials;
+}
+
+const std::unordered_map<std::string, std::shared_ptr<Model>>& Lumeda::RendererOpenGL::ListModels()
+{
+	LUMEDA_PROFILE;
+	return m_Models;
+}
+
+#define SAFE_RETURN_RESOURCE(map, resourceName) \
+const auto& iterator = map.find(resourceName); \
+if (iterator == map.end()) \
+{ \
+	LUMEDA_CORE_WARN("[RendererOpenGL] Did not find the resource {0} in the map {1}", resourceName, #map); \
+	return nullptr; \
+} \
+return iterator->second;
+
+std::shared_ptr<Shader> Lumeda::RendererOpenGL::GetShader(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	SAFE_RETURN_RESOURCE(m_Shaders, name);
+}
+
+std::shared_ptr<Texture2D> Lumeda::RendererOpenGL::GetTexture2D(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	SAFE_RETURN_RESOURCE(m_Textures2D, name);
+}
+
+std::shared_ptr<Mesh> Lumeda::RendererOpenGL::GetMesh(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	SAFE_RETURN_RESOURCE(m_Meshes, name);
+}
+
+std::shared_ptr<Material> Lumeda::RendererOpenGL::GetMaterial(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	SAFE_RETURN_RESOURCE(m_Materials, name);
+}
+
+std::shared_ptr<Model> Lumeda::RendererOpenGL::GetModel(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	SAFE_RETURN_RESOURCE(m_Models, name);
+}
+
 std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
 {
 	LUMEDA_PROFILE;
