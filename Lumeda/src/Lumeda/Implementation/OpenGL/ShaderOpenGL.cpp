@@ -102,6 +102,15 @@ void ShaderOpenGL::UnBind()
 	glUseProgram(0);
 }
 
+void ShaderOpenGL::Prepare(float time, const glm::vec3& cameraPosition, const glm::vec3& cameraForward, const glm::mat4 cameraMatrix)
+{
+	LUMEDA_PROFILE;
+	SetUniform("u_Time", time);
+	SetUniform("u_CameraPosition", cameraPosition);
+	SetUniform("u_CameraForward", cameraForward);
+	SetUniform("u_CameraMatrix", cameraMatrix);
+}
+
 void ShaderOpenGL::SetUniform(const std::string& uniform, int value)
 {
 	LUMEDA_PROFILE;
