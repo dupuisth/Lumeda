@@ -43,7 +43,7 @@ void Model::Draw(const glm::mat4 world)
 	}
 }
 
-const std::vector<ModelItem>& Model::GetItems() const
+const std::vector<ModelItem>& Model::ListItems() const
 {
 	LUMEDA_PROFILE;
 	return m_ModelItems;
