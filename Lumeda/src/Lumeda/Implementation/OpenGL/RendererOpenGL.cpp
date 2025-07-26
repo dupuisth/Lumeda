@@ -5,6 +5,7 @@
 #include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/MeshOpenGL.h>
 #include <Lumeda/Renderer/Material.h>
+#include <Lumeda/Renderer/Model.h>
 
 #include <glad/glad.h>
 
@@ -103,6 +104,14 @@ std::shared_ptr<Material> Lumeda::RendererOpenGL::CreateMaterial(const std::stri
 	std::shared_ptr<Material> material = std::make_shared<Material>(name);
 	m_Materials.insert({ name, material });
 	return material;
+}
+
+std::shared_ptr<Model> RendererOpenGL::CreateModel(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	std::shared_ptr<Model> model = std::make_shared<Model>(name);
+	m_Models.insert({ name, model });
+	return model;
 }
 
 void RendererOpenGL::OnWindowResize(Window& window, int width, int height)

@@ -13,6 +13,7 @@ namespace Lumeda
 	class Mesh;
 	struct MeshAttrib;
 	class Material;
+	class Model;
 
 	class Renderer
 	{
@@ -28,6 +29,7 @@ namespace Lumeda
 		virtual std::shared_ptr<Texture2D> CreateTexture2D(const std::string& name, const std::string& path) = 0;
 		virtual std::shared_ptr<Mesh> CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs) = 0;
 		virtual std::shared_ptr<Material> CreateMaterial(const std::string& name) = 0;
+		virtual std::shared_ptr<Model> CreateModel(const std::string& name) = 0;
 
 		static std::unique_ptr<Renderer> Create();
 	};

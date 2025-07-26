@@ -24,6 +24,7 @@ namespace Lumeda
 		std::shared_ptr<Texture2D> CreateTexture2D(const std::string& name, const std::string& path) override;
 		std::shared_ptr<Mesh> CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs) override;
 		std::shared_ptr<Material> CreateMaterial(const std::string& name) override;
+		std::shared_ptr<Model> CreateModel(const std::string& name) override;
 
 	private:
 		void OnWindowResize(Window& window, int width, int height);
@@ -33,6 +34,7 @@ namespace Lumeda
 		std::unordered_map<std::string, std::shared_ptr<Texture2D>> m_Textures2D;
 		std::unordered_map<std::string, std::shared_ptr<Mesh>> m_Meshes;
 		std::unordered_map<std::string, std::shared_ptr<Material>> m_Materials;
+		std::unordered_map<std::string, std::shared_ptr<Model>> m_Models;
 
 		WindowCallbackToken m_WindowResizeCallbackToken;
 	};
