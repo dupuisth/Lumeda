@@ -49,6 +49,12 @@ project "Lumeda"
         "%{IncludeDir.glm}",
         "%{IncludeDir.imgui}",
         "%{IncludeDir.imgui}" .. "/backends",
+        "%{IncludeDir.assimp}",
+    }
+
+    libdirs 
+    { 
+        "%{prj.name}/libs/%{cfg.system}/%{cfg.buildcfg}" 
     }
 
     links
@@ -56,6 +62,7 @@ project "Lumeda"
         "GLFW",
         "glad",
         "ImGui",
+        "assimp"
     }
 
     filter "system:windows"
@@ -81,9 +88,9 @@ project "Lumeda"
             "tracy"
         }
     
-    filter "configurations:Staging"
-        defines "LUMEDA_STAGING"
-        optimize "On"
+    -- filter "configurations:Staging"
+    --     defines "LUMEDA_STAGING"
+    --     optimize "On"
 
     filter "configurations:Release"
         defines "LUMEDA_RELEASE"
