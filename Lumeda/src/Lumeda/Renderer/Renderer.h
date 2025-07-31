@@ -48,6 +48,7 @@ namespace Lumeda
 		virtual std::shared_ptr<Mesh> CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs) = 0;
 		virtual std::shared_ptr<Material> CreateMaterial(const std::string& name) = 0;
 		virtual std::shared_ptr<Model> CreateModel(const std::string& name) = 0;
+		virtual std::shared_ptr<Model> CreateModel(const std::string& name, const std::string& fromFile) = 0;
 
 		static std::unique_ptr<Renderer> Create();
 	};

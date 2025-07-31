@@ -39,6 +39,7 @@ namespace Lumeda
 		std::shared_ptr<Mesh> CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs) override;
 		std::shared_ptr<Material> CreateMaterial(const std::string& name) override;
 		std::shared_ptr<Model> CreateModel(const std::string& name) override;
+		std::shared_ptr<Model> CreateModel(const std::string& name, const std::string& fromFile) override;
 
 	private:
 		void OnWindowResize(Window& window, int width, int height);

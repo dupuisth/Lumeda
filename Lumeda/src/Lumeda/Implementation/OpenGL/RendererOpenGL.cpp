@@ -7,6 +7,7 @@
 #include <Lumeda/Renderer/Material.h>
 #include <Lumeda/Renderer/Model.h>
 #include <Lumeda/Renderer/Camera.h>
+#include <Lumeda/Renderer/ModelLoader.h>
 
 #include <glad/glad.h>
 
@@ -204,6 +205,14 @@ std::shared_ptr<Model> RendererOpenGL::CreateModel(const std::string& name)
 	LUMEDA_PROFILE;
 	std::shared_ptr<Model> model = std::make_shared<Model>(name);
 	m_Models.insert({ name, model });
+	return model;
+}
+
+std::shared_ptr<Model> RendererOpenGL::CreateModel(const std::string& name, const std::string& fromFile)
+{
+	LUMEDA_PROFILE;
+	std::shared_ptr<Model> model = CreateModel(name);
+	ModelLoader::LoadModelFromFile(model, fromFile);
 	return model;
 }
 
