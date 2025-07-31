@@ -74,3 +74,9 @@ int Texture2DOpenGL::GetHeight() const
 	LUMEDA_PROFILE;
 	return m_Height;
 }
+
+unsigned int Texture2DOpenGL::GetOpenGLHandle()
+{
+	LUMEDA_PROFILE;
+	return m_Handle;
+}

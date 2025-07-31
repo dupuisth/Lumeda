@@ -26,6 +26,8 @@ namespace Lumeda
 
 		virtual void SetViewport(int x, int y, int width, int height)  = 0;
 
+		virtual void PrepareShaders() = 0;
+
 		// Lists
 		virtual const std::unordered_map<std::string, std::shared_ptr<Shader>>& ListShaders() = 0;
 		virtual const std::unordered_map<std::string, std::shared_ptr<Texture2D>>& ListTextures2D() = 0;

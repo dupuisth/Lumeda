@@ -55,9 +55,10 @@ void Engine::Run(std::unique_ptr<Layer> application)
 	{
 		LUMEDA_PROFILE_FRAME;
 
-		m_Renderer->Clear();
-
 		m_Application->Update();
+
+		m_Renderer->Clear();
+		m_Renderer->PrepareShaders();
 		m_Application->Render();
 
 		m_ImGuiLayer->Begin();

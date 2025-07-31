@@ -26,6 +26,8 @@ namespace Lumeda
 			return m_Name;
 		}
 
+		unsigned int GetOpenGLHandle();
+
 	private:
 		unsigned int m_Handle;
 		std::string m_Name;

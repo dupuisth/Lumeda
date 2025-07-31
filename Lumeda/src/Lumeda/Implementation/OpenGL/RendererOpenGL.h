@@ -20,6 +20,8 @@ namespace Lumeda
 
 		void SetViewport(int x, int y, int width, int height) override;
 
+		void PrepareShaders() override;
+
 		const std::unordered_map<std::string, std::shared_ptr<Shader>>& ListShaders() override;
 		const std::unordered_map<std::string, std::shared_ptr<Texture2D>>& ListTextures2D() override;
 		const std::unordered_map<std::string, std::shared_ptr<Mesh>>& ListMeshes() override;
