@@ -12,3 +12,4 @@
 #include <Lumeda/Renderer/Mesh.h>
 #include <Lumeda/Renderer/Camera.h>
 #include <Lumeda/Renderer/Material.h>
+#include <Lumeda/Renderer/Model.h>

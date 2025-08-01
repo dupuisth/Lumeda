@@ -4,6 +4,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 
+#if LUMEDA_PLATFORM_WINDOWS
+#include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
+#endif
+
 class Sandbox : public Lumeda::Layer
 {
 public:
@@ -50,6 +54,13 @@ public:
 		m_Material = renderer.CreateMaterial("default");
 		m_Material->SetShader(m_Shader);
 		m_Material->SetUniform("u_Color", m_Texture);
+
+		m_Model = renderer.CreateModel("quad");
+		m_Model->AttachItem(
+			{ m_Mesh, m_Material }
+		);
+
+		std::shared_ptr<Lumeda::Model> model = renderer.CreateModel("cube", "assets/models/cube.fbx");
 	}
 
 	void Update() override
@@ -60,17 +71,28 @@ public:
 	void Render() override
 	{
 		LUMEDA_PROFILE;
-		m_Material->SetUniform("u_Camera", m_Camera.GetProjectionView());
-		m_Material->Use();
-		m_Mesh->Draw();
+
+		Lumeda::Transform transform;
+		transform.SetRotation(glm::vec3(0.0f, 0.0f, 25.0f));
+		m_Model->Draw(transform.GetWorld());
+
+		transform.SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+		transform.SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
+		Lumeda::Engine::Get().GetRenderer().GetModel("cube")->Draw(transform.GetWorld());
 	}
 
 	void RenderImGui() override
 	{
 		LUMEDA_PROFILE;
-
 		if (ImGui::BeginMainMenuBar())
 		{
+			if (ImGui::BeginMenu("Renderer"))
+			{
+				ImGui::SeparatorText("Resources");
+				RenderResourceMenu();
+				ImGui::EndMenu();
+			}
+
 			if (ImGui::BeginMenu("Camera"))
 			{
 				if (ImGui::DragFloat3("Position", glm::value_ptr(m_Camera.GetTransform().GetPositionRef()), 0.5f, -100.0f, 100.0f))
@@ -110,6 +132,108 @@ public:
 		}
 	}
 
+	void RenderResourceMenu()
+	{
+		LUMEDA_PROFILE;
+		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
+		if (ImGui::BeginMenu("Shaders"))
+		{
+			const auto& shaderMap = renderer.ListShaders();
+			for (const auto& [name, shader] : shaderMap)
+			{
+				if (ImGui::BeginMenu(name.c_str()))
+				{
+					ImGui::LabelText("Pointer", "%x", shader);
+					ImGui::EndMenu();
+				}
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Textures"))
+		{
+			const auto& textureMap = renderer.ListTextures2D();
+			for (const auto& [name, texture] : textureMap)
+			{
+				if (ImGui::BeginMenu(name.c_str()))
+				{
+					ImGui::LabelText("Pointer", "%x", texture);
+					ImGui::LabelText("Size", "%d x %d", texture->GetWidth(), texture->GetHeight());
+					
+#if LUMEDA_PLATFORM_WINDOWS
+					std::shared_ptr<Lumeda::Texture2DOpenGL> castedTexture = std::dynamic_pointer_cast<Lumeda::Texture2DOpenGL>(texture);
+					ImGui::Image((ImTextureID)(intptr_t)castedTexture->GetOpenGLHandle(), ImVec2(128, 128));
+#endif
+
+					ImGui::EndMenu();
+				}
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Mesh"))
+		{
+			const auto& meshMap = renderer.ListMeshes();
+			for (const auto& [name, mesh] : meshMap)
+			{
+				if (ImGui::BeginMenu(name.c_str()))
+				{
+					ImGui::LabelText("Pointer", "%x", mesh);
+					ImGui::EndMenu();
+				}
+			}
+			ImGui::EndMenu();
+		}		
+		if (ImGui::BeginMenu("Models"))
+		{
+			const auto& modelMap = renderer.ListModels();
+			for (const auto& [name, model] : modelMap)
+			{
+				if (ImGui::BeginMenu(name.c_str()))
+				{
+					const auto& modelItems = model->ListItems();
+
+					ImGui::LabelText("Pointer", "%x", model);
+					if (ImGui::BeginMenu("Items"))
+					{
+						for (const auto& modelItem : modelItems)
+						{
+							std::string materialName = "nullptr";
+							std::string meshName = "nullptr";
+
+							if (modelItem.m_Material != nullptr)
+							{
+								materialName = modelItem.m_Material->GetName();
+							}
+							if (modelItem.m_Mesh != nullptr)
+							{
+								meshName = modelItem.m_Mesh->GetName();
+							}
+
+							ImGui::LabelText("Mesh", meshName.c_str());
+							ImGui::LabelText("Material", materialName.c_str());
+						}
+						ImGui::EndMenu();
+					}
+
+					ImGui::EndMenu();
+				}
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Materials"))
+		{
+			const auto& materialsMap = renderer.ListMaterials();
+			for (const auto& [name, material] : materialsMap)
+			{
+				if (ImGui::BeginMenu(name.c_str()))
+				{
+					ImGui::LabelText("Pointer", "%x", material);
+					ImGui::EndMenu();
+				}
+			}
+			ImGui::EndMenu();
+		}
+	}
+
 	void Terminate() override
 	{
 		LUMEDA_PROFILE;
@@ -120,6 +244,7 @@ public:
 	std::shared_ptr<Lumeda::Shader> m_Shader;
 	std::shared_ptr<Lumeda::Mesh> m_Mesh;
 	std::shared_ptr<Lumeda::Texture2D> m_Texture;
+	std::shared_ptr<Lumeda::Model> m_Model;
 	Lumeda::Camera m_Camera;
 };
 

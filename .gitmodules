@@ -13,3 +13,6 @@
 [submodule "Lumeda/vendor/imgui"]
 	path = Lumeda/vendor/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "Lumeda/vendor/assimp"]
+	path = Lumeda/vendor/assimp
+	url = https://github.com/assimp/assimp.git
