@@ -13,3 +13,7 @@
 #include <Lumeda/Renderer/Camera.h>
 #include <Lumeda/Renderer/Material.h>
 #include <Lumeda/Renderer/Model.h>
+
+#include <Lumeda/Scene/Scene.h>
+#include <Lumeda/Scene/Entity.h>
+#include <Lumeda/Scene/Component.h>
