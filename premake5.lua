@@ -6,7 +6,6 @@ workspace "Lumeda"
     configurations
     {
         "Debug",
-        "Staging",
         "Release"
     }
 
@@ -61,8 +60,7 @@ project "Lumeda"
     {
         "GLFW",
         "glad",
-        "ImGui",
-        "assimp"
+        "ImGui"
     }
 
     filter "system:windows"
@@ -85,16 +83,18 @@ project "Lumeda"
         }    
         links
         {
-            "tracy"
+            "tracy",
+            "assimpd"
         }
     
-    -- filter "configurations:Staging"
-    --     defines "LUMEDA_STAGING"
-    --     optimize "On"
-
     filter "configurations:Release"
         defines "LUMEDA_RELEASE"
         optimize "On"
+        links
+        {
+            "tracy",
+            "assimp"
+        }
 
 project "Sandbox"
     location "Sandbox"
@@ -132,6 +132,11 @@ project "Sandbox"
         {
             "LUMEDA_PLATFORM_WINDOWS"
         }
+
+        postbuildcommands
+        {
+            '{COPYFILE} "%{wks.location}Lumeda/libs/windows/%{cfg.buildcfg}/%{iif(cfg.buildcfg == "Debug", "assimpd", "assimp")}.dll" "%{cfg.buildtarget.directory}"'
+        }
     
     filter "configurations:Debug"
         includedirs
@@ -141,10 +146,6 @@ project "Sandbox"
         defines "LUMEDA_DEBUG"
         symbols "On"
     
-    filter "configurations:Staging"
-        defines "LUMEDA_STAGING"
-        optimize "On"
-
     filter "configurations:Release"
         defines "LUMEDA_RELEASE"
         optimize "On"
