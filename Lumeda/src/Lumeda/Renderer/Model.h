@@ -34,7 +34,7 @@ namespace Lumeda
 		const std::string& GetName();
 
 	private:
-		const std::string& m_Name;
+		std::string m_Name;
 
 		std::vector<ModelItem> m_ModelItems;
 	};
