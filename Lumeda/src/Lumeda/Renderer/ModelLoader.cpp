@@ -64,7 +64,7 @@ void ModelLoader::LoadModelFromFile(std::shared_ptr<Model> model, const std::str
 		return;
 	}
 
-	std::shared_ptr<Material> material = Engine::Get().GetRenderer().CreateMaterial(model->GetName());
+	std::shared_ptr<Material> material = Engine::Get().GetRenderer().CreateMaterial(model->GetName() + "_material");
 	
 	int numModelsItem = 0;
 	std::queue<aiNode*> nodes;
