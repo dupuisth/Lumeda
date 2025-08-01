@@ -69,7 +69,7 @@ void Model::SetItem(int index, const ModelItem& modelItem)
 void Model::RemoveItem(int index)
 {
 	LUMEDA_PROFILE;
-	if (index < 0 || index > m_ModelItems.size())
+	if (index < 0 || index >= m_ModelItems.size())
 	{
 		LUMEDA_CORE_WARN("[Model] Index is out of bounds for RemoveItem");
 		return;
