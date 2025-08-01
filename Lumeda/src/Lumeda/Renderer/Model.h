@@ -24,7 +24,7 @@ namespace Lumeda
 		virtual ~Model();
 
 		virtual void Draw();
-		virtual void Draw(const glm::mat4 world);
+		virtual void Draw(const glm::mat4& world);
 
 		virtual const std::vector<ModelItem>& ListItems() const;
 		virtual void AttachItem(const ModelItem& modelItem);

@@ -29,7 +29,7 @@ void Model::Draw()
 	}
 }
 
-void Model::Draw(const glm::mat4 world)
+void Model::Draw(const glm::mat4& world)
 {
 	LUMEDA_PROFILE;
 	for (const auto& modelItem : m_ModelItems)
