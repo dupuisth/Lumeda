@@ -25,6 +25,9 @@ RendererOpenGL::RendererOpenGL()
 	m_WindowResizeCallbackToken = Engine::Get().GetWindow().AddResizeCallback(
 		std::bind(&RendererOpenGL::OnWindowResize, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
 	);
+
+	// Enable depth test
+	glEnable(GL_DEPTH_TEST);
 }
 
 RendererOpenGL::~RendererOpenGL()
@@ -67,7 +70,7 @@ void RendererOpenGL::SetClearColor(float r, float g, float b, float a)
 void RendererOpenGL::Clear()
 {
 	LUMEDA_PROFILE;
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RendererOpenGL::SetViewport(int x, int y, int width, int height)

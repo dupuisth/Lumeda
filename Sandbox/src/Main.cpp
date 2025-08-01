@@ -61,6 +61,15 @@ public:
 		);
 
 		std::shared_ptr<Lumeda::Model> model = renderer.CreateModel("cube", "assets/models/cube.fbx");
+
+		// Sets the material for testing
+		for (size_t i = 0; i < model->ListItems().size(); i++)
+		{
+			Lumeda::ModelItem modelItem = model->ListItems()[i];
+			modelItem.m_Material = m_Material;
+			model->SetItem(i, modelItem);
+		}
+		
 	}
 
 	void Update() override
