@@ -59,6 +59,8 @@ public:
 		m_Model->AttachItem(
 			{ m_Mesh, m_Material }
 		);
+
+		std::shared_ptr<Lumeda::Model> model = renderer.CreateModel("cube", "assets/models/cube.fbx");
 	}
 
 	void Update() override
@@ -73,6 +75,10 @@ public:
 		Lumeda::Transform transform;
 		transform.SetRotation(glm::vec3(0.0f, 0.0f, 25.0f));
 		m_Model->Draw(transform.GetWorld());
+
+		transform.SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+		transform.SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
+		Lumeda::Engine::Get().GetRenderer().GetModel("cube")->Draw(transform.GetWorld());
 	}
 
 	void RenderImGui() override
