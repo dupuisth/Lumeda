@@ -40,6 +40,9 @@ project "GLFW"
     
     -- Not tested
     filter "system:linux"
+        pic "On"
+        systemversion "latest"
+        staticruntime "On"
         files
         {
             "glfw/src/x11_init.c",
@@ -51,9 +54,13 @@ project "GLFW"
             "glfw/src/glx_context.c",
             "glfw/src/egl_context.c",
             "glfw/src/osmesa_context.c",
-            "glfw/src/linux_joystick.c"
+            "glfw/src/linux_joystick.c",
+        }        
+        defines 
+        { 
+            "_GLFW_X11",
+            "_CRT_SECURE_NO_WARNINGS"
         }
-        defines { "_GLFW_X11" }
     
     -- Not tested
     filter "system:macosx"
@@ -100,6 +107,11 @@ project "glad"
         staticruntime "On"
         cppdialect "C++20"
 
+    filter "system:linux"
+        systemversion "latest"
+        staticruntime "On"
+        cppdialect "C++20"  
+
     filter "configurations:Debug"
         runtime "Debug"
         symbols "on"
@@ -125,6 +137,10 @@ project "tracy"
     }
     
     filter "system:windows"        
+        systemversion "latest"
+        staticruntime "on"
+
+    filter "system:linux"
         systemversion "latest"
         staticruntime "on"
 

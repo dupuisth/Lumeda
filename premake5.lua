@@ -74,6 +74,15 @@ project "Lumeda"
             "LUMEDA_BUILD_DLL"
         }
     
+    filter "system:linux"
+        cppdialect "C++20"
+        staticruntime "On"
+        systemversion "latest"
+        defines 
+        {
+            "LUMEDA_PLATFORM_LINUX"
+        }
+    
     filter "configurations:Debug"
         defines "LUMEDA_DEBUG"
         symbols "On"
@@ -92,7 +101,6 @@ project "Lumeda"
         optimize "On"
         links
         {
-            "tracy",
             "assimp"
         }
 
@@ -120,7 +128,7 @@ project "Sandbox"
 
     links
     {
-        "Lumeda",
+        "Lumeda"
     }
     
     filter "system:windows"

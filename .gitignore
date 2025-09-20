@@ -12,3 +12,7 @@
 
 # Logging
 *.log
+
+# Makefile (premake gmake)
+**.make
+Makefile

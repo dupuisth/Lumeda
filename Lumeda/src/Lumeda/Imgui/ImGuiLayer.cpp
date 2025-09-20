@@ -10,8 +10,11 @@
 #if LUMEDA_PLATFORM_WINDOWS
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_glfw.h>
+#elif LUMEDA_PLATFORM_LINUX
+#include <imgui_impl_opengl3.h>
+#include <imgui_impl_glfw.h>
 #else
-#error Only windows is supported
+#error Current platform not supported! 
 #endif
 
 using namespace Lumeda;

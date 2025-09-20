@@ -12,9 +12,18 @@ std::unique_ptr<Window> Window::Create()
 	std::unique_ptr<WindowGLFW> window = std::make_unique<WindowGLFW>();
 	return window;
 }
-
+#elif LUMEDA_PLATFORM_LINUX
+// Create a Window for Windows
+#include <Lumeda/Implementation/GLFW/WindowGLFW.h>
+using namespace Lumeda;
+std::unique_ptr<Window> Window::Create()
+{
+	LUMEDA_PROFILE;
+	std::unique_ptr<WindowGLFW> window = std::make_unique<WindowGLFW>();
+	return window;
+}
 #else
-	#error "Only windows is supported"
+	#error "Current platform not supported!"
 #endif
 
 Window::Window() : m_NextCallbackToken(0)
