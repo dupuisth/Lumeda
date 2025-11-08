@@ -10,6 +10,9 @@
 
 class Sandbox : public Lumeda::Layer
 {
+private:
+	Lumeda::Node headNode;
+
 public:
 	Sandbox() 
 	{
@@ -69,25 +72,27 @@ public:
 			modelItem.m_Material = m_Material;
 			model->SetItem(i, modelItem);
 		}
-		
+
+		std::shared_ptr<Lumeda::SpinNode> cubeNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.1f, 0.0f));
+		std::shared_ptr<Lumeda::ModelNode> cubeModelNode = std::make_shared<Lumeda::ModelNode>();
+		cubeNode->AddChild(cubeModelNode);
+		cubeModelNode->SetModel(*model);
+		headNode.AddChild(cubeNode);
 	}
 
 	void Update() override
 	{
 		LUMEDA_PROFILE;
+
+		headNode.ProcessLifecycle();
+		headNode.Update();
 	}
 
 	void Render() override
 	{
 		LUMEDA_PROFILE;
 
-		Lumeda::Transform transform;
-		transform.SetRotation(glm::vec3(0.0f, 0.0f, 25.0f));
-		m_Model->Draw(transform.GetWorld());
-
-		transform.SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
-		transform.SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
-		Lumeda::Engine::Get().GetRenderer().GetModel("cube")->Draw(transform.GetWorld());
+		headNode.Render();
 	}
 
 	void RenderImGui() override
@@ -139,6 +144,8 @@ public:
 
 			ImGui::EndMainMenuBar();
 		}
+
+		headNode.RenderImGui();
 	}
 
 	void RenderResourceMenu()

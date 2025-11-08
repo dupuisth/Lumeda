@@ -14,6 +14,6 @@
 #include <Lumeda/Renderer/Material.h>
 #include <Lumeda/Renderer/Model.h>
 
-#include <Lumeda/Scene/Scene.h>
-#include <Lumeda/Scene/Entity.h>
-#include <Lumeda/Scene/Component.h>
+#include <Lumeda/Node/Node.h>
+#include <Lumeda/Node/ModelNode.h>
+#include <Lumeda/Node/SpinNode.h>

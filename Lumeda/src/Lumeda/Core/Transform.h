@@ -6,10 +6,12 @@
 
 namespace Lumeda
 {
+	class Node;
+
 	class Transform
 	{
 	public:
-		Transform();
+		Transform(Node* attachedTo = nullptr);
 		virtual ~Transform();
 
 		void BuildWorld();
@@ -38,7 +40,7 @@ namespace Lumeda
 		void SetPosition(const glm::vec3& position);
 		void SetRotation(const glm::vec3& rotation);
 		void SetScale(const glm::vec3& scale);
-		void SetDirty(bool dirty = true) { m_IsDirty = dirty; }
+		void SetDirty(bool dirty = true);
 
 	private:
 		glm::vec3 m_Position;
@@ -52,5 +54,7 @@ namespace Lumeda
 		glm::mat4 m_World;
 
 		bool m_IsDirty;
+
+		Node* m_AttachedTo;
 	};
 }
