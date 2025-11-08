@@ -54,18 +54,30 @@ void Engine::Run(std::unique_ptr<Layer> application)
 	while (!m_Window->ShouldClose())
 	{
 		LUMEDA_PROFILE_FRAME;
+		{
 
-		m_Application->Update();
+			LUMEDA_PROFILE_SECTION("Update");
+			m_Application->Update();
+		}
 
-		m_Renderer->Clear();
-		m_Renderer->PrepareShaders();
-		m_Application->Render();
+		{
+			LUMEDA_PROFILE_SECTION("Rendering");
+			m_Renderer->Clear();
+			m_Renderer->PrepareShaders();
+			m_Application->Render();
+		}
+		{
 
-		m_ImGuiLayer->Begin();
-		m_Application->RenderImGui();
-		m_ImGuiLayer->End();
+			LUMEDA_PROFILE_SECTION("ImGui Rendering");
+			m_ImGuiLayer->Begin();
+			m_Application->RenderImGui();
+			m_ImGuiLayer->End();
+		}
 
-		m_Window->Update();
+		{
+			LUMEDA_PROFILE_SECTION("Window Update");
+			m_Window->Update();
+		}
 	}
 	m_Application->Terminate();
 

@@ -111,6 +111,7 @@ void Transform::SetScale(const glm::vec3& scale)
 
 void Transform::SetDirty(bool dirty)
 {
+	LUMEDA_PROFILE;
 	m_IsDirty = dirty;
 	if (dirty && m_AttachedTo != nullptr)
 	{

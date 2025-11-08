@@ -113,48 +113,48 @@ void ShaderOpenGL::Prepare(float time, const glm::vec3& cameraPosition, const gl
 
 void ShaderOpenGL::SetUniform(const std::string& uniform, int value)
 {
-	LUMEDA_PROFILE;
+	LUMEDA_PROFILE_TAG("ShaderOpenGL::SetUniform(int)");
 	glUniform1i(glGetUniformLocation(m_Handle, uniform.c_str()), value);
 }
 
 void ShaderOpenGL::SetUniform(const std::string& uniform, float value)
 {
-	LUMEDA_PROFILE;
+	LUMEDA_PROFILE_TAG("ShaderOpenGL::SetUniform(float)");
 	glUniform1f(glGetUniformLocation(m_Handle, uniform.c_str()), value);
 }
 
 void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::vec2& value)
 {
-	LUMEDA_PROFILE;
+	LUMEDA_PROFILE_TAG("ShaderOpenGL::SetUniform(vec2)");
 	glUniform2fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, glm::value_ptr(value));
 }
 
 void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::vec3& value)
 {
-	LUMEDA_PROFILE;
+	LUMEDA_PROFILE_TAG("ShaderOpenGL::SetUniform(vec3)");
 	glUniform3fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, glm::value_ptr(value));
 }
 
 void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::vec4& value)
 {
-	LUMEDA_PROFILE;
+	LUMEDA_PROFILE_TAG("ShaderOpenGL::SetUniform(vec4)");
 	glUniform4fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, glm::value_ptr(value));
 }
 
 void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::mat2& value)
 {
-	LUMEDA_PROFILE;
+	LUMEDA_PROFILE_TAG("ShaderOpenGL::SetUniform(mat2)");
 	glUniformMatrix2fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, false, glm::value_ptr(value));
 }
 
 void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::mat3& value)
 {
-	LUMEDA_PROFILE;
+	LUMEDA_PROFILE_TAG("ShaderOpenGL::SetUniform(mat3)");
 	glUniformMatrix3fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, false, glm::value_ptr(value));
 }
 
 void ShaderOpenGL::SetUniform(const std::string& uniform, const glm::mat4& value)
 {
-	LUMEDA_PROFILE;
+	LUMEDA_PROFILE_TAG("ShaderOpenGL::SetUniform(mat4)");
 	glUniformMatrix4fv(glGetUniformLocation(m_Handle, uniform.c_str()), 1, false, glm::value_ptr(value));
 }

@@ -101,6 +101,18 @@ public:
 		LUMEDA_PROFILE;
 		if (ImGui::BeginMainMenuBar())
 		{
+			if (ImGui::BeginMenu("Infos"))
+			{
+#ifdef LUMEDA_PROFILING_ENABLED
+				ImGui::LabelText("Profiling", "Enabled");
+#else
+
+				ImGui::LabelText("Profiling", "Disabled");
+#endif // LUMEDA_PROFILING_ENABLED
+
+				ImGui::EndMenu();
+			}
+
 			if (ImGui::BeginMenu("Renderer"))
 			{
 				ImGui::SeparatorText("Resources");
@@ -277,6 +289,7 @@ public:
 
 	void RenderNode(Lumeda::Node* node)
 	{
+		LUMEDA_PROFILE;
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
 		if (selectedNode == node)
 		{
