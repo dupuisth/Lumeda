@@ -55,7 +55,7 @@ project "Lumeda"
     { 
         "%{prj.name}/libs/%{cfg.system}/%{cfg.buildcfg}" 
     }
-
+    
     links
     {
         "GLFW",
@@ -73,10 +73,28 @@ project "Lumeda"
             "LUMEDA_PLATFORM_WINDOWS",
             "LUMEDA_BUILD_DLL"
         }
+
+    filter "system:linux"
+        cppdialect "C++20"
+        staticruntime "Off"
+        systemversion "latest"
+        pic "On"
+        
+        defines 
+        {
+            "LUMEDA_PLATFORM_LINUX"
+        }
+
+        links
+        {
+            "dl",
+            "pthread"
+        }
     
     filter "configurations:Debug"
         defines "LUMEDA_DEBUG"
         symbols "On"
+        runtime "Debug"
         includedirs
         {
             "%{IncludeDir.tracy}"
@@ -89,11 +107,11 @@ project "Lumeda"
     
     filter "configurations:Release"
         defines "LUMEDA_RELEASE"
+        runtime "Release"
         optimize "On"
         links
         {
-            "tracy",
-            "assimp"
+            "libassimp"
         }
 
 project "Sandbox"
@@ -118,9 +136,14 @@ project "Sandbox"
         "%{IncludeDir.imgui}",
     }
 
+    libdirs 
+    { 
+        "Lumeda/libs/%{cfg.system}/%{cfg.buildcfg}" 
+    }
+
     links
     {
-        "Lumeda",
+        "Lumeda"
     }
     
     filter "system:windows"
@@ -137,8 +160,34 @@ project "Sandbox"
         {
             '{COPYFILE} "%{wks.location}Lumeda/libs/windows/%{cfg.buildcfg}/%{iif(cfg.buildcfg == "Debug", "assimpd", "assimp")}.dll" "%{cfg.buildtarget.directory}"'
         }
+
+    filter "system:linux"
+        cppdialect "C++20"
+        staticruntime "Off"
+        systemversion "latest"
+        pic "On"
+        
+        defines 
+        {
+            "LUMEDA_PLATFORM_LINUX"
+        }
+
+        -- Link order is important on Linux!
+        links
+        {
+            "assimp",
+            "ImGui",
+            "glad",
+            "GLFW",
+            "dl",
+            "pthread",
+            "X11",
+            "GL",
+            "z",
+        }
     
     filter "configurations:Debug"
+        runtime "Debug"
         includedirs
         {
             "%{IncludeDir.tracy}"
@@ -147,5 +196,6 @@ project "Sandbox"
         symbols "On"
     
     filter "configurations:Release"
+        runtime "Release"
         defines "LUMEDA_RELEASE"
         optimize "On"

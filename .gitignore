@@ -12,3 +12,9 @@
 
 # Logging
 *.log
+
+# Makefile (premake gmake)
+**.make
+Makefile
+
+imgui.ini

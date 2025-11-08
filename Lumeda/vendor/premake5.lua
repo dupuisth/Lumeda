@@ -25,6 +25,7 @@ project "GLFW"
     filter "system:windows"
         systemversion "latest"
         staticruntime "On"
+        
         files
         {
             "glfw/src/win32*.c",
@@ -32,14 +33,17 @@ project "GLFW"
             "glfw/src/egl_context.c",
             "glfw/src/osmesa_context.c"
         }
+        
         defines 
         { 
             "_GLFW_WIN32",
             "_CRT_SECURE_NO_WARNINGS"
         }
     
-    -- Not tested
     filter "system:linux"
+        pic "On"
+        staticruntime "On"
+        
         files
         {
             "glfw/src/x11_init.c",
@@ -48,28 +52,18 @@ project "GLFW"
             "glfw/src/xkb_unicode.c",
             "glfw/src/posix_time.c",
             "glfw/src/posix_thread.c",
+            "glfw/src/posix_module.c",
             "glfw/src/glx_context.c",
             "glfw/src/egl_context.c",
             "glfw/src/osmesa_context.c",
-            "glfw/src/linux_joystick.c"
+            "glfw/src/linux_joystick.c",
+            "glfw/src/posix_poll.c"
         }
-        defines { "_GLFW_X11" }
-    
-    -- Not tested
-    filter "system:macosx"
-        files
+        
+        defines
         {
-            "glfw/src/cocoa_init.m",
-            "glfw/src/cocoa_joystick.m",
-            "glfw/src/cocoa_monitor.m",
-            "glfw/src/cocoa_window.m",
-            "glfw/src/cocoa_time.c",
-            "glfw/src/posix_thread.c",
-            "glfw/src/nsgl_context.m",
-            "glfw/src/egl_context.c",
-            "glfw/src/osmesa_context.c"
+            "_GLFW_X11"
         }
-        defines { "_GLFW_COCOA" }
     
     filter "configurations:Debug"
         runtime "Debug"
@@ -89,7 +83,7 @@ project "glad"
     {
         "glad/src/glad.c"
     }
-
+    
     includedirs
     {
         "glad/include"
@@ -99,11 +93,16 @@ project "glad"
         systemversion "latest"
         staticruntime "On"
         cppdialect "C++20"
-
+    
+    filter "system:linux"
+        pic "On"
+        staticruntime "On"
+        cppdialect "C++20"
+    
     filter "configurations:Debug"
         runtime "Debug"
         symbols "on"
-
+    
     filter "configurations:Release"
         runtime "Release"
         optimize "on"
@@ -118,7 +117,7 @@ project "tracy"
     {
         "tracy/public/TracyClient.cpp"
     }
-
+    
     includedirs
     {
         "tracy/public"
@@ -127,61 +126,65 @@ project "tracy"
     filter "system:windows"        
         systemversion "latest"
         staticruntime "on"
-
+    
+    filter "system:linux"
+        pic "On"
+        staticruntime "On"
+    
     filter "configurations:Debug"
         runtime "Debug"
         symbols "on"
         defines "TRACY_ENABLE"
-
+    
     filter "configurations:Release"
         runtime "Release"
         optimize "on"
 
 project "ImGui"
-	kind "StaticLib"
-	language "C++"
-
+    kind "StaticLib"
+    language "C++"
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
-
+    
     includedirs
     {
         "imgui/",
         "glfw/include/"
     }
-
-	files
-	{
-		"imgui/imconfig.h",
-		"imgui/imgui.h",
-		"imgui/imgui.cpp",
-		"imgui/imgui_draw.cpp",
-		"imgui/imgui_internal.h",
-		"imgui/imgui_widgets.cpp",
-		"imgui/imstb_rectpack.h",
-		"imgui/imstb_textedit.h",
-		"imgui/imstb_truetype.h",
-		"imgui/imgui_demo.cpp",
-        "imgui/imgui_tables.cpp"
-	}
-
-	filter "system:windows"
-		systemversion "latest"
+    
+    files
+    {
+        "imgui/imconfig.h",
+        "imgui/imgui.h",
+        "imgui/imgui.cpp",
+        "imgui/imgui_draw.cpp",
+        "imgui/imgui_internal.h",
+        "imgui/imgui_widgets.cpp",
+        "imgui/imstb_rectpack.h",
+        "imgui/imstb_textedit.h",
+        "imgui/imstb_truetype.h",
+        "imgui/imgui_demo.cpp",
+        "imgui/imgui_tables.cpp",
+        "imgui/backends/imgui_impl_glfw.h",
+        "imgui/backends/imgui_impl_glfw.cpp",
+        "imgui/backends/imgui_impl_opengl3.h",
+        "imgui/backends/imgui_impl_opengl3.cpp"
+    }
+    
+    filter "system:windows"
+        systemversion "latest"
         cppdialect "C++20"
-		staticruntime "On"
-
-        files
-        {
-            "imgui/backends/imgui_impl_glfw.h",
-            "imgui/backends/imgui_impl_glfw.cpp",
-            "imgui/backends/imgui_impl_opengl3.h",
-            "imgui/backends/imgui_impl_opengl3.cpp",
-        }
-        
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "on"
+        staticruntime "On"
+    
+    filter "system:linux"
+        pic "On"
+        cppdialect "C++20"
+        staticruntime "On"
+    
+    filter "configurations:Debug"
+        runtime "Debug"
+        symbols "on"
+    
+    filter "configurations:Release"
+        runtime "Release"
+        optimize "on"
