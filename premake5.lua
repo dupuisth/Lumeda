@@ -115,7 +115,7 @@ project "Lumeda"
         optimize "On"
         links
         {
-            "libassimp"
+            "assimp"
         }
 
 project "Sandbox"
