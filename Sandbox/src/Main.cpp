@@ -4,7 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 
-#if LUMEDA_PLATFORM_WINDOWS
+#if LUMEDA_PLATFORM_WINDOWS | LUMEDA_PLATFORM_LINUX
 #include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #endif
 

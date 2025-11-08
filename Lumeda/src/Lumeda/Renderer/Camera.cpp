@@ -7,7 +7,7 @@
 
 using namespace Lumeda;
 
-Camera* s_Instance = nullptr;
+static Camera* s_Instance = nullptr;
 
 Camera::Camera() : m_ProjectionView(1.0f), m_IsDirty(true)
 {
