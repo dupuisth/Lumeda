@@ -1,4 +1,6 @@
 #include <Lumeda/Node/SpinNode.h>
+#include <imgui.h>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace Lumeda;
 
@@ -17,5 +19,12 @@ void SpinNode::OnUpdate()
 {
 	LUMEDA_PROFILE;
 	m_Transform.SetRotation(m_Transform.GetRotation() + RotationDelta);
-	LUMEDA_CORE_TRACE("[SpinNode] {0} {1} {2}", m_Transform.GetRotation().x, m_Transform.GetRotation().y, m_Transform.GetRotation().z);
+}
+
+void SpinNode::OnRenderImGui()
+{
+	LUMEDA_PROFILE;
+	Node::OnRenderImGui();
+	ImGui::SeparatorText("SpinNode");
+	ImGui::DragFloat3("RotationDelta", glm::value_ptr(RotationDelta), 0.1f, -10.0f, 10.0f);
 }

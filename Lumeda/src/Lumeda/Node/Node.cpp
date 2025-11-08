@@ -1,4 +1,6 @@
 #include <Lumeda/Node/Node.h>
+#include <imgui.h>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace Lumeda;
 
@@ -185,13 +187,13 @@ void Node::RenderImGui()
     OnRenderImGui();
 
     // Render ImGui for all children
-    for (auto& child : m_Children)
-    {
-        if (child)
-        {
-            child->RenderImGui();
-        }
-    }
+    //for (auto& child : m_Children)
+    //{
+    //    if (child)
+    //    {
+    //        child->RenderImGui();
+    //    }
+    //}
 }
 
 void Node::SetParent(std::shared_ptr<Node> newParent)
@@ -280,4 +282,29 @@ void Node::SetEnabled(bool enabled)
     // Queue enabled state change (will be applied in ProcessLifecycle)
     m_PendingEnabledState = enabled;
     m_HasPendingEnabledChange = true;
+}
+
+void Node::OnRenderImGui()
+{
+    char labelBuffer[512];
+    strcpy(labelBuffer, m_Name.c_str());
+    if (ImGui::InputText("Label", labelBuffer, 512))
+    {
+        m_Name = labelBuffer;
+    }
+
+    if (ImGui::DragFloat3("Position", glm::value_ptr(m_Transform.GetPositionRef()), 0.5f, -100.0f, 100.0f))
+    {
+        m_Transform.SetDirty();
+    }
+
+    if (ImGui::DragFloat3("Rotation", glm::value_ptr(m_Transform.GetRotationRef()), 0.1f, -360.0f, 360.0f))
+    {
+        m_Transform.SetDirty();
+    }
+
+    if (ImGui::DragFloat3("Scale", glm::value_ptr(m_Transform.GetScaleRef()), 0.1f, -360.0f, 360.0f))
+    {
+        m_Transform.SetDirty();
+    }
 }

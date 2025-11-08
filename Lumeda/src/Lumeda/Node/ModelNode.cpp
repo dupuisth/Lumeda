@@ -2,6 +2,7 @@
 #include <Lumeda/Core/Engine.h>
 #include <Lumeda/Renderer/Renderer.h>
 #include <Lumeda/Renderer/Model.h>
+#include <imgui.h>
 
 using namespace Lumeda;
 
@@ -31,14 +32,19 @@ void ModelNode::OnRender()
 			LUMEDA_CORE_WARN("[ModelNode] The specified m_ModelName was not found in the renderer: '{0}'", m_ModelName);
 		}
 	}
-	LUMEDA_CORE_TRACE("[ModelNode] {0} {1} {2}", m_Transform.GetRotation().x, m_Transform.GetRotation().y, m_Transform.GetRotation().z);
 
 }
 
 void ModelNode::SetModel(Model& model)
 {
 	LUMEDA_PROFILE;
-	m_ModelName = model.GetName();
+	SetModel(model.GetName());
+}
+
+void ModelNode::SetModel()
+{
+	LUMEDA_PROFILE;
+	SetModel("");
 }
 
 void ModelNode::SetModel(const std::string& modelName)
@@ -47,10 +53,24 @@ void ModelNode::SetModel(const std::string& modelName)
 	m_ModelName = modelName;
 }
 
-void ModelNode::SetModel()
+void ModelNode::OnRenderImGui()
 {
 	LUMEDA_PROFILE;
-	m_ModelName = "";
+	Node::OnRenderImGui();
+
+	ImGui::SeparatorText("ModelNode");
+	Renderer& renderer = Engine::Get().GetRenderer();
+	auto models = renderer.ListModels();
+	if (ImGui::BeginCombo("Model", m_ModelName.c_str()))
+	{
+		for (auto& model : models)
+		{
+			if (ImGui::Selectable(model.first.c_str(), model.first == m_ModelName))
+			{
+				m_ModelName = model.first;
+			}
+		}
+
+		ImGui::EndCombo();
+	}
 }
-
-

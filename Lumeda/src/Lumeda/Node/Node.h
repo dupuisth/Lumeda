@@ -32,24 +32,24 @@ public:
 
     // Enable/Disable
     void SetEnabled(bool enabled);
-    bool IsSelfEnabled() const { return m_IsSelfEnabled; }
-    bool IsEnabled() const { return m_isEnabled; }
+    bool IsSelfEnabled() const { LUMEDA_PROFILE; return m_IsSelfEnabled; }
+    bool IsEnabled() const { LUMEDA_PROFILE; return m_isEnabled; }
 
     // Accessors
-    Node* GetParent() const { return m_Parent; }
-    const std::vector<std::shared_ptr<Node>>& GetChildren() const { return m_Children; }
-    const std::string& GetName() const { return m_Name; }
-    void SetName(const std::string& name) { m_Name = name; }
-    Transform& GetTransform() { return m_Transform; }
+    Node* GetParent() const { LUMEDA_PROFILE; return m_Parent; }
+    const std::vector<std::shared_ptr<Node>>& GetChildren() const { LUMEDA_PROFILE; return m_Children; }
+    const std::string& GetName() const { LUMEDA_PROFILE; return m_Name; }
+    void SetName(const std::string& name) { LUMEDA_PROFILE; m_Name = name; }
+    Transform& GetTransform() { LUMEDA_PROFILE; return m_Transform; }
 
 protected:
     // Virtual methods for derived classes to override
-    virtual void OnUpdate() {}
-    virtual void OnRender() {}
-    virtual void OnRenderImGui() {}
-    virtual void OnEnable() {}
-    virtual void OnDisable() {}
-    virtual void OnParentChanged(Node* oldParent, Node* newParent) {}
+    virtual void OnUpdate() { LUMEDA_PROFILE; }
+    virtual void OnRender() { LUMEDA_PROFILE; }
+    virtual void OnRenderImGui();
+    virtual void OnEnable() { LUMEDA_PROFILE; }
+    virtual void OnDisable() { LUMEDA_PROFILE; }
+    virtual void OnParentChanged(Node* oldParent, Node* newParent) { LUMEDA_PROFILE; }
 
 protected:
     std::string m_Name;

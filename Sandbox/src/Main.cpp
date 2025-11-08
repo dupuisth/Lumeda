@@ -12,6 +12,7 @@ class Sandbox : public Lumeda::Layer
 {
 private:
 	Lumeda::Node headNode;
+	Lumeda::Node* selectedNode = nullptr;
 
 public:
 	Sandbox() 
@@ -145,7 +146,20 @@ public:
 			ImGui::EndMainMenuBar();
 		}
 
-		headNode.RenderImGui();
+		if (ImGui::Begin("Scene"))
+		{
+			RenderSceneTree();
+			ImGui::End();
+		}
+
+		if (selectedNode != nullptr)
+		{
+			if (ImGui::Begin("Selected Node"))
+			{
+				selectedNode->RenderImGui();
+			}
+			ImGui::End();
+		}
 	}
 
 	void RenderResourceMenu()
@@ -247,6 +261,45 @@ public:
 				}
 			}
 			ImGui::EndMenu();
+		}
+	}
+
+	void RenderSceneTree()
+	{
+		LUMEDA_PROFILE;
+
+		if (ImGui::TreeNodeEx("root", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			RenderNode(&headNode);
+			ImGui::TreePop();
+		}
+	}
+
+	void RenderNode(Lumeda::Node* node)
+	{
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
+		if (selectedNode == node)
+		{
+			flags |= ImGuiTreeNodeFlags_Selected;
+		}
+		if (node->GetChildren().size() == 0)
+		{
+			flags |= ImGuiTreeNodeFlags_Leaf;
+		}
+
+		if (ImGui::TreeNodeEx(node->GetName().c_str(), flags))
+		{
+
+			if (ImGui::IsItemClicked())
+			{
+				selectedNode = node;
+			}
+
+			for (auto it : node->GetChildren())
+			{
+				RenderNode(it.get());
+			}
+			ImGui::TreePop();
 		}
 	}
 

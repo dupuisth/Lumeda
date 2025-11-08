@@ -12,6 +12,7 @@ public:
 	virtual ~ModelNode();
 
 	void OnRender() override;
+	void OnRenderImGui() override;
 
 	void SetModel(Model& model);
 	void SetModel(const std::string& modelName);

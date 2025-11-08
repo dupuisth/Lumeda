@@ -12,6 +12,7 @@ public:
 	virtual ~SpinNode();
 
 	void OnUpdate() override;
+	void OnRenderImGui() override;
 
 public:
 	glm::vec3 RotationDelta;
