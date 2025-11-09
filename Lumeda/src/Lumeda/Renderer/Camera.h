@@ -11,12 +11,12 @@ namespace Lumeda
 	class Camera
 	{
 	public:
-		Camera();
+		Camera(Transform* transform = nullptr);
 		virtual ~Camera();
 
 		const glm::mat4& GetProjectionView();
 
-		Transform& GetTransform() { return m_Transform; }
+		Transform& GetTransform() { return *m_Transform; }
 
 		float GetAspectRatio() { return m_AspectRatio; }
 		float GetFOV() { return m_FOV; }
@@ -37,7 +37,8 @@ namespace Lumeda
 		void OnWindowResized(Window& window, int width, int height);
 
 	private:
-		Transform m_Transform;
+		Transform* m_Transform;
+		bool m_HasTransformOwnership;
 
 		float m_AspectRatio;
 		float m_FOV;

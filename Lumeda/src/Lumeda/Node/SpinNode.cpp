@@ -8,6 +8,7 @@ SpinNode::SpinNode(glm::vec3 rotationDelta)
 	: RotationDelta(rotationDelta)
 {
 	LUMEDA_PROFILE;
+	SetName("SpinNode");
 }
 
 SpinNode::~SpinNode()

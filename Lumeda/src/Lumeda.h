@@ -17,3 +17,5 @@
 #include <Lumeda/Node/Node.h>
 #include <Lumeda/Node/ModelNode.h>
 #include <Lumeda/Node/SpinNode.h>
+#include <Lumeda/Node/PlayerNode.h>
+#include <Lumeda/Node/CameraNode.h>

@@ -9,6 +9,7 @@ using namespace Lumeda;
 ModelNode::ModelNode() : m_ModelName("")
 {
 	LUMEDA_PROFILE;
+	SetName("ModelNode");
 }
 
 ModelNode::~ModelNode()

@@ -2,18 +2,22 @@
 
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Node/Node.h>
+#include <Lumeda/Renderer/Camera.h>
 
 namespace Lumeda
 {
-class PlayerNode : public Node
+class CameraNode : public Node
 {
 public:
-	PlayerNode();
-	virtual ~PlayerNode();
+	CameraNode();
+	virtual ~CameraNode();
 
 protected:
 	void OnUpdate() override;
-	void OnRender() override;
 	void OnRenderImGui() override;
+
+protected:
+	Camera m_Camera;
+	bool m_IsMain;
 };
 }
