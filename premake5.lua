@@ -138,6 +138,8 @@ project "Sandbox"
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.imgui}",
+        "%{IncludeDir.glfw}",
+        "%{IncludeDir.glad}",
     }
 
     libdirs 

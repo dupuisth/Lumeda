@@ -1,19 +1,8 @@
 #include <Lumeda/Core/Window.h>
 
 
-#if LUMEDA_PLATFORM_WINDOWS
-
-// Create a Window for Windows
-#include <Lumeda/Implementation/GLFW/WindowGLFW.h>
-using namespace Lumeda;
-std::unique_ptr<Window> Window::Create()
-{
-	LUMEDA_PROFILE;
-	std::unique_ptr<WindowGLFW> window = std::make_unique<WindowGLFW>();
-	return window;
-}
-#elif LUMEDA_PLATFORM_LINUX
-// Create a Window for Windows
+#ifdef LUMEDA_USE_GLFW
+// Create a GLFW Window
 #include <Lumeda/Implementation/GLFW/WindowGLFW.h>
 using namespace Lumeda;
 std::unique_ptr<Window> Window::Create()

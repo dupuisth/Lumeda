@@ -26,3 +26,8 @@
 #else
 #error "Undefined profiling macros!"
 #endif
+
+#if defined(LUMEDA_PLATFORM_LINUX) || defined(LUMEDA_PLATFORM_WINDOWS)
+#define LUMEDA_USE_GLFW
+#define LUMEDA_USE_GLAD
+#endif

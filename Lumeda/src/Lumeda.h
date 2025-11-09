@@ -19,3 +19,14 @@
 #include <Lumeda/Node/SpinNode.h>
 #include <Lumeda/Node/PlayerNode.h>
 #include <Lumeda/Node/CameraNode.h>
+
+#ifdef LUMEDA_USE_GLFW
+#include <Lumeda/Implementation/GLFW/WindowGLFW.h>
+#endif
+
+#ifdef LUMEDA_USE_GLAD
+#include <Lumeda/Implementation/OpenGL/MeshOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/RendererOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/ShaderOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
+#endif

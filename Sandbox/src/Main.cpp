@@ -4,10 +4,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 
-#if LUMEDA_PLATFORM_WINDOWS | LUMEDA_PLATFORM_LINUX
-#include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
-#endif
-
 class Sandbox : public Lumeda::Layer
 {
 private:
@@ -201,7 +197,7 @@ public:
 					ImGui::LabelText("Pointer", "%x", texture);
 					ImGui::LabelText("Size", "%d x %d", texture->GetWidth(), texture->GetHeight());
 					
-#if LUMEDA_PLATFORM_WINDOWS
+#ifdef LUMEDA_USE_GLAD
 					std::shared_ptr<Lumeda::Texture2DOpenGL> castedTexture = std::dynamic_pointer_cast<Lumeda::Texture2DOpenGL>(texture);
 					ImGui::Image((ImTextureID)(intptr_t)castedTexture->GetOpenGLHandle(), ImVec2(128, 128));
 #endif
