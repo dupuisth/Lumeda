@@ -7,7 +7,7 @@
 #define LUMEDA_PROFILE
 #define LUMEDA_PROFILE_FRAME
 #define LUMEDA_PROFILE_SECTION(x)
-#define LUMEDA_PROFILE_TAG(y, x)
+#define LUMEDA_PROFILE_TAG(x)
 #define LUMEDA_PROFILE_LOG(text, size)
 #define LUMEDA_PROFILE_VALUE(text, value)
 
