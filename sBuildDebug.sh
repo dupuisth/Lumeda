@@ -1,2 +1,2 @@
-./vendor/premake/premake5 gmake2
-make config=debug
+./vendor/premake/premake5 gmake
+make config=debug -j 6
