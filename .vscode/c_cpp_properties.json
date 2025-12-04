@@ -16,7 +16,8 @@
                 "${workspaceFolder}/Lumeda/vendor/stb_image",
                 "${workspaceFolder}/Lumeda/vendor/imgui",
                 "${workspaceFolder}/Lumeda/vendor/glm",
-                "${workspaceFolder}/Lumeda/vendor/imgui/backends"
+                "${workspaceFolder}/Lumeda/vendor/imgui/backends",
+                "${workspaceFolder}/LumedaTest/vendor/googletest/googletest/include",
             ],
             "intelliSenseMode": "linux-gcc-x64",
             "compilerPath": "/usr/bin/gcc",

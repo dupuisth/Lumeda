@@ -1,2 +1,2 @@
-./vendor/premake/premake5 gmake2
-make config=release
+./vendor/premake/premake5 gmake
+make config=release -j 6

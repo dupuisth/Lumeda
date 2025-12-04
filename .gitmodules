@@ -16,3 +16,6 @@
 [submodule "Lumeda/vendor/assimp"]
 	path = Lumeda/vendor/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "LumedaTest/vendor/googletest"]
+	path = LumedaTest/vendor/googletest
+	url = https://github.com/google/googletest.git
