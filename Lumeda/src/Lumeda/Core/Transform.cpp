@@ -165,27 +165,6 @@ const glm::vec3& Transform::GetForward()
 	return m_Forward;
 }
 
-void Transform::SetPosition(const glm::vec3& position)
-{
-	LUMEDA_PROFILE;
-	m_Position = position;
-	SetDirty();
-}
-
-void Transform::SetRotation(const glm::vec3& rotation)
-{
-	LUMEDA_PROFILE;
-	m_Rotation = rotation;
-	SetDirty();
-}
-
-void Transform::SetScale(const glm::vec3& scale)
-{
-	LUMEDA_PROFILE;
-	m_Scale = scale;
-	SetDirty();
-}
-
 void Transform::SetLocalPosition(const glm::vec3& position)
 {
 	LUMEDA_PROFILE;
