@@ -3,6 +3,7 @@
 #include <Lumeda/Core/Base.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace Lumeda
 {
@@ -17,17 +18,17 @@ namespace Lumeda
 		void Bake();
 
 		const glm::vec3& GetPosition();
-		const glm::vec3& GetRotation();
+		const glm::quat& GetRotation();
+		const glm::vec3& GetRotationEulerAngles();
 		const glm::vec3& GetScale();
 
 		const glm::vec3& GetLocalPosition();
-		const glm::vec3& GetLocalRotation();
+		const glm::vec3& GetLocalRotationEulerAngles();
+		const glm::quat& GetLocalRotation();
 		const glm::vec3& GetLocalScale();
 
 		/// @brief Using this is insecure, you must always set the transform dirty after modifications
 		glm::vec3& GetLocalPositionRef();
-		/// @brief Using this is insecure, you must always set the transform dirty after modifications
-		glm::vec3& GetLocalRotationRef();
 		/// @brief Using this is insecure, you must always set the transform dirty after modifications
 		glm::vec3& GetLocalScaleRef();
 
@@ -36,29 +37,31 @@ namespace Lumeda
 		const glm::vec3& GetUp();
 		const glm::vec3& GetForward();
 
-		// void SetPosition(const glm::vec3& position);
-		// void SetRotation(const glm::vec3& rotation);
-		// void SetScale(const glm::vec3& scale);
-
 		void SetLocalPosition(const glm::vec3& position);
-		void SetLocalRotation(const glm::vec3& rotation);
+		void SetLocalRotationEulerAngles(const glm::vec3& rotation);
 		void SetLocalScale(const glm::vec3& scale);
+
+		void Rotate(const glm::quat& quat);
+		void Rotate(const glm::vec3& euler);
 
 		void SetDirty(bool dirty = true);
 
 	private:
 		glm::vec3 m_LocalPosition;
-		glm::vec3 m_LocalRotation;
+		glm::vec3 m_LocalRotationEulerAngles;
+		glm::quat m_LocalRotation;
 		glm::vec3 m_LocalScale;
 
 		glm::vec3 m_Position;
-		glm::vec3 m_Rotation;
+		glm::vec3 m_RotationEulerAngles;
+		glm::quat m_Rotation;
 		glm::vec3 m_Scale;
 
 		glm::vec3 m_Right;
 		glm::vec3 m_Up;
 		glm::vec3 m_Forward;
 
+		glm::mat4 m_LocalWorld;
 		glm::mat4 m_World;
 
 		bool m_IsDirty;

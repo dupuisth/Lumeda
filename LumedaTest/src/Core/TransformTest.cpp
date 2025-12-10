@@ -20,11 +20,11 @@ namespace
         Lumeda::Transform transform;
 
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(0.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
 
         EXPECT_VEC3_EQ(transform.GetPosition(), glm::vec3(0.0f));
-        EXPECT_VEC3_EQ(transform.GetRotation(), glm::vec3(0.0f));
+        EXPECT_VEC3_EQ(transform.GetRotationEulerAngles(), glm::vec3(0.0f));
         EXPECT_VEC3_EQ(transform.GetScale(), glm::vec3(1.0f));
 
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -38,7 +38,7 @@ namespace
 
         // Default
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(0.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -46,7 +46,7 @@ namespace
 
         // Y by 90°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(0.0f, 90.0f, 0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(0.0f, 90.0f, 0.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(1.0f, 0.0f, 0.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(0.0f, 0.0f, -1.0f));
@@ -54,7 +54,7 @@ namespace
 
         // Y by 180°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(0.0f, 180.0f, 0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(0.0f, 180.0f, 0.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, -1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(-1.0f, 0.0f, 0.0f));
@@ -62,7 +62,7 @@ namespace
 
         // Y by 360°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(0.0f, 360.0f, 0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(0.0f, 360.0f, 0.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -71,7 +71,7 @@ namespace
 
         // X by 90°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(90.0f, 0.0f, 0.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 1.0f, 0.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -79,7 +79,7 @@ namespace
 
         // X by 180°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(180.0f, 0.0f, 0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(180.0f, 0.0f, 0.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, -1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -87,7 +87,7 @@ namespace
 
         // X by 360°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(360.0f, 0.0f, 0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(360.0f, 0.0f, 0.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -95,7 +95,7 @@ namespace
 
         // Z by 90°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(0.0f, 0.0f, 90.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(0.0f, 0.0f, 90.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(0.0f, -1.0f, 0.0f));
@@ -103,7 +103,7 @@ namespace
 
         // Z by 180°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(0.0f, 0.0f, 180.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(0.0f, 0.0f, 180.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(-1.0f, 0.0f, 0.0f));
@@ -111,7 +111,7 @@ namespace
 
         // Z by 360°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotation(glm::vec3(0.0f, 0.0f, 360.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(0.0f, 0.0f, 360.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -148,7 +148,7 @@ namespace
         parentNode->ProcessLifecycle();
 
         parentNode->GetTransform().SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-        parentNode->GetTransform().SetLocalRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+        parentNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(90.0f, 0.0f, 0.0f));
         childNode->GetTransform().SetLocalPosition(glm::vec3(10.0f, 15.0f, 5.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(10.0f, -5.0f, 15.0f));
     }
@@ -162,7 +162,7 @@ namespace
         parentNode->ProcessLifecycle();
 
         parentNode->GetTransform().SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-        parentNode->GetTransform().SetLocalRotation(glm::vec3(0.0f, 90.0f, 0.0f));
+        parentNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(0.0f, 90.0f, 0.0f));
         childNode->GetTransform().SetLocalPosition(glm::vec3(5.0f, 10.0f, 15.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(15.0f, 10.0f, -5.0f));
     }
@@ -176,7 +176,7 @@ namespace
         parentNode->ProcessLifecycle();
 
         parentNode->GetTransform().SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-        parentNode->GetTransform().SetLocalRotation(glm::vec3(0.0f, 0.0f, 90.0f));
+        parentNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(0.0f, 0.0f, 90.0f));
         childNode->GetTransform().SetLocalPosition(glm::vec3(5.0f, 10.0f, 15.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(-10.0f, 5.0f, 15.0f));
     }
@@ -189,10 +189,10 @@ namespace
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
 
-        parentNode->GetTransform().SetLocalRotation(glm::vec3(45.0f, 45.0f, 45.0f));
-        childNode->GetTransform().SetLocalRotation(glm::vec3(10.0f, 20.0f, 30.0f));
+        parentNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(45.0f, 45.0f, 45.0f));
+        childNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(10.0f, 20.0f, 30.0f));
 
-        ASSERT_VEC3_EQ(childNode->GetTransform().GetRotation(), glm::vec3(55.0f, 65.0f, 75.0f));
+        ASSERT_VEC3_EQ(childNode->GetTransform().GetRotationEulerAngles(), glm::vec3(55.0f, 65.0f, 75.0f));
     }
 
     TEST(TransformTest, GlobalScaleTest)

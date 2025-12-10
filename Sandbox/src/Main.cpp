@@ -34,7 +34,7 @@ public:
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
 
 		m_Camera.GetTransform().SetLocalPosition(glm::vec3(0.0f, 0.5f, -0.6f));
-		m_Camera.GetTransform().SetLocalRotation(glm::vec3(-32.0f, 0.0f, 0.0f));
+		m_Camera.GetTransform().SetLocalRotationEulerAngles(glm::vec3(-32.0f, 0.0f, 0.0f));
 		m_Shader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
 		m_Mesh = renderer.CreateMesh(
 			"quad",
@@ -145,8 +145,10 @@ public:
 					m_Camera.SetDirty();
 				}
 
-				if (ImGui::DragFloat3("Rotation", glm::value_ptr(m_Camera.GetTransform().GetLocalRotationRef()), 0.1f, -360.0f, 360.0f))
+				glm::vec3 localRotationEuler = m_Camera.GetTransform().GetLocalRotationEulerAngles();
+				if (ImGui::DragFloat3("Rotation", glm::value_ptr(localRotationEuler), 0.1f, -360.0f, 360.0f))
 				{
+					m_Camera.GetTransform().SetLocalRotationEulerAngles(localRotationEuler);
 					m_Camera.GetTransform().SetDirty();
 					m_Camera.SetDirty();
 				}

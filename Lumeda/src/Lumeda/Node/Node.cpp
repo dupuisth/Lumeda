@@ -298,9 +298,17 @@ void Node::OnRenderImGui()
         m_Transform.SetDirty();
     }
 
-    if (ImGui::DragFloat3("Rotation", glm::value_ptr(m_Transform.GetLocalRotationRef()), 0.1f, -360.0f, 360.0f))
+    glm::vec3 rotationEuler = m_Transform.GetLocalRotationEulerAngles();
+    if (ImGui::DragFloat3("Rotation Euleur", glm::value_ptr(rotationEuler), 0.1f, -360.0f, 360.0f))
     {
+        m_Transform.SetLocalRotationEulerAngles(rotationEuler);
         m_Transform.SetDirty();
+    }
+
+    glm::quat rotation = m_Transform.GetLocalRotation();
+    if (ImGui::DragFloat4("Rotation", glm::value_ptr(rotation)))
+    {
+
     }
 
     if (ImGui::DragFloat3("Scale", glm::value_ptr(m_Transform.GetLocalScaleRef()), 0.1f, -360.0f, 360.0f))
@@ -314,8 +322,13 @@ void Node::OnRenderImGui()
     {
     }
 
-    glm::vec3 globalRotation = m_Transform.GetRotation();
-    if (ImGui::DragFloat3("Global Rotation", glm::value_ptr(globalRotation), 0.1f, 0.0f, 0.0f, "%.3f", ImGuiSliderFlags_NoInput))
+    glm::vec3 globalRotationEuler = m_Transform.GetRotationEulerAngles();
+    if (ImGui::DragFloat3("Global Rotation Euler", glm::value_ptr(globalRotationEuler), 0.1f, 0.0f, 0.0f, "%.3f", ImGuiSliderFlags_NoInput))
+    {
+    }
+
+    glm::quat globalRotation = m_Transform.GetRotation();
+    if (ImGui::DragFloat4("Global Rotation", glm::value_ptr(rotation)))
     {
     }
 

@@ -4,7 +4,7 @@
 
 using namespace Lumeda;
 
-SpinNode::SpinNode(glm::vec3 rotationDelta) 
+SpinNode::SpinNode(glm::vec3 rotationDelta)
 	: RotationDelta(rotationDelta)
 {
 	LUMEDA_PROFILE;
@@ -19,7 +19,7 @@ SpinNode::~SpinNode()
 void SpinNode::OnUpdate()
 {
 	LUMEDA_PROFILE;
-	m_Transform.SetLocalRotation(m_Transform.GetLocalRotation() + RotationDelta);
+	m_Transform.Rotate(RotationDelta);
 }
 
 void SpinNode::OnRenderImGui()
@@ -27,5 +27,5 @@ void SpinNode::OnRenderImGui()
 	LUMEDA_PROFILE;
 	Node::OnRenderImGui();
 	ImGui::SeparatorText("SpinNode");
-	ImGui::DragFloat3("RotationDelta", glm::value_ptr(RotationDelta), 0.1f, -10.0f, 10.0f);
+	ImGui::DragFloat3("Rotation Delta", glm::value_ptr(RotationDelta), 0.1f, -10.0f, 10.0f);
 }
