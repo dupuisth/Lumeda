@@ -30,8 +30,8 @@ namespace Lumeda
 		void SetDirty(bool dirty = true) { m_IsDirty = dirty; }
 
 		static Camera* GetCurrent();
-		static void SetCurrent(Camera& camera);
-		static void SetCurrent();
+		static void SetCurrent(Camera* camera);
+		void SetCurrent();
 
 	protected:
 		void OnWindowResized(Window& window, int width, int height);

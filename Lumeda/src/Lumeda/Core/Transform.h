@@ -14,35 +14,43 @@ namespace Lumeda
 		Transform(Node* attachedTo = nullptr);
 		virtual ~Transform();
 
-		void BuildWorld();
+		void Bake();
 
-		const glm::vec3& GetPosition() { return m_Position; }
-		const glm::vec3& GetRotation() { return m_Rotation; }
-		const glm::vec3& GetScale() { return m_Scale; }
+		const glm::vec3& GetPosition();
+		const glm::vec3& GetRotation();
+		const glm::vec3& GetScale();
+
+		const glm::vec3& GetLocalPosition();
+		const glm::vec3& GetLocalRotation();
+		const glm::vec3& GetLocalScale();
+
+		/// @brief Using this is insecure, you must always set the transform dirty after modifications
+		glm::vec3& GetLocalPositionRef();
+		/// @brief Using this is insecure, you must always set the transform dirty after modifications
+		glm::vec3& GetLocalRotationRef();
+		/// @brief Using this is insecure, you must always set the transform dirty after modifications
+		glm::vec3& GetLocalScaleRef();
+
 		const glm::mat4& GetWorld();
 		const glm::vec3& GetRight();
 		const glm::vec3& GetUp();
 		const glm::vec3& GetForward();
 
-		/// <summary>
-		/// Get the reference of the Position, the Dirty flag will not be set so be careful when using it
-		/// </summary>
-		glm::vec3& GetPositionRef() { return m_Position; }
-		/// <summary>
-		/// Get the reference of the Rotation, the Dirty flag will not be set so be careful when using it
-		/// </summary>
-		glm::vec3& GetRotationRef() { return m_Rotation; }
-		/// <summary>
-		/// Get the reference of the Scale, the Dirty flag will not be set so be careful when using it
-		/// </summary>
-		glm::vec3& GetScaleRef() { return m_Scale; }
-
 		void SetPosition(const glm::vec3& position);
 		void SetRotation(const glm::vec3& rotation);
 		void SetScale(const glm::vec3& scale);
+
+		void SetLocalPosition(const glm::vec3& position);
+		void SetLocalRotation(const glm::vec3& rotation);
+		void SetLocalScale(const glm::vec3& scale);
+
 		void SetDirty(bool dirty = true);
 
 	private:
+		glm::vec3 m_LocalPosition;
+		glm::vec3 m_LocalRotation;
+		glm::vec3 m_LocalScale;
+
 		glm::vec3 m_Position;
 		glm::vec3 m_Rotation;
 		glm::vec3 m_Scale;

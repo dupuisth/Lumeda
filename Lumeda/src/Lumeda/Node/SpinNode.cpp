@@ -19,7 +19,7 @@ SpinNode::~SpinNode()
 void SpinNode::OnUpdate()
 {
 	LUMEDA_PROFILE;
-	m_Transform.SetRotation(m_Transform.GetRotation() + RotationDelta);
+	m_Transform.SetLocalRotation(m_Transform.GetLocalRotation() + RotationDelta);
 }
 
 void SpinNode::OnRenderImGui()

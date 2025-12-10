@@ -9,7 +9,7 @@ std::unordered_map<GLFWwindow*, WindowGLFW*> WindowGLFW::s_Windows;
 WindowGLFW::WindowGLFW()
 {
 	LUMEDA_PROFILE;
-	if (glfwInit() != GLFW_TRUE) 
+	if (glfwInit() != GLFW_TRUE)
 	{
 		LUMEDA_CORE_ERROR("Failed to initialized GLFW");
 		throw std::runtime_error("Failed to initialize GLFW");
@@ -80,6 +80,12 @@ float WindowGLFW::GetAspectRatio() const
 	return (float)size.x / (float)size.y;
 }
 
+void WindowGLFW::SetSize(const glm::ivec2& size) const
+{
+	LUMEDA_PROFILE;
+	glfwSetWindowSize(m_NativeWindow, size.x, size.y);
+}
+
 void WindowGLFW::SetVSync(bool enabled)
 {
 	LUMEDA_PROFILE;
@@ -108,6 +114,12 @@ bool WindowGLFW::ShouldClose() const
 }
 
 void* WindowGLFW::GetNativeWindow() const
+{
+	LUMEDA_PROFILE;
+	return m_NativeWindow;
+}
+
+GLFWwindow* WindowGLFW::GetNativeGLFWWindow() const
 {
 	LUMEDA_PROFILE;
 	return m_NativeWindow;

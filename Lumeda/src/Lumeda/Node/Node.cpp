@@ -5,15 +5,7 @@
 using namespace Lumeda;
 
 Node::Node()
-    : m_Name("Node")
-    , m_IsSelfEnabled(true)
-    , m_isEnabled(true)
-    , m_Parent(nullptr)
-    , m_PendingParent(nullptr)
-    , m_HasPendingParentChange(false)
-    , m_PendingEnabledState(true)
-    , m_HasPendingEnabledChange(false)
-    , m_Transform(this)
+    : m_Name("Node"), m_IsSelfEnabled(true), m_isEnabled(true), m_Parent(nullptr), m_PendingParent(nullptr), m_HasPendingParentChange(false), m_PendingEnabledState(true), m_HasPendingEnabledChange(false), m_Transform(this)
 {
     LUMEDA_PROFILE;
 }
@@ -187,7 +179,7 @@ void Node::RenderImGui()
     OnRenderImGui();
 
     // Render ImGui for all children
-    //for (auto& child : m_Children)
+    // for (auto& child : m_Children)
     //{
     //    if (child)
     //    {
@@ -225,7 +217,7 @@ void Node::SetParent(std::shared_ptr<Node> newParent)
     }
 }
 
-void Node::AddChild(std::shared_ptr<Node> node)
+void Node::AddChild(std::shared_ptr<Node> node, bool immediate)
 {
     LUMEDA_PROFILE;
 
@@ -247,7 +239,15 @@ void Node::AddChild(std::shared_ptr<Node> node)
         return; // Already a child
 
     // Queue for addition (will be applied in ProcessLifecycle)
-    m_PendingAdd.push_back(node);
+    if (immediate)
+    {
+        m_Children.push_back(node);
+    }
+    else
+    {
+        m_PendingAdd.push_back(node);
+
+    }
 }
 
 void Node::RemoveChild(std::shared_ptr<Node> node)
@@ -293,18 +293,34 @@ void Node::OnRenderImGui()
         m_Name = labelBuffer;
     }
 
-    if (ImGui::DragFloat3("Position", glm::value_ptr(m_Transform.GetPositionRef()), 0.5f, -100.0f, 100.0f))
+    if (ImGui::DragFloat3("Position", glm::value_ptr(m_Transform.GetLocalPositionRef()), 0.05f, -100.0f, 100.0f))
     {
         m_Transform.SetDirty();
     }
 
-    if (ImGui::DragFloat3("Rotation", glm::value_ptr(m_Transform.GetRotationRef()), 0.1f, -360.0f, 360.0f))
+    if (ImGui::DragFloat3("Rotation", glm::value_ptr(m_Transform.GetLocalRotationRef()), 0.1f, -360.0f, 360.0f))
     {
         m_Transform.SetDirty();
     }
 
-    if (ImGui::DragFloat3("Scale", glm::value_ptr(m_Transform.GetScaleRef()), 0.1f, -360.0f, 360.0f))
+    if (ImGui::DragFloat3("Scale", glm::value_ptr(m_Transform.GetLocalScaleRef()), 0.1f, -360.0f, 360.0f))
     {
         m_Transform.SetDirty();
+    }
+
+    ImGui::SeparatorText("Global");
+    glm::vec3 globalPosition = m_Transform.GetPosition();
+    if (ImGui::DragFloat3("Global Position", glm::value_ptr(globalPosition), 0.1f, 0.0f, 0.0f, "%.3f", ImGuiSliderFlags_NoInput))
+    {
+    }
+
+    glm::vec3 globalRotation = m_Transform.GetRotation();
+    if (ImGui::DragFloat3("Global Rotation", glm::value_ptr(globalRotation), 0.1f, 0.0f, 0.0f, "%.3f", ImGuiSliderFlags_NoInput))
+    {
+    }
+
+    glm::vec3 globalScale = m_Transform.GetScale();
+    if (ImGui::DragFloat3("Global Scale", glm::value_ptr(globalScale), 0.1f, 0.0f, 0.0f, "%.3f", ImGuiSliderFlags_NoInput))
+    {
     }
 }

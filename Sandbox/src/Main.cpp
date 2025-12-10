@@ -3,15 +3,17 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
+#include <memory>
 
 class Sandbox : public Lumeda::Layer
 {
 private:
 	Lumeda::Node headNode;
 	Lumeda::Node* selectedNode = nullptr;
+	Lumeda::Node* secondSeletedNode = nullptr;
 
 public:
-	Sandbox() 
+	Sandbox()
 	{
 		LUMEDA_PROFILE;
 	}
@@ -22,15 +24,17 @@ public:
 	}
 
 	void Initialize() override
-	{ 
+	{
 		LUMEDA_PROFILE;
 		LUMEDA_TRACE("Initialized Sandbox");
 
-		Lumeda::Camera::SetCurrent(m_Camera);
+		Lumeda::Engine::Get().GetWindow().SetSize(glm::ivec2(980, 500));
+		Lumeda::Camera::SetCurrent(&m_Camera);
 
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
 
-		m_Camera.GetTransform().SetPosition(glm::vec3(0.0f, 0.0f, -0.2f));
+		m_Camera.GetTransform().SetLocalPosition(glm::vec3(0.0f, 0.5f, -0.6f));
+		m_Camera.GetTransform().SetLocalRotation(glm::vec3(-32.0f, 0.0f, 0.0f));
 		m_Shader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
 		m_Mesh = renderer.CreateMesh(
 			"quad",
@@ -70,11 +74,27 @@ public:
 			model->SetItem(i, modelItem);
 		}
 
-		std::shared_ptr<Lumeda::SpinNode> cubeNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.1f, 0.0f));
+		std::shared_ptr<Lumeda::SpinNode> cubeNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.50f, 0.0f));
 		std::shared_ptr<Lumeda::ModelNode> cubeModelNode = std::make_shared<Lumeda::ModelNode>();
+		cubeModelNode->GetTransform().SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.0f));
+		cubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.15f));
 		cubeNode->AddChild(cubeModelNode);
 		cubeModelNode->SetModel(*model);
 		headNode.AddChild(cubeNode);
+
+		std::shared_ptr<Lumeda::ModelNode> centerCubeModelNode = std::make_shared<Lumeda::ModelNode>();
+		centerCubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.1f));
+		centerCubeModelNode->SetModel(*model);
+		headNode.AddChild(centerCubeModelNode);
+
+		// Playernode
+		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.0f, 0.0f));
+		std::shared_ptr<Lumeda::PlayerNode> playerNode = std::make_shared<Lumeda::PlayerNode>();
+		std::shared_ptr<Lumeda::CameraNode> cameraNode = std::dynamic_pointer_cast<Lumeda::CameraNode>(playerNode->GetChildren()[0]);
+		//cameraNode->GetCamera().SetCurrent();
+
+		pivotNode->AddChild(playerNode);
+		headNode.AddChild(pivotNode);
 	}
 
 	void Update() override
@@ -83,6 +103,7 @@ public:
 
 		headNode.ProcessLifecycle();
 		headNode.Update();
+
 	}
 
 	void Render() override
@@ -118,13 +139,13 @@ public:
 
 			if (ImGui::BeginMenu("Camera"))
 			{
-				if (ImGui::DragFloat3("Position", glm::value_ptr(m_Camera.GetTransform().GetPositionRef()), 0.5f, -100.0f, 100.0f))
+				if (ImGui::DragFloat3("Position", glm::value_ptr(m_Camera.GetTransform().GetLocalPositionRef()), 0.5f, -100.0f, 100.0f))
 				{
 					m_Camera.GetTransform().SetDirty();
 					m_Camera.SetDirty();
 				}
 
-				if (ImGui::DragFloat3("Rotation", glm::value_ptr(m_Camera.GetTransform().GetRotationRef()), 0.1f, -360.0f, 360.0f))
+				if (ImGui::DragFloat3("Rotation", glm::value_ptr(m_Camera.GetTransform().GetLocalRotationRef()), 0.1f, -360.0f, 360.0f))
 				{
 					m_Camera.GetTransform().SetDirty();
 					m_Camera.SetDirty();
@@ -168,6 +189,15 @@ public:
 			}
 			ImGui::End();
 		}
+
+		if (secondSeletedNode != nullptr)
+		{
+			if (ImGui::Begin("Second Selected Node"))
+			{
+				secondSeletedNode->RenderImGui();
+			}
+			ImGui::End();
+		}
 	}
 
 	void RenderResourceMenu()
@@ -196,7 +226,7 @@ public:
 				{
 					ImGui::LabelText("Pointer", "%x", texture);
 					ImGui::LabelText("Size", "%d x %d", texture->GetWidth(), texture->GetHeight());
-					
+
 #ifdef LUMEDA_USE_GLAD
 					std::shared_ptr<Lumeda::Texture2DOpenGL> castedTexture = std::dynamic_pointer_cast<Lumeda::Texture2DOpenGL>(texture);
 					ImGui::Image((ImTextureID)(intptr_t)castedTexture->GetOpenGLHandle(), ImVec2(128, 128));
@@ -219,7 +249,7 @@ public:
 				}
 			}
 			ImGui::EndMenu();
-		}		
+		}
 		if (ImGui::BeginMenu("Models"))
 		{
 			const auto& modelMap = renderer.ListModels();
@@ -283,7 +313,7 @@ public:
 		}
 	}
 
-	void RenderNode(Lumeda::Node* node)
+	void RenderNode(Lumeda::Node* node, int treeNodeId = 0)
 	{
 		LUMEDA_PROFILE;
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen;
@@ -296,7 +326,8 @@ public:
 			flags |= ImGuiTreeNodeFlags_Leaf;
 		}
 
-		if (ImGui::TreeNodeEx(node->GetName().c_str(), flags))
+		std::string name = node->GetName() + "##" + std::to_string(treeNodeId);
+		if (ImGui::TreeNodeEx(name.c_str(), flags))
 		{
 
 			if (ImGui::IsItemClicked())
@@ -304,9 +335,14 @@ public:
 				selectedNode = node;
 			}
 
+			if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+			{
+				secondSeletedNode = node;
+			}
+
 			for (auto it : node->GetChildren())
 			{
-				RenderNode(it.get());
+				RenderNode(it.get(), ++treeNodeId);
 			}
 			ImGui::TreePop();
 		}
@@ -326,7 +362,7 @@ public:
 	Lumeda::Camera m_Camera;
 };
 
-int main() 
+int main()
 {
 	{
 		Lumeda::Engine engine;

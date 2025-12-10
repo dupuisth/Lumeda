@@ -1,5 +1,6 @@
 #include <Lumeda/Node/CameraNode.h>
 #include <imgui.h>
+#include "CameraNode.h"
 
 using namespace Lumeda;
 
@@ -10,8 +11,15 @@ CameraNode::CameraNode() : m_Camera(&m_Transform)
 }
 
 CameraNode::~CameraNode()
-{ 
+{
     LUMEDA_PROFILE;
+}
+
+
+Camera& Lumeda::CameraNode::GetCamera()
+{
+    LUMEDA_PROFILE;
+    return m_Camera;
 }
 
 void CameraNode::OnUpdate()
@@ -27,6 +35,6 @@ void CameraNode::OnRenderImGui()
     ImGui::SeparatorText("CameraNode");
     if (ImGui::Checkbox("IsMain", &m_IsMain))
     {
-        Camera::SetCurrent(m_Camera);
+        Camera::SetCurrent(&m_Camera);
     }
 }

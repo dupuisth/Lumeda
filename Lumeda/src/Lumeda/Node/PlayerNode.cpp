@@ -3,19 +3,19 @@
 
 using namespace Lumeda;
 
-PlayerNode::PlayerNode() 
+PlayerNode::PlayerNode()
 {
     LUMEDA_PROFILE;
 
     // Directly add a CameraNode
     std::shared_ptr<CameraNode> cameraNode = std::make_shared<CameraNode>();
-    AddChild(cameraNode);
+    AddChild(cameraNode, true);
 
     SetName("PlayerNode");
 }
 
 PlayerNode::~PlayerNode()
-{ 
+{
     LUMEDA_PROFILE;
 }
 
