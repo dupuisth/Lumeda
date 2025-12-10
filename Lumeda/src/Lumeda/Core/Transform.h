@@ -38,6 +38,7 @@ namespace Lumeda
 		const glm::vec3& GetForward();
 
 		void SetLocalPosition(const glm::vec3& position);
+		void SetLocalRotation(const glm::quat& rotation);
 		void SetLocalRotationEulerAngles(const glm::vec3& rotation);
 		void SetLocalScale(const glm::vec3& scale);
 

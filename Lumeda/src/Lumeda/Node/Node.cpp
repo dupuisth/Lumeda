@@ -242,11 +242,11 @@ void Node::AddChild(std::shared_ptr<Node> node, bool immediate)
     if (immediate)
     {
         m_Children.push_back(node);
+        node->m_Parent = this;
     }
     else
     {
         m_PendingAdd.push_back(node);
-
     }
 }
 
@@ -336,4 +336,15 @@ void Node::OnRenderImGui()
     if (ImGui::DragFloat3("Global Scale", glm::value_ptr(globalScale), 0.1f, 0.0f, 0.0f, "%.3f", ImGuiSliderFlags_NoInput))
     {
     }
+
+    ImGui::SeparatorText("Directions");
+
+    glm::vec3 dummy = m_Transform.GetForward();
+    ImGui::DragFloat3("Forward", glm::value_ptr(dummy));
+
+    dummy = m_Transform.GetRight();
+    ImGui::DragFloat3("Right", glm::value_ptr(dummy));
+
+    dummy = m_Transform.GetUp();
+    ImGui::DragFloat3("Up", glm::value_ptr(dummy));
 }

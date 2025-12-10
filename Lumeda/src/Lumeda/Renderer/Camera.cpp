@@ -46,7 +46,7 @@ const glm::mat4& Camera::GetProjectionView()
 	if (m_IsDirty)
 	{
 		glm::vec3 position = m_Transform->GetPosition();
-		position.x = -position.x;
+		position.x = position.x;
 
 		glm::mat4 projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_ZNear, m_ZFar);
 		glm::mat4 view = glm::lookAt(position, m_Transform->GetPosition() + m_Transform->GetForward(), m_Transform->GetUp());

@@ -60,14 +60,9 @@ void Transform::Bake()
 	m_LocalWorld = T * R * S;
 	m_World = parentWorld * m_LocalWorld;
 
-	glm::mat4 inverse = glm::inverse(m_World);
-	m_Right = glm::normalize(glm::vec3(inverse[0]));
-	m_Up = glm::normalize(glm::vec3(inverse[1]));
-	m_Forward = glm::normalize(glm::vec3(inverse[2]));
-
-	// m_Right = glm::normalize(glm::vec3(m_World[0])); 
-	// m_Up = glm::normalize(glm::vec3(m_World[1]));
-	// m_Forward = glm::normalize(glm::vec3(m_World[2]));
+	m_Right = glm::normalize(glm::vec3(m_World[0]));
+	m_Up = glm::normalize(glm::vec3(m_World[1]));
+	m_Forward = glm::normalize(glm::vec3(m_World[2]));
 
 	// Bake global position, rotation and scale
 	if (m_AttachedTo != nullptr && m_AttachedTo->GetParent() != nullptr)
@@ -75,10 +70,16 @@ void Transform::Bake()
 		// Attached to a parent so the globals depends on it
 		m_Position = glm::vec3(m_World[3]);
 
-		m_Rotation = glm::quat_cast(m_World);
+		glm::mat3 rotMat = glm::mat3(m_World);
+		rotMat[0] = glm::normalize(rotMat[0]);
+		rotMat[1] = glm::normalize(rotMat[1]);
+		rotMat[2] = glm::normalize(rotMat[2]);
+		m_Rotation = glm::quat_cast(rotMat);
 		m_RotationEulerAngles = glm::degrees(glm::eulerAngles(m_Rotation));
 
-		m_Scale = m_AttachedTo->GetParent()->GetTransform().GetScale() * m_LocalScale;
+		m_Scale.x = glm::length(m_World[0]);
+		m_Scale.y = glm::length(m_World[1]);
+		m_Scale.z = glm::length(m_World[2]);
 	}
 	else
 	{
@@ -197,6 +198,13 @@ void Transform::SetLocalPosition(const glm::vec3& position)
 	SetDirty();
 }
 
+void Transform::SetLocalRotation(const glm::quat& rotation)
+{
+	LUMEDA_PROFILE;
+	m_LocalRotation = rotation;
+	SetDirty();
+}
+
 void Transform::SetLocalRotationEulerAngles(const glm::vec3& rotation)
 {
 	LUMEDA_PROFILE;
@@ -219,7 +227,7 @@ void Transform::SetDirty(bool dirty)
 	{
 		for (auto& child : m_AttachedTo->GetChildren())
 		{
-			child->GetTransform().SetDirty();
+			child->GetTransform().SetDirty(true);
 		}
 	}
 }
@@ -227,15 +235,14 @@ void Transform::SetDirty(bool dirty)
 void Transform::Rotate(const glm::quat& quat)
 {
 	LUMEDA_PROFILE;
-	SetDirty();
 	m_LocalRotation *= quat;
+	SetDirty();
 }
 
-void Transform::Rotate(const glm::vec3& euler)
+void Transform::Rotate(const glm::vec3& eulerDeg)
 {
 	LUMEDA_PROFILE;
-	SetDirty();
-
-	glm::quat quat = glm::quat(euler);
+	glm::quat quat = glm::quat(glm::radians(eulerDeg));
 	Rotate(quat);
+	SetDirty();
 }

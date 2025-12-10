@@ -3,7 +3,7 @@
 #include <Lumeda/Core/Transform.h>
 #include <Lumeda/Node/Node.h>
 
-#define ABS_ERROR 0.000001
+#define ABS_ERROR 0.0001
 #define EXPECT_VEC3_EQ(veca, vecb) \
     EXPECT_NEAR((veca).x, (vecb).x, ABS_ERROR); \
     EXPECT_NEAR((veca).y, (vecb).y, ABS_ERROR); \
@@ -12,6 +12,17 @@
     ASSERT_NEAR((veca).x, (vecb).x, ABS_ERROR); \
     ASSERT_NEAR((veca).y, (vecb).y, ABS_ERROR); \
     ASSERT_NEAR((veca).z, (vecb).z, ABS_ERROR)
+
+#define EXPECT_QUAT_EQ(qa, qb) \
+    EXPECT_NEAR((qa).w, (qb).w, ABS_ERROR); \
+    EXPECT_NEAR((qa).x, (qb).x, ABS_ERROR); \
+    EXPECT_NEAR((qa).y, (qb).y, ABS_ERROR); \
+    EXPECT_NEAR((qa).z, (qb).z, ABS_ERROR)
+#define ASSERT_QUAT_EQ(qa, qb) \
+    ASSERT_NEAR((qa).w, (qb).w, ABS_ERROR); \
+    ASSERT_NEAR((qa).x, (qb).x, ABS_ERROR); \
+    ASSERT_NEAR((qa).y, (qb).y, ABS_ERROR); \
+    ASSERT_NEAR((qa).z, (qb).z, ABS_ERROR)
 
 namespace
 {
@@ -32,17 +43,38 @@ namespace
         EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
-    TEST(TransformTest, OrphanSingleRotationDirectionTest)
+    TEST(TransformTest, OrphanRotationXDirectionTest)
     {
         Lumeda::Transform transform;
 
-        // Default
+        // X by 90°
         transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotationEulerAngles(glm::vec3(0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(90.0f, 0.0f, 0.0f));
+        transform.SetLocalScale(glm::vec3(1.0f));
+        EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, -1.0f, 0.0f));
+        EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
+        EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        // X by 180°
+        transform.SetLocalPosition(glm::vec3(0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(180.0f, 0.0f, 0.0f));
+        transform.SetLocalScale(glm::vec3(1.0f));
+        EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, -1.0f));
+        EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
+        EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(0.0f, -1.0f, 0.0f));
+
+        // X by 360°
+        transform.SetLocalPosition(glm::vec3(0.0f));
+        transform.SetLocalRotationEulerAngles(glm::vec3(360.0f, 0.0f, 0.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
         EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(0.0f, 1.0f, 0.0f));
+    }
+
+    TEST(TransformTest, OrphanRotationYDirectionTest)
+    {
+        Lumeda::Transform transform;
 
         // Y by 90°
         transform.SetLocalPosition(glm::vec3(0.0f));
@@ -67,39 +99,19 @@ namespace
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
         EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
         EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(0.0f, 1.0f, 0.0f));
+    }
 
-
-        // X by 90°
-        transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotationEulerAngles(glm::vec3(90.0f, 0.0f, 0.0f));
-        transform.SetLocalScale(glm::vec3(1.0f));
-        EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 1.0f, 0.0f));
-        EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
-        EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(0.0f, 0.0f, -1.0f));
-
-        // X by 180°
-        transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotationEulerAngles(glm::vec3(180.0f, 0.0f, 0.0f));
-        transform.SetLocalScale(glm::vec3(1.0f));
-        EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, -1.0f));
-        EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
-        EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(0.0f, -1.0f, 0.0f));
-
-        // X by 360°
-        transform.SetLocalPosition(glm::vec3(0.0f));
-        transform.SetLocalRotationEulerAngles(glm::vec3(360.0f, 0.0f, 0.0f));
-        transform.SetLocalScale(glm::vec3(1.0f));
-        EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
-        EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(1.0f, 0.0f, 0.0f));
-        EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(0.0f, 1.0f, 0.0f));
+    TEST(TransformTest, OrphanRotationZDirectionTest)
+    {
+        Lumeda::Transform transform;
 
         // Z by 90°
         transform.SetLocalPosition(glm::vec3(0.0f));
         transform.SetLocalRotationEulerAngles(glm::vec3(0.0f, 0.0f, 90.0f));
         transform.SetLocalScale(glm::vec3(1.0f));
         EXPECT_VEC3_EQ(transform.GetForward(), glm::vec3(0.0f, 0.0f, 1.0f));
-        EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(0.0f, -1.0f, 0.0f));
-        EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(1.0f, 0.0f, 0.0f));
+        EXPECT_VEC3_EQ(transform.GetRight(), glm::vec3(0.0f, 1.0f, 0.0f));
+        EXPECT_VEC3_EQ(transform.GetUp(), glm::vec3(-1.0f, 0.0f, 0.0f));
 
         // Z by 180°
         transform.SetLocalPosition(glm::vec3(0.0f));
@@ -189,10 +201,14 @@ namespace
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
 
-        parentNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(45.0f, 45.0f, 45.0f));
-        childNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(10.0f, 20.0f, 30.0f));
+        glm::quat a = glm::quat(glm::radians(glm::vec3(45.0f, 45.0f, 45.0f)));
+        glm::quat b = glm::quat(glm::radians(glm::vec3(10.0f, 20.0f, 30.0f)));
+        glm::quat res = a * b;
 
-        ASSERT_VEC3_EQ(childNode->GetTransform().GetRotationEulerAngles(), glm::vec3(55.0f, 65.0f, 75.0f));
+        parentNode->GetTransform().SetLocalRotation(a);
+        childNode->GetTransform().SetLocalRotation(b);
+
+        ASSERT_QUAT_EQ(childNode->GetTransform().GetRotation(), res);
     }
 
     TEST(TransformTest, GlobalScaleTest)
