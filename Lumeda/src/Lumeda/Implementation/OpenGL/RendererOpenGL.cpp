@@ -16,7 +16,7 @@ using namespace Lumeda;
 RendererOpenGL::RendererOpenGL()
 {
 	LUMEDA_PROFILE;
-	if (!gladLoadGL()) 
+	if (!gladLoadGL())
 	{
 		LUMEDA_CORE_CRITICAL("Failed to initialize glad");
 		throw std::runtime_error("Failed to initialize glad");
@@ -132,6 +132,11 @@ const std::unordered_map<std::string, std::shared_ptr<Model>>& Lumeda::RendererO
 	return m_Models;
 }
 
+const std::unordered_map<std::string, std::shared_ptr<Framebuffer>>& ListFramebuffers()
+{
+	LUMEDA_PROFILE;
+}
+
 #define SAFE_RETURN_RESOURCE(map, resourceName) \
 const auto& iterator = map.find(resourceName); \
 if (iterator == map.end()) \
@@ -169,6 +174,12 @@ std::shared_ptr<Model> RendererOpenGL::GetModel(const std::string& name)
 {
 	LUMEDA_PROFILE;
 	SAFE_RETURN_RESOURCE(m_Models, name);
+}
+
+std::shared_ptr<Framebuffer> RendererOpenGL::GetFramebuffer(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	SAFE_RETURN_RESOURCE(m_Framebuffers, name);
 }
 
 std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
@@ -217,6 +228,14 @@ std::shared_ptr<Model> RendererOpenGL::CreateModel(const std::string& name, cons
 	std::shared_ptr<Model> model = CreateModel(name);
 	ModelLoader::LoadModelFromFile(model, fromFile);
 	return model;
+}
+
+std::shared_ptr<Framebuffer> RendererOpenGL::CreateFramebuffer(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	std::shared_ptr<Framebuffer> framebuffer = std::make_shared<Framebuffer>(name);
+	m_Framebuffers.insert({ name, framebuffer });
+	return framebuffer;
 }
 
 void RendererOpenGL::OnWindowResize(Window& window, int width, int height)

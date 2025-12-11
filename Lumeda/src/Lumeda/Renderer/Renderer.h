@@ -15,6 +15,7 @@ namespace Lumeda
 	struct MeshAttrib;
 	class Material;
 	class Model;
+	class Framebuffer;
 
 	class Renderer
 	{
@@ -24,7 +25,7 @@ namespace Lumeda
 		virtual void SetClearColor(float r, float g, float b, float a) = 0;
 		virtual void Clear() = 0;
 
-		virtual void SetViewport(int x, int y, int width, int height)  = 0;
+		virtual void SetViewport(int x, int y, int width, int height) = 0;
 
 		virtual void PrepareShaders() = 0;
 
@@ -34,6 +35,7 @@ namespace Lumeda
 		virtual const std::unordered_map<std::string, std::shared_ptr<Mesh>>& ListMeshes() = 0;
 		virtual const std::unordered_map<std::string, std::shared_ptr<Material>>& ListMaterials() = 0;
 		virtual const std::unordered_map<std::string, std::shared_ptr<Model>>& ListModels() = 0;
+		virtual const std::unordered_map<std::string, std::shared_ptr<Framebuffer>>& ListFramebuffers() = 0;
 
 		// Gets
 		virtual std::shared_ptr<Shader> GetShader(const std::string& name) = 0;
@@ -41,14 +43,16 @@ namespace Lumeda
 		virtual std::shared_ptr<Mesh> GetMesh(const std::string& name) = 0;
 		virtual std::shared_ptr<Material> GetMaterial(const std::string& name) = 0;
 		virtual std::shared_ptr<Model> GetModel(const std::string& name) = 0;
+		virtual std::shared_ptr<Framebuffer> GetFramebuffer(const std::string& name) = 0;
 
-		// Create
+		// Creates
 		virtual std::shared_ptr<Shader> CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) = 0;
 		virtual std::shared_ptr<Texture2D> CreateTexture2D(const std::string& name, const std::string& path) = 0;
 		virtual std::shared_ptr<Mesh> CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs) = 0;
 		virtual std::shared_ptr<Material> CreateMaterial(const std::string& name) = 0;
 		virtual std::shared_ptr<Model> CreateModel(const std::string& name) = 0;
 		virtual std::shared_ptr<Model> CreateModel(const std::string& name, const std::string& fromFile) = 0;
+		virtual std::shared_ptr<Framebuffer> CreateFramebuffer(const std::string& name) = 0;
 
 		static std::unique_ptr<Renderer> Create();
 	};
