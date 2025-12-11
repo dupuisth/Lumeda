@@ -13,12 +13,15 @@
 #include <Lumeda/Renderer/Camera.h>
 #include <Lumeda/Renderer/Material.h>
 #include <Lumeda/Renderer/Model.h>
+#include <Lumeda/Renderer/Light.h>
 
 #include <Lumeda/Node/Node.h>
+#include <Lumeda/Node/RootNode.h>
 #include <Lumeda/Node/ModelNode.h>
 #include <Lumeda/Node/SpinNode.h>
 #include <Lumeda/Node/PlayerNode.h>
 #include <Lumeda/Node/CameraNode.h>
+#include <Lumeda/Node/LightNode.h>
 
 #ifdef LUMEDA_USE_GLFW
 #include <Lumeda/Implementation/GLFW/WindowGLFW.h>

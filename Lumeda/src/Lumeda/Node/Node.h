@@ -10,6 +10,7 @@
 
 namespace Lumeda
 {
+    class RootNode;
 
     class Node : public std::enable_shared_from_this<Node>
     {
@@ -36,20 +37,21 @@ namespace Lumeda
         bool IsEnabled() const { LUMEDA_PROFILE; return m_isEnabled; }
 
         // Accessors
-        Node* GetParent() const { LUMEDA_PROFILE; return m_Parent; }
+        std::shared_ptr<Node> GetParent() const { LUMEDA_PROFILE; return m_Parent; }
         const std::vector<std::shared_ptr<Node>>& GetChildren() const { LUMEDA_PROFILE; return m_Children; }
         const std::string& GetName() const { LUMEDA_PROFILE; return m_Name; }
         void SetName(const std::string& name) { LUMEDA_PROFILE; m_Name = name; }
         Transform& GetTransform() { LUMEDA_PROFILE; return m_Transform; }
+        std::shared_ptr<RootNode> GetRootNode();
 
     protected:
         // Virtual methods for derived classes to override
-        virtual void OnUpdate() { LUMEDA_PROFILE; }
-        virtual void OnRender() { LUMEDA_PROFILE; }
+        virtual void OnUpdate();
+        virtual void OnRender();
         virtual void OnRenderImGui();
-        virtual void OnEnable() { LUMEDA_PROFILE; }
-        virtual void OnDisable() { LUMEDA_PROFILE; }
-        virtual void OnParentChanged(Node* oldParent, Node* newParent) { LUMEDA_PROFILE; }
+        virtual void OnEnable();
+        virtual void OnDisable();
+        virtual void OnParentChanged(Node* oldParent, Node* newParent);
 
     protected:
         std::string m_Name;
@@ -57,7 +59,7 @@ namespace Lumeda
         bool m_isEnabled;
         Transform m_Transform;
 
-        Node* m_Parent;
+        std::shared_ptr<Node> m_Parent;
         std::vector<std::shared_ptr<Node>> m_Children;
     private:
         void ApplyPendingHierarchyChanges();
@@ -66,10 +68,12 @@ namespace Lumeda
         // Pending operations (deferred until ProcessLifecycle)
         std::vector<std::shared_ptr<Node>> m_PendingAdd;
         std::vector<std::shared_ptr<Node>> m_PendingRemove;
-        Node* m_PendingParent;
+        std::shared_ptr<Node> m_PendingParent;
         bool m_HasPendingParentChange;
         bool m_PendingEnabledState;
         bool m_HasPendingEnabledChange;
+
+        bool m_HasStarted;
     };
 
 }

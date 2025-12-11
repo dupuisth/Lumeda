@@ -1,11 +1,14 @@
 #include <Lumeda/Node/Node.h>
+
+#include <Lumeda/Node/RootNode.h>
+
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace Lumeda;
 
 Node::Node()
-    : m_Name("Node"), m_IsSelfEnabled(true), m_isEnabled(true), m_Parent(nullptr), m_PendingParent(nullptr), m_HasPendingParentChange(false), m_PendingEnabledState(true), m_HasPendingEnabledChange(false), m_Transform(this)
+    : m_Name("Node"), m_IsSelfEnabled(true), m_isEnabled(true), m_Parent(nullptr), m_PendingParent(nullptr), m_HasPendingParentChange(false), m_PendingEnabledState(true), m_HasPendingEnabledChange(false), m_Transform(this), m_HasStarted(false)
 {
     LUMEDA_PROFILE;
 }
@@ -75,7 +78,7 @@ void Node::ApplyPendingHierarchyChanges()
             m_Children.push_back(nodeToAdd);
 
             // Set parent reference
-            nodeToAdd->m_Parent = this;
+            nodeToAdd->m_Parent = shared_from_this();
 
             // The child will recalculate its enabled state in its own ApplyPendingEnableChanges
         }
@@ -85,12 +88,12 @@ void Node::ApplyPendingHierarchyChanges()
     // Apply parent change for this node
     if (m_HasPendingParentChange)
     {
-        Node* oldParent = m_Parent;
+        std::shared_ptr<Node> oldParent = m_Parent;
         m_Parent = m_PendingParent;
         m_HasPendingParentChange = false;
 
         // Notify of parent change
-        OnParentChanged(oldParent, m_Parent);
+        OnParentChanged(oldParent.get(), m_Parent.get());
 
         // Enabled state will be recalculated in ApplyPendingEnableChanges
     }
@@ -133,6 +136,12 @@ void Node::Update()
     // Only process if enabled
     if (!m_isEnabled)
         return;
+
+    if (!m_HasStarted)
+    {
+        OnEnable();
+        m_HasStarted = true;
+    }
 
     // Call virtual method for derived classes
     OnUpdate();
@@ -177,23 +186,40 @@ void Node::RenderImGui()
 
     // Call virtual method for derived classes
     OnRenderImGui();
-
-    // Render ImGui for all children
-    // for (auto& child : m_Children)
-    //{
-    //    if (child)
-    //    {
-    //        child->RenderImGui();
-    //    }
-    //}
 }
+
+void Node::OnRender()
+{
+    LUMEDA_PROFILE;
+}
+
+void Node::OnUpdate()
+{
+    LUMEDA_PROFILE;
+}
+
+void Node::OnEnable()
+{
+    LUMEDA_PROFILE;
+}
+
+void Node::OnDisable()
+{
+    LUMEDA_PROFILE;
+}
+
+void Node::OnParentChanged(Node* oldParent, Node* newParent)
+{
+    LUMEDA_PROFILE;
+}
+
 
 void Node::SetParent(std::shared_ptr<Node> newParent)
 {
     LUMEDA_PROFILE;
 
     // Check if already has this parent
-    if (m_Parent == newParent.get())
+    if (m_Parent == newParent)
         return;
 
     // Prevent setting self as parent
@@ -207,7 +233,7 @@ void Node::SetParent(std::shared_ptr<Node> newParent)
     }
 
     // Queue parent change (will be applied in ProcessLifecycle)
-    m_PendingParent = newParent.get();
+    m_PendingParent = newParent;
     m_HasPendingParentChange = true;
 
     // Queue addition to new parent
@@ -242,7 +268,7 @@ void Node::AddChild(std::shared_ptr<Node> node, bool immediate)
     if (immediate)
     {
         m_Children.push_back(node);
-        node->m_Parent = this;
+        node->m_Parent = shared_from_this();
     }
     else
     {
@@ -271,12 +297,28 @@ void Node::RemoveChild(std::shared_ptr<Node> node)
     m_PendingRemove.push_back(node);
 }
 
+std::shared_ptr<RootNode> Node::GetRootNode()
+{
+    std::shared_ptr<Node> currentNode = shared_from_this();
+    while (currentNode->m_Parent != nullptr)
+    {
+        currentNode = currentNode->m_Parent;
+    }
+
+    std::shared_ptr<RootNode> rootNode = std::dynamic_pointer_cast<RootNode>(currentNode);
+    return rootNode;
+}
+
 void Node::SetEnabled(bool enabled)
 {
     LUMEDA_PROFILE;
 
-    // Check if already in this state
-    if (m_IsSelfEnabled == enabled)
+    // Check if already in this state or switching to this state
+    if (m_HasPendingEnabledChange)
+    {
+        if (m_PendingEnabledState == enabled) return;
+    }
+    else if (m_IsSelfEnabled == enabled)
         return;
 
     // Queue enabled state change (will be applied in ProcessLifecycle)

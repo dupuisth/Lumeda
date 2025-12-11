@@ -9,8 +9,7 @@ PlayerNode::PlayerNode()
 
     // Directly add a CameraNode
     std::shared_ptr<CameraNode> cameraNode = std::make_shared<CameraNode>();
-    AddChild(cameraNode, true);
-
+    AddChild(cameraNode);
     SetName("PlayerNode");
 }
 

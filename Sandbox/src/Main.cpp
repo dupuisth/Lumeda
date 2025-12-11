@@ -8,7 +8,7 @@
 class Sandbox : public Lumeda::Layer
 {
 private:
-	Lumeda::Node headNode;
+	std::shared_ptr<Lumeda::RootNode> rootNode;
 	Lumeda::Node* selectedNode = nullptr;
 	Lumeda::Node* secondSeletedNode = nullptr;
 
@@ -74,35 +74,40 @@ public:
 			model->SetItem(i, modelItem);
 		}
 
+		rootNode = std::make_shared<Lumeda::RootNode>();
 		std::shared_ptr<Lumeda::SpinNode> cubeNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.50f, 0.0f));
 		std::shared_ptr<Lumeda::ModelNode> cubeModelNode = std::make_shared<Lumeda::ModelNode>();
+		std::shared_ptr<Lumeda::LightNode> lightNode = std::make_shared<Lumeda::LightNode>();
 		cubeModelNode->GetTransform().SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.0f));
 		cubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.15f));
 		cubeNode->AddChild(cubeModelNode);
 		cubeModelNode->SetModel(*model);
-		headNode.AddChild(cubeNode);
+		cubeNode->AddChild(lightNode);
+		rootNode->AddChild(cubeNode);
 
 		std::shared_ptr<Lumeda::ModelNode> centerCubeModelNode = std::make_shared<Lumeda::ModelNode>();
 		centerCubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.1f));
 		centerCubeModelNode->SetModel(*model);
-		headNode.AddChild(centerCubeModelNode);
+		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
 		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.0f, 0.0f));
 		std::shared_ptr<Lumeda::PlayerNode> playerNode = std::make_shared<Lumeda::PlayerNode>();
+		// PlayerNode automatically add a CameraNode, but in order to access it, the child need to be really added, not pending.
+		playerNode->ProcessLifecycle();
 		std::shared_ptr<Lumeda::CameraNode> cameraNode = std::dynamic_pointer_cast<Lumeda::CameraNode>(playerNode->GetChildren()[0]);
 		//cameraNode->GetCamera().SetCurrent();
 
 		pivotNode->AddChild(playerNode);
-		headNode.AddChild(pivotNode);
+		rootNode->AddChild(pivotNode);
 	}
 
 	void Update() override
 	{
 		LUMEDA_PROFILE;
 
-		headNode.ProcessLifecycle();
-		headNode.Update();
+		rootNode->ProcessLifecycle();
+		rootNode->Update();
 
 	}
 
@@ -110,7 +115,7 @@ public:
 	{
 		LUMEDA_PROFILE;
 
-		headNode.Render();
+		rootNode->Render();
 	}
 
 	void RenderImGui() override
@@ -308,11 +313,7 @@ public:
 	{
 		LUMEDA_PROFILE;
 
-		if (ImGui::TreeNodeEx("root", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			RenderNode(&headNode);
-			ImGui::TreePop();
-		}
+		RenderNode(rootNode.get());
 	}
 
 	void RenderNode(Lumeda::Node* node, int treeNodeId = 0)

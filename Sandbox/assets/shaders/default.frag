@@ -13,7 +13,7 @@ void main() {
     vec4 diffuse = texture(u_Color, f_Uv);
 
     float d = length(f_WorldPosition);
-    float intensity = (1 /( pow(d, 2) + 2 * d + 0.2)) * 1.0;
+    float intensity = (1 / ( pow(d, 2) + 2 * d + 1)) * 1.0;
 
     FragColor = diffuse * intensity;
 }
