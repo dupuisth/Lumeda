@@ -33,7 +33,7 @@ public:
 
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
 
-		m_Camera.GetTransform().SetLocalPosition(glm::vec3(0.0f, 0.5f, -0.6f));
+		m_Camera.GetTransform().SetLocalPosition(glm::vec3(0.0f, 0.5f, -9.6f));
 		m_Camera.GetTransform().SetLocalRotationEulerAngles(glm::vec3(32.0f, 0.0f, 0.0f));
 		m_Shader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
 		m_Mesh = renderer.CreateMesh(

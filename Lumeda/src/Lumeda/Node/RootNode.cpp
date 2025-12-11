@@ -2,6 +2,10 @@
 #include <imgui.h>
 
 #include <Lumeda/Node/LightNode.h>
+#include <Lumeda/Core/Engine.h>
+#include <Lumeda/Renderer/Renderer.h>
+#include <Lumeda/Renderer/Shader.h>
+#include <Lumeda/Renderer/Light.h>
 
 using namespace Lumeda;
 
@@ -55,4 +59,21 @@ void RootNode::RemoveLightNode(std::shared_ptr<LightNode> lightNode)
 void RootNode::OnRender()
 {
     // Prepare shaders
+    Renderer& renderer = Engine::Get().GetRenderer();
+
+
+    const std::unordered_map<std::string, std::shared_ptr<Shader>>& shadersMap = renderer.ListShaders();
+    for (auto const& [name, shader] : shadersMap)
+    {
+        shader->Bind();
+        sLightPassCounter passCounter;
+        for (auto const& lightNode : m_LightNodes)
+        {
+            lightNode->GetLight().SendToShader(shader, &lightNode->GetTransform(), passCounter);
+        }
+
+        shader->SetUniform("u_PointLightsCount", passCounter.Current(eLightType::POINT));
+        shader->SetUniform("u_SpotLightsCount", passCounter.Current(eLightType::SPOT));
+        shader->SetUniform("u_DirectionnalLightsCount", passCounter.Current(eLightType::DIRECTIONNAL));
+    }
 }

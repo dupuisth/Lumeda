@@ -25,6 +25,8 @@ namespace Lumeda
 
     struct sLightPassCounter
     {
+        sLightPassCounter();
+
         std::map<eLightType, int> Counter;
 
         void Increment(eLightType lightType);
@@ -36,7 +38,10 @@ namespace Lumeda
     {
         eLightType LightType;
         sLightCharacteristics LightCharacteristics;
+        float Intensity;
+        float AngleRad;
+        glm::vec3 Color;
 
-        void SendToShader(std::shared_ptr<Shader> shader, const Transform* transform, sLightPassCounter& counter);
+        void SendToShader(std::shared_ptr<Shader> shader, Transform* transform, sLightPassCounter& counter);
     };
 }
