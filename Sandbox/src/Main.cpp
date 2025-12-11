@@ -29,12 +29,8 @@ public:
 		LUMEDA_TRACE("Initialized Sandbox");
 
 		Lumeda::Engine::Get().GetWindow().SetSize(glm::ivec2(980, 500));
-		Lumeda::Camera::SetCurrent(&m_Camera);
 
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
-
-		m_Camera.GetTransform().SetLocalPosition(glm::vec3(0.0f, 0.5f, -9.6f));
-		m_Camera.GetTransform().SetLocalRotationEulerAngles(glm::vec3(32.0f, 0.0f, 0.0f));
 		m_Shader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
 		m_Mesh = renderer.CreateMesh(
 			"quad",
@@ -78,6 +74,10 @@ public:
 		std::shared_ptr<Lumeda::SpinNode> cubeNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.50f, 0.0f));
 		std::shared_ptr<Lumeda::ModelNode> cubeModelNode = std::make_shared<Lumeda::ModelNode>();
 		std::shared_ptr<Lumeda::LightNode> lightNode = std::make_shared<Lumeda::LightNode>();
+		lightNode->GetLight().Color = glm::vec3(1.0f);
+		lightNode->GetLight().Intensity = 1.0f;
+		lightNode->GetLight().LightCharacteristics = { 1.2f, 1.2f, 0.8f };
+		lightNode->GetLight().LightType = Lumeda::eLightType::POINT;
 		cubeModelNode->GetTransform().SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.0f));
 		cubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.15f));
 		cubeNode->AddChild(cubeModelNode);
@@ -91,12 +91,15 @@ public:
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
-		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.0f, 0.0f));
+		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.05f, 0.0f));
 		std::shared_ptr<Lumeda::PlayerNode> playerNode = std::make_shared<Lumeda::PlayerNode>();
+		playerNode->GetTransform().SetLocalPosition({ 0.0f, 0.5f, -0.8f });
+		playerNode->GetTransform().SetLocalRotationEulerAngles({ 30.0f, 0.0f, 0.0f });
 		// PlayerNode automatically add a CameraNode, but in order to access it, the child need to be really added, not pending.
 		playerNode->ProcessLifecycle();
 		std::shared_ptr<Lumeda::CameraNode> cameraNode = std::dynamic_pointer_cast<Lumeda::CameraNode>(playerNode->GetChildren()[0]);
-		//cameraNode->GetCamera().SetCurrent();
+		cameraNode->GetCamera().SetCurrent();
+
 
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
@@ -144,36 +147,45 @@ public:
 
 			if (ImGui::BeginMenu("Camera"))
 			{
-				if (ImGui::DragFloat3("Position", glm::value_ptr(m_Camera.GetTransform().GetLocalPositionRef()), 0.5f, -100.0f, 100.0f))
-				{
-					m_Camera.GetTransform().SetDirty();
-					m_Camera.SetDirty();
-				}
+				Lumeda::Camera* m_Camera = Lumeda::Camera::GetCurrent();
 
-				glm::vec3 localRotationEuler = m_Camera.GetTransform().GetLocalRotationEulerAngles();
-				if (ImGui::DragFloat3("Rotation", glm::value_ptr(localRotationEuler), 0.1f, -360.0f, 360.0f))
+				if (m_Camera != nullptr)
 				{
-					m_Camera.GetTransform().SetLocalRotationEulerAngles(localRotationEuler);
-					m_Camera.GetTransform().SetDirty();
-					m_Camera.SetDirty();
-				}
+					if (ImGui::DragFloat3("Position", glm::value_ptr(m_Camera->GetTransform().GetLocalPositionRef()), 0.5f, -100.0f, 100.0f))
+					{
+						m_Camera->GetTransform().SetDirty();
+						m_Camera->SetDirty();
+					}
 
-				float buffer = m_Camera.GetFOV();
-				if (ImGui::DragFloat("FOV", &buffer, 0.05f, 1.0f, 120.0f))
-				{
-					m_Camera.SetFOV(buffer);
-				}
+					glm::vec3 localRotationEuler = m_Camera->GetTransform().GetLocalRotationEulerAngles();
+					if (ImGui::DragFloat3("Rotation", glm::value_ptr(localRotationEuler), 0.1f, -360.0f, 360.0f))
+					{
+						m_Camera->GetTransform().SetLocalRotationEulerAngles(localRotationEuler);
+						m_Camera->GetTransform().SetDirty();
+						m_Camera->SetDirty();
+					}
 
-				buffer = m_Camera.GetZNear();
-				if (ImGui::DragFloat("zNear", &buffer, 0.001f, 0.001f, 1.0f))
-				{
-					m_Camera.SetZNear(buffer);
-				}
+					float buffer = m_Camera->GetFOV();
+					if (ImGui::DragFloat("FOV", &buffer, 0.05f, 1.0f, 120.0f))
+					{
+						m_Camera->SetFOV(buffer);
+					}
 
-				buffer = m_Camera.GetZFar();
-				if (ImGui::DragFloat("zFar", &buffer, 0.5f, 10.0f, 1000.0f))
+					buffer = m_Camera->GetZNear();
+					if (ImGui::DragFloat("zNear", &buffer, 0.001f, 0.001f, 1.0f))
+					{
+						m_Camera->SetZNear(buffer);
+					}
+
+					buffer = m_Camera->GetZFar();
+					if (ImGui::DragFloat("zFar", &buffer, 0.5f, 10.0f, 1000.0f))
+					{
+						m_Camera->SetZFar(buffer);
+					}
+				}
+				else
 				{
-					m_Camera.SetZFar(buffer);
+					ImGui::Text("No camera set");
 				}
 
 				ImGui::EndMenu();
@@ -362,7 +374,6 @@ public:
 	std::shared_ptr<Lumeda::Mesh> m_Mesh;
 	std::shared_ptr<Lumeda::Texture2D> m_Texture;
 	std::shared_ptr<Lumeda::Model> m_Model;
-	Lumeda::Camera m_Camera;
 };
 
 int main()

@@ -72,7 +72,7 @@ void Camera::SetCurrent(Camera* camera)
 void Camera::SetCurrent()
 {
 	LUMEDA_PROFILE;
-	s_Instance = nullptr;
+	s_Instance = this;
 }
 
 void Camera::SetAspectRatio(float aspectRatio)
