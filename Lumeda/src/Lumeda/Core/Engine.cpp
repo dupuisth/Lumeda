@@ -24,6 +24,15 @@ Engine::Engine() : m_Application()
 	}
 	LUMEDA_CORE_INFO("Window initialized");
 
+	// Initialize the input layer
+	m_InputsLayer = InputsLayer::Create();
+	if (m_InputsLayer == nullptr)
+	{
+		LUMEDA_CORE_CRITICAL("Failed to create inputs layer");
+		throw std::runtime_error("Failed to create inputs layer");
+	}
+	LUMEDA_CORE_INFO("Inputs layer initialized");
+
 	// Initialize the Renderer
 	m_Renderer = Renderer::Create();
 	if (m_Renderer == nullptr)
@@ -54,18 +63,31 @@ void Engine::Run(std::unique_ptr<Layer> application)
 	while (!m_Window->ShouldClose())
 	{
 		LUMEDA_PROFILE_FRAME;
+		{
 
-		m_Application->Update();
+			LUMEDA_PROFILE_SECTION("Update");
+			m_InputsLayer->Update();
+			m_Application->Update();
+		}
 
-		m_Renderer->Clear();
-		m_Renderer->PrepareShaders();
-		m_Application->Render();
+		{
+			LUMEDA_PROFILE_SECTION("Rendering");
+			m_Renderer->Clear();
+			m_Renderer->PrepareShaders();
+			m_Application->Render();
+		}
+		{
 
-		m_ImGuiLayer->Begin();
-		m_Application->RenderImGui();
-		m_ImGuiLayer->End();
+			LUMEDA_PROFILE_SECTION("ImGui Rendering");
+			m_ImGuiLayer->Begin();
+			m_Application->RenderImGui();
+			m_ImGuiLayer->End();
+		}
 
-		m_Window->Update();
+		{
+			LUMEDA_PROFILE_SECTION("Window Update");
+			m_Window->Update();
+		}
 	}
 	m_Application->Terminate();
 
@@ -79,6 +101,9 @@ void Engine::Run(std::unique_ptr<Layer> application)
 
 	// Destroy the renderer
 	m_Renderer.reset();
+
+	// Destroy the inputs layer
+	m_InputsLayer.reset();
 
 	// Destroy the window
 	m_Window.reset();

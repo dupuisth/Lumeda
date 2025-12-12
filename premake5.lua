@@ -115,7 +115,7 @@ project "Lumeda"
         optimize "On"
         links
         {
-            "libassimp"
+            "assimp"
         }
 
 project "Sandbox"
@@ -138,6 +138,8 @@ project "Sandbox"
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.imgui}",
+        "%{IncludeDir.glfw}",
+        "%{IncludeDir.glad}",
     }
 
     libdirs 

@@ -1,0 +1,10 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Premake5: Build Debug",
+			"type": "shell",
+			"command": "${workspaceFolder}/sBuildDebug.sh",
+		}
+	]
+}

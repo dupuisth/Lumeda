@@ -7,11 +7,13 @@
 
 #include <imgui.h>
 
-#if LUMEDA_PLATFORM_WINDOWS
+#ifdef LUMEDA_USE_GLAD
 #include <imgui_impl_opengl3.h>
-#include <imgui_impl_glfw.h>
-#elif LUMEDA_PLATFORM_LINUX
-#include <imgui_impl_opengl3.h>
+#else
+#error Current platform not supported! 
+#endif
+
+#ifdef LUMEDA_USE_GLFW
 #include <imgui_impl_glfw.h>
 #else
 #error Current platform not supported! 
@@ -37,10 +39,9 @@ void ImGuiLayer::Initialize()
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::StyleColorsDark();
 
-#if LUMEDA_PLATFORM_WINDOWS
-	ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Engine::Get().GetWindow().GetNativeWindow(), true);
-	ImGui_ImplOpenGL3_Init("#version 460");
-#elif LUMEDA_PLATFORM_LINUX
+
+
+#if defined(LUMEDA_USE_GLFW) && defined(LUMEDA_USE_GLAD)
 	ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)Engine::Get().GetWindow().GetNativeWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
 #else
@@ -51,10 +52,7 @@ void ImGuiLayer::Initialize()
 void ImGuiLayer::Terminate()
 {
 	LUMEDA_PROFILE;
-#if LUMEDA_PLATFORM_WINDOWS
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-#elif LUMEDA_PLATFORM_LINUX
+#if defined(LUMEDA_USE_GLFW) && defined(LUMEDA_USE_GLAD)
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 #else
@@ -67,11 +65,7 @@ void ImGuiLayer::Terminate()
 void ImGuiLayer::Begin()
 {
 	LUMEDA_PROFILE;
-#if LUMEDA_PLATFORM_WINDOWS
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-#elif LUMEDA_PLATFORM_LINUX
+#if defined(LUMEDA_USE_GLFW) && defined(LUMEDA_USE_GLAD)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -84,9 +78,7 @@ void ImGuiLayer::End()
 {
 	LUMEDA_PROFILE;
 	ImGui::Render();
-#if LUMEDA_PLATFORM_WINDOWS
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-#elif LUMEDA_PLATFORM_LINUX
+#if defined(LUMEDA_USE_GLFW) && defined(LUMEDA_USE_GLAD)
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 #else
 #error Current platform not supported! 

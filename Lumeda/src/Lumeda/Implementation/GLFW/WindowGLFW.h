@@ -20,12 +20,15 @@ namespace Lumeda
 		glm::ivec2 GetSize() const override;
 		float GetAspectRatio() const override;
 
+		void SetSize(const glm::ivec2& size) const override;
+
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
 
 		bool ShouldClose() const override;
 
 		void* GetNativeWindow() const override;
+		GLFWwindow* GetNativeGLFWWindow() const;
 
 	private:
 		WindowGLFW(const WindowGLFW&) = delete;
