@@ -4,6 +4,7 @@
 #include <Lumeda/Implementation/OpenGL/ShaderOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/MeshOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/FramebufferOpenGL.h>
 #include <Lumeda/Renderer/Material.h>
 #include <Lumeda/Renderer/Model.h>
 #include <Lumeda/Renderer/Camera.h>
@@ -56,6 +57,12 @@ RendererOpenGL::~RendererOpenGL()
 	for (auto& mesh : m_Meshes)
 	{
 		mesh.second.reset();
+	}
+
+	// Force delete all framebuffers
+	for (auto& framebuffer : m_Framebuffers)
+	{
+		framebuffer.second.reset();
 	}
 
 	Engine::Get().GetWindow().RemoveResizeCallback(m_WindowResizeCallbackToken);
@@ -132,9 +139,10 @@ const std::unordered_map<std::string, std::shared_ptr<Model>>& Lumeda::RendererO
 	return m_Models;
 }
 
-const std::unordered_map<std::string, std::shared_ptr<Framebuffer>>& ListFramebuffers()
+const std::unordered_map<std::string, std::shared_ptr<Framebuffer>>& RendererOpenGL::ListFramebuffers()
 {
 	LUMEDA_PROFILE;
+	return m_Framebuffers;
 }
 
 #define SAFE_RETURN_RESOURCE(map, resourceName) \
@@ -233,7 +241,7 @@ std::shared_ptr<Model> RendererOpenGL::CreateModel(const std::string& name, cons
 std::shared_ptr<Framebuffer> RendererOpenGL::CreateFramebuffer(const std::string& name)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<Framebuffer> framebuffer = std::make_shared<Framebuffer>(name);
+	std::shared_ptr<Framebuffer> framebuffer = std::make_shared<FramebufferOpenGL>(name);
 	m_Framebuffers.insert({ name, framebuffer });
 	return framebuffer;
 }

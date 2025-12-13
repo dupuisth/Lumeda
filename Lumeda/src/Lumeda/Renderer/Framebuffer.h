@@ -9,6 +9,7 @@ namespace Lumeda
     {
     public:
         virtual ~Framebuffer() = default;
-    };
 
+        virtual const std::string& GetName() const = 0;
+    };
 }

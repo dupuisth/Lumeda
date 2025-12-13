@@ -8,6 +8,7 @@
 class Sandbox : public Lumeda::Layer
 {
 private:
+	std::shared_ptr<Lumeda::Framebuffer> framebuffer;
 	std::shared_ptr<Lumeda::RootNode> rootNode;
 	Lumeda::Node* selectedNode = nullptr;
 	Lumeda::Node* secondSeletedNode = nullptr;
@@ -100,9 +101,10 @@ public:
 		std::shared_ptr<Lumeda::CameraNode> cameraNode = std::dynamic_pointer_cast<Lumeda::CameraNode>(playerNode->GetChildren()[0]);
 		cameraNode->GetCamera().SetCurrent();
 
-
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
+
+		framebuffer = renderer.CreateFramebuffer("render");
 	}
 
 	void Update() override
@@ -314,6 +316,20 @@ public:
 				if (ImGui::BeginMenu(name.c_str()))
 				{
 					ImGui::LabelText("Pointer", "%x", material);
+					ImGui::EndMenu();
+				}
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Framebuffer"))
+		{
+			const auto& framebufferMap = renderer.ListFramebuffers();
+			for (const auto& [name, framebuffer] : framebufferMap)
+			{
+				if (ImGui::BeginMenu(name.c_str()))
+				{
+					ImGui::LabelText("Pointer", "%x", framebuffer);
 					ImGui::EndMenu();
 				}
 			}
