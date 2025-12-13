@@ -16,6 +16,8 @@ namespace Lumeda
 	class Material;
 	class Model;
 	class Framebuffer;
+	class RenderTarget;
+
 	enum class eTextureFormat;
 
 	class Renderer
@@ -37,6 +39,7 @@ namespace Lumeda
 		virtual const std::unordered_map<std::string, std::shared_ptr<Material>>& ListMaterials() = 0;
 		virtual const std::unordered_map<std::string, std::shared_ptr<Model>>& ListModels() = 0;
 		virtual const std::unordered_map<std::string, std::shared_ptr<Framebuffer>>& ListFramebuffers() = 0;
+		virtual const std::unordered_map<std::string, std::shared_ptr<RenderTarget>>& ListRenderTargets() = 0;
 
 		// Gets
 		virtual std::shared_ptr<Shader> GetShader(const std::string& name) = 0;
@@ -45,6 +48,7 @@ namespace Lumeda
 		virtual std::shared_ptr<Material> GetMaterial(const std::string& name) = 0;
 		virtual std::shared_ptr<Model> GetModel(const std::string& name) = 0;
 		virtual std::shared_ptr<Framebuffer> GetFramebuffer(const std::string& name) = 0;
+		virtual std::shared_ptr<RenderTarget> GetRenderTarget(const std::string& name) = 0;
 
 		// Creates
 		virtual std::shared_ptr<Shader> CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) = 0;
@@ -55,6 +59,7 @@ namespace Lumeda
 		virtual std::shared_ptr<Model> CreateModel(const std::string& name) = 0;
 		virtual std::shared_ptr<Model> CreateModel(const std::string& name, const std::string& fromFile) = 0;
 		virtual std::shared_ptr<Framebuffer> CreateFramebuffer(const std::string& name) = 0;
+		virtual std::shared_ptr<RenderTarget> CreateRenderTarget(const std::string& name, int width, int height) = 0;
 
 		static std::unique_ptr<Renderer> Create();
 	};

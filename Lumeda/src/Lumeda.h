@@ -14,6 +14,7 @@
 #include <Lumeda/Renderer/Material.h>
 #include <Lumeda/Renderer/Model.h>
 #include <Lumeda/Renderer/Framebuffer.h>
+#include <Lumeda/Renderer/RenderTarget.h>
 #include <Lumeda/Renderer/Light.h>
 
 #include <Lumeda/Node/Node.h>
@@ -34,4 +35,5 @@
 #include <Lumeda/Implementation/OpenGL/ShaderOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/FramebufferOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/RenderTargetOpenGL.h>
 #endif

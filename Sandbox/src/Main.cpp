@@ -8,10 +8,8 @@
 class Sandbox : public Lumeda::Layer
 {
 private:
-	std::shared_ptr<Lumeda::Framebuffer> framebuffer;
+	std::shared_ptr<Lumeda::RenderTarget> renderTarget;
 	std::shared_ptr<Lumeda::Shader> screenShader;
-	std::shared_ptr<Lumeda::Texture2D> colorTexture;
-	std::shared_ptr<Lumeda::Texture2D> depthstencilTexture;
 
 	std::shared_ptr<Lumeda::RootNode> rootNode;
 	Lumeda::Node* selectedNode = nullptr;
@@ -110,15 +108,7 @@ public:
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
 
-		framebuffer = renderer.CreateFramebuffer("render");
-		framebuffer->Bind();
-		colorTexture = renderer.CreateTexture2D("colorTexture", 800, 600, Lumeda::eTextureFormat::RGB);
-		depthstencilTexture = renderer.CreateTexture2D("depthStencilTexture", 800, 600, Lumeda::eTextureFormat::DepthStencil);
-		framebuffer->AttachTexture2D(Lumeda::eFramebufferAttachment::ColorAttachment, colorTexture);
-		framebuffer->AttachTexture2D(Lumeda::eFramebufferAttachment::DepthStencilAttachment, depthstencilTexture);
-		LUMEDA_CORE_TRACE("[InitTest] Is framebuffer ready ? {0}", std::dynamic_pointer_cast<Lumeda::FramebufferOpenGL>(framebuffer)->IsComplete());
-		framebuffer->UnBind();
-
+		renderTarget = renderer.CreateRenderTarget("RenderTarget", 600, 400);
 		screenShader = renderer.CreateShader("screenShader", "assets/shaders/screenshader.vert", "assets/shaders/screenshader.frag");
 	}
 
@@ -136,23 +126,19 @@ public:
 
 		// All of the below should be handled in the Renderer, not here.
 		// This is for testing !
-		framebuffer->Bind();
-		glViewport(0, 0, 800, 600);
+		renderTarget->Bind();
+		glViewport(0, 0, renderTarget->GetSize().x, renderTarget->GetSize().y);
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		rootNode->Render();
+		renderTarget->UnBind();
 
-		framebuffer->UnBind();
 		glViewport(0, 0, Lumeda::Engine::Get().GetWindow().GetWidth(), Lumeda::Engine::Get().GetWindow().GetHeight());
 		glDisable(GL_DEPTH_TEST);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		screenShader->Bind();
-		colorTexture->Bind(0);
-		screenShader->SetUniform("u_ScreenTexture", 0);
-		depthstencilTexture->Bind(1);
-		screenShader->SetUniform("u_DepthStencilTexture", 1);
+		std::static_pointer_cast<Lumeda::RenderTargetOpenGL>(renderTarget)->PrepareRender(screenShader);
 		m_Mesh->Draw();
 	}
 
@@ -173,10 +159,21 @@ public:
 				ImGui::EndMenu();
 			}
 
+			if (ImGui::BeginMenu("Resources"))
+			{
+				ImGui::SeparatorText("Graphics");
+				RenderGraphicsResourcesMenu();
+				ImGui::EndMenu();
+			}
+
 			if (ImGui::BeginMenu("Renderer"))
 			{
-				ImGui::SeparatorText("Resources");
-				RenderResourceMenu();
+				ImGui::SeparatorText("Framebuffer");
+				glm::ivec2 size = renderTarget->GetSize();
+				if (ImGui::InputInt2("Size", glm::value_ptr(size)))
+				{
+					renderTarget->SetSize(size);
+				}
 				ImGui::EndMenu();
 			}
 
@@ -254,7 +251,7 @@ public:
 		}
 	}
 
-	void RenderResourceMenu()
+	void RenderGraphicsResourcesMenu()
 	{
 		LUMEDA_PROFILE;
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
@@ -281,6 +278,26 @@ public:
 					ImGui::LabelText("Pointer", "%x", texture);
 					ImGui::LabelText("Size", "%d x %d", texture->GetWidth(), texture->GetHeight());
 
+
+					const char* filterings[] = { "NEAREST", "LINEAR" };
+					int currentItem = (int)texture->GetFiltering();
+					if (ImGui::BeginCombo("Filtering", filterings[currentItem]))
+					{
+						for (int i = 0; i < sizeof(filterings) / sizeof(char*); i++)
+						{
+							bool selected = currentItem == i;
+							if (ImGui::Selectable(filterings[i], selected))
+							{
+								texture->Bind();
+								texture->SetFiltering((Lumeda::eTextureFiltering)i);
+							}
+							if (selected)
+							{
+								ImGui::SetItemDefaultFocus();
+							}
+						}
+						ImGui::EndCombo();
+					}
 #ifdef LUMEDA_USE_GLAD
 					std::shared_ptr<Lumeda::Texture2DOpenGL> castedTexture = std::dynamic_pointer_cast<Lumeda::Texture2DOpenGL>(texture);
 					ImGui::Image((ImTextureID)(intptr_t)castedTexture->GetOpenGLHandle(), ImVec2(128, 128));

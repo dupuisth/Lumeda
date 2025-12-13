@@ -28,6 +28,7 @@ namespace Lumeda
 		const std::unordered_map<std::string, std::shared_ptr<Material>>& ListMaterials() override;
 		const std::unordered_map<std::string, std::shared_ptr<Model>>& ListModels() override;
 		const std::unordered_map<std::string, std::shared_ptr<Framebuffer>>& ListFramebuffers() override;
+		const std::unordered_map<std::string, std::shared_ptr<RenderTarget>>& ListRenderTargets() override;
 
 		std::shared_ptr<Shader> GetShader(const std::string& name) override;
 		std::shared_ptr<Texture2D> GetTexture2D(const std::string& name) override;
@@ -35,6 +36,8 @@ namespace Lumeda
 		std::shared_ptr<Material> GetMaterial(const std::string& name) override;
 		std::shared_ptr<Model> GetModel(const std::string& name) override;
 		std::shared_ptr<Framebuffer> GetFramebuffer(const std::string& name) override;
+		std::shared_ptr<RenderTarget> GetRenderTarget(const std::string& name) override;
+
 
 		std::shared_ptr<Shader> CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) override;
 		std::shared_ptr<Texture2D> CreateTexture2D(const std::string& name, const std::string& path) override;
@@ -44,6 +47,7 @@ namespace Lumeda
 		std::shared_ptr<Model> CreateModel(const std::string& name) override;
 		std::shared_ptr<Model> CreateModel(const std::string& name, const std::string& fromFile) override;
 		std::shared_ptr<Framebuffer> CreateFramebuffer(const std::string& name) override;
+		std::shared_ptr<RenderTarget> CreateRenderTarget(const std::string& name, int width, int height) override;
 
 	private:
 		void OnWindowResize(Window& window, int width, int height);
@@ -55,6 +59,7 @@ namespace Lumeda
 		std::unordered_map<std::string, std::shared_ptr<Material>> m_Materials;
 		std::unordered_map<std::string, std::shared_ptr<Model>> m_Models;
 		std::unordered_map<std::string, std::shared_ptr<Framebuffer>> m_Framebuffers;
+		std::unordered_map<std::string, std::shared_ptr<RenderTarget>> m_RenderTargets;
 
 		WindowCallbackToken m_WindowResizeCallbackToken;
 	};

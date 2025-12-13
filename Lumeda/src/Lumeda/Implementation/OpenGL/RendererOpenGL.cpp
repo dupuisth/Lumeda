@@ -5,6 +5,7 @@
 #include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/MeshOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/FramebufferOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/RenderTargetOpenGL.h>
 #include <Lumeda/Renderer/Material.h>
 #include <Lumeda/Renderer/Model.h>
 #include <Lumeda/Renderer/Camera.h>
@@ -145,6 +146,13 @@ const std::unordered_map<std::string, std::shared_ptr<Framebuffer>>& RendererOpe
 	return m_Framebuffers;
 }
 
+const std::unordered_map<std::string, std::shared_ptr<RenderTarget>>& RendererOpenGL::ListRenderTargets()
+{
+	LUMEDA_PROFILE;
+	return m_RenderTargets;
+}
+
+
 #define SAFE_RETURN_RESOURCE(map, resourceName) \
 const auto& iterator = map.find(resourceName); \
 if (iterator == map.end()) \
@@ -190,6 +198,12 @@ std::shared_ptr<Framebuffer> RendererOpenGL::GetFramebuffer(const std::string& n
 	SAFE_RETURN_RESOURCE(m_Framebuffers, name);
 }
 
+std::shared_ptr<RenderTarget> RendererOpenGL::GetRenderTarget(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	SAFE_RETURN_RESOURCE(m_RenderTargets, name);
+}
+
 std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
 {
 	LUMEDA_PROFILE;
@@ -213,7 +227,6 @@ std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& na
 	m_Textures2D.insert({ name, texture2D });
 	return texture2D;
 }
-
 
 std::shared_ptr<Mesh> RendererOpenGL::CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs)
 {
@@ -254,6 +267,15 @@ std::shared_ptr<Framebuffer> RendererOpenGL::CreateFramebuffer(const std::string
 	m_Framebuffers.insert({ name, framebuffer });
 	return framebuffer;
 }
+
+std::shared_ptr<RenderTarget> RendererOpenGL::CreateRenderTarget(const std::string& name, int width, int height)
+{
+	LUMEDA_PROFILE;
+	std::shared_ptr<RenderTarget> renderTarget = std::make_shared<RenderTargetOpenGL>(name, glm::ivec2(width, height));
+	m_RenderTargets.insert({ name, renderTarget });
+	return renderTarget;
+}
+
 
 void RendererOpenGL::OnWindowResize(Window& window, int width, int height)
 {
