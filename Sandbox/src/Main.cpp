@@ -8,9 +8,16 @@
 class Sandbox : public Lumeda::Layer
 {
 private:
+	std::shared_ptr<Lumeda::Framebuffer> framebuffer;
+	std::shared_ptr<Lumeda::Shader> screenShader;
+	std::shared_ptr<Lumeda::Texture2D> colorTexture;
+	std::shared_ptr<Lumeda::Texture2D> depthstencilTexture;
+
 	std::shared_ptr<Lumeda::RootNode> rootNode;
 	Lumeda::Node* selectedNode = nullptr;
 	Lumeda::Node* secondSeletedNode = nullptr;
+
+
 
 public:
 	Sandbox()
@@ -35,10 +42,10 @@ public:
 		m_Mesh = renderer.CreateMesh(
 			"quad",
 			{
-				-0.5f, -0.5f, 0.0f, -1.0f, 1.0f, // Top Left
-				-0.5f, 0.5f, 0.0f, -1.0f, 0.0f,  // Bottom Left
-				0.5f, -0.5f, 0.0f, 1.0f, 1.0f,   // Top Right
-				0.5f, 0.5f, 0.0f, 1.0f, 0.0f     // Bottom Right
+				-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Top Left
+				-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,  // Bottom Left
+				1.0f, 1.0f, 0.0f, 1.0f, 1.0f,   // Top Right
+				1.0f, -1.0f, 0.0f, 1.0f, 0.0f     // Bottom Right
 			},
 			{
 				0, 1, 2,
@@ -91,7 +98,7 @@ public:
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
-		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.05f, 0.0f));
+		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.2f, 0.05f, 0.1f));
 		std::shared_ptr<Lumeda::PlayerNode> playerNode = std::make_shared<Lumeda::PlayerNode>();
 		playerNode->GetTransform().SetLocalPosition({ 0.0f, 0.5f, -0.8f });
 		playerNode->GetTransform().SetLocalRotationEulerAngles({ 30.0f, 0.0f, 0.0f });
@@ -100,9 +107,19 @@ public:
 		std::shared_ptr<Lumeda::CameraNode> cameraNode = std::dynamic_pointer_cast<Lumeda::CameraNode>(playerNode->GetChildren()[0]);
 		cameraNode->GetCamera().SetCurrent();
 
-
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
+
+		framebuffer = renderer.CreateFramebuffer("render");
+		framebuffer->Bind();
+		colorTexture = renderer.CreateTexture2D("colorTexture", 800, 600, Lumeda::eTextureFormat::RGB);
+		depthstencilTexture = renderer.CreateTexture2D("depthStencilTexture", 800, 600, Lumeda::eTextureFormat::DepthStencil);
+		framebuffer->AttachTexture2D(Lumeda::eFramebufferAttachment::ColorAttachment, colorTexture);
+		framebuffer->AttachTexture2D(Lumeda::eFramebufferAttachment::DepthStencilAttachment, depthstencilTexture);
+		LUMEDA_CORE_TRACE("[InitTest] Is framebuffer ready ? {0}", std::dynamic_pointer_cast<Lumeda::FramebufferOpenGL>(framebuffer)->IsComplete());
+		framebuffer->UnBind();
+
+		screenShader = renderer.CreateShader("screenShader", "assets/shaders/screenshader.vert", "assets/shaders/screenshader.frag");
 	}
 
 	void Update() override
@@ -111,14 +128,32 @@ public:
 
 		rootNode->ProcessLifecycle();
 		rootNode->Update();
-
 	}
 
 	void Render() override
 	{
 		LUMEDA_PROFILE;
 
+		// All of the below should be handled in the Renderer, not here.
+		// This is for testing !
+		framebuffer->Bind();
+		glViewport(0, 0, 800, 600);
+		glEnable(GL_DEPTH_TEST);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		rootNode->Render();
+
+		framebuffer->UnBind();
+		glViewport(0, 0, Lumeda::Engine::Get().GetWindow().GetWidth(), Lumeda::Engine::Get().GetWindow().GetHeight());
+		glDisable(GL_DEPTH_TEST);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		screenShader->Bind();
+		colorTexture->Bind(0);
+		screenShader->SetUniform("u_ScreenTexture", 0);
+		depthstencilTexture->Bind(1);
+		screenShader->SetUniform("u_DepthStencilTexture", 1);
+		m_Mesh->Draw();
 	}
 
 	void RenderImGui() override
@@ -314,6 +349,20 @@ public:
 				if (ImGui::BeginMenu(name.c_str()))
 				{
 					ImGui::LabelText("Pointer", "%x", material);
+					ImGui::EndMenu();
+				}
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Framebuffer"))
+		{
+			const auto& framebufferMap = renderer.ListFramebuffers();
+			for (const auto& [name, framebuffer] : framebufferMap)
+			{
+				if (ImGui::BeginMenu(name.c_str()))
+				{
+					ImGui::LabelText("Pointer", "%x", framebuffer);
 					ImGui::EndMenu();
 				}
 			}

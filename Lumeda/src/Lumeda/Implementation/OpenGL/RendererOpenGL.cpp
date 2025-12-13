@@ -4,6 +4,7 @@
 #include <Lumeda/Implementation/OpenGL/ShaderOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/MeshOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/FramebufferOpenGL.h>
 #include <Lumeda/Renderer/Material.h>
 #include <Lumeda/Renderer/Model.h>
 #include <Lumeda/Renderer/Camera.h>
@@ -16,7 +17,7 @@ using namespace Lumeda;
 RendererOpenGL::RendererOpenGL()
 {
 	LUMEDA_PROFILE;
-	if (!gladLoadGL()) 
+	if (!gladLoadGL())
 	{
 		LUMEDA_CORE_CRITICAL("Failed to initialize glad");
 		throw std::runtime_error("Failed to initialize glad");
@@ -56,6 +57,12 @@ RendererOpenGL::~RendererOpenGL()
 	for (auto& mesh : m_Meshes)
 	{
 		mesh.second.reset();
+	}
+
+	// Force delete all framebuffers
+	for (auto& framebuffer : m_Framebuffers)
+	{
+		framebuffer.second.reset();
 	}
 
 	Engine::Get().GetWindow().RemoveResizeCallback(m_WindowResizeCallbackToken);
@@ -132,6 +139,12 @@ const std::unordered_map<std::string, std::shared_ptr<Model>>& Lumeda::RendererO
 	return m_Models;
 }
 
+const std::unordered_map<std::string, std::shared_ptr<Framebuffer>>& RendererOpenGL::ListFramebuffers()
+{
+	LUMEDA_PROFILE;
+	return m_Framebuffers;
+}
+
 #define SAFE_RETURN_RESOURCE(map, resourceName) \
 const auto& iterator = map.find(resourceName); \
 if (iterator == map.end()) \
@@ -171,6 +184,12 @@ std::shared_ptr<Model> RendererOpenGL::GetModel(const std::string& name)
 	SAFE_RETURN_RESOURCE(m_Models, name);
 }
 
+std::shared_ptr<Framebuffer> RendererOpenGL::GetFramebuffer(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	SAFE_RETURN_RESOURCE(m_Framebuffers, name);
+}
+
 std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
 {
 	LUMEDA_PROFILE;
@@ -186,6 +205,15 @@ std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& na
 	m_Textures2D.insert({ name, texture2D });
 	return texture2D;
 }
+
+std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& name, unsigned int width, unsigned int height, eTextureFormat format)
+{
+	LUMEDA_PROFILE;
+	std::shared_ptr<Texture2DOpenGL> texture2D = std::make_shared<Texture2DOpenGL>(name, width, height, format);
+	m_Textures2D.insert({ name, texture2D });
+	return texture2D;
+}
+
 
 std::shared_ptr<Mesh> RendererOpenGL::CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs)
 {
@@ -217,6 +245,14 @@ std::shared_ptr<Model> RendererOpenGL::CreateModel(const std::string& name, cons
 	std::shared_ptr<Model> model = CreateModel(name);
 	ModelLoader::LoadModelFromFile(model, fromFile);
 	return model;
+}
+
+std::shared_ptr<Framebuffer> RendererOpenGL::CreateFramebuffer(const std::string& name)
+{
+	LUMEDA_PROFILE;
+	std::shared_ptr<Framebuffer> framebuffer = std::make_shared<FramebufferOpenGL>(name);
+	m_Framebuffers.insert({ name, framebuffer });
+	return framebuffer;
 }
 
 void RendererOpenGL::OnWindowResize(Window& window, int width, int height)

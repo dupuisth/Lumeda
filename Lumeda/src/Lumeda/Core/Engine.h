@@ -9,9 +9,12 @@
 
 #include <string>
 
-namespace Lumeda 
+namespace Lumeda
 {
-	class Engine 
+	class Framebuffer;
+	class Texture2D;
+
+	class Engine
 	{
 	public:
 		Engine();

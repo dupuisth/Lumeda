@@ -12,6 +12,12 @@ namespace Lumeda
 		Linear
 	};
 
+	enum class eTextureFormat
+	{
+		RGB,
+		DepthStencil
+	};
+
 	class Texture
 	{
 	public:
