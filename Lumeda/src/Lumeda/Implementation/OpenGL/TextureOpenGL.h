@@ -11,6 +11,7 @@ namespace Lumeda
 	{
 	public:
 		Texture2DOpenGL(const std::string& name, const std::string& path);
+		Texture2DOpenGL(const std::string& name, unsigned int width, unsigned int height, eTextureFormat format);
 		virtual ~Texture2DOpenGL();
 
 		void Bind(int slot = 0) override;

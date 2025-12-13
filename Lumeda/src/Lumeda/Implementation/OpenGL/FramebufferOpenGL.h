@@ -17,6 +17,7 @@ namespace Lumeda
         /// @brief Return true if the framebuffer is ready to be used, must be Bind before
         bool IsComplete();
 
+        void AttachTexture2D(eFramebufferAttachment slot, std::shared_ptr<Texture2D> texture) override;
     private:
         std::string m_Name;
 

@@ -25,6 +25,6 @@ namespace Lumeda
         virtual void Bind() = 0;
         virtual void UnBind() = 0;
 
-        void AttachTexture2D(std::shared_ptr<Texture2D> texture);
+        virtual void AttachTexture2D(eFramebufferAttachment slot, std::shared_ptr<Texture2D> texture) = 0;
     };
 }

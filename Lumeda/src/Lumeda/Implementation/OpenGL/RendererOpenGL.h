@@ -38,6 +38,7 @@ namespace Lumeda
 
 		std::shared_ptr<Shader> CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) override;
 		std::shared_ptr<Texture2D> CreateTexture2D(const std::string& name, const std::string& path) override;
+		std::shared_ptr<Texture2D> CreateTexture2D(const std::string& name, unsigned int width, unsigned int height, eTextureFormat format) override;
 		std::shared_ptr<Mesh> CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs) override;
 		std::shared_ptr<Material> CreateMaterial(const std::string& name) override;
 		std::shared_ptr<Model> CreateModel(const std::string& name) override;

@@ -206,6 +206,15 @@ std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& na
 	return texture2D;
 }
 
+std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& name, unsigned int width, unsigned int height, eTextureFormat format)
+{
+	LUMEDA_PROFILE;
+	std::shared_ptr<Texture2DOpenGL> texture2D = std::make_shared<Texture2DOpenGL>(name, width, height, format);
+	m_Textures2D.insert({ name, texture2D });
+	return texture2D;
+}
+
+
 std::shared_ptr<Mesh> RendererOpenGL::CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs)
 {
 	LUMEDA_PROFILE;

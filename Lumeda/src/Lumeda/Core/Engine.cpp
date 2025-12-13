@@ -5,7 +5,7 @@ using namespace Lumeda;
 
 Engine* s_Instance = nullptr;
 
-Engine::Engine() : m_Application() 
+Engine::Engine() : m_Application()
 {
 	LUMEDA_PROFILE;
 
@@ -41,7 +41,7 @@ Engine::Engine() : m_Application()
 		throw std::runtime_error("Failed to create renderer");
 	}
 	m_Renderer->SetViewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
-	m_Renderer->SetClearColor(0.02f, 0.05f, 0.13f, 1.0f);
+	m_Renderer->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	LUMEDA_CORE_INFO("Renderer initialized");
 
 	// Initialize ImGui
@@ -50,7 +50,7 @@ Engine::Engine() : m_Application()
 	LUMEDA_CORE_INFO("ImGui initialized");
 }
 
-Engine::~Engine() { }
+Engine::~Engine() {}
 
 void Engine::Run(std::unique_ptr<Layer> application)
 {
@@ -58,13 +58,12 @@ void Engine::Run(std::unique_ptr<Layer> application)
 	m_Application = std::move(application);
 
 	LUMEDA_CORE_INFO("Starting the game loop");
-	
+
 	m_Application->Initialize();
 	while (!m_Window->ShouldClose())
 	{
 		LUMEDA_PROFILE_FRAME;
 		{
-
 			LUMEDA_PROFILE_SECTION("Update");
 			m_InputsLayer->Update();
 			m_Application->Update();
@@ -76,8 +75,8 @@ void Engine::Run(std::unique_ptr<Layer> application)
 			m_Renderer->PrepareShaders();
 			m_Application->Render();
 		}
-		{
 
+		{
 			LUMEDA_PROFILE_SECTION("ImGui Rendering");
 			m_ImGuiLayer->Begin();
 			m_Application->RenderImGui();

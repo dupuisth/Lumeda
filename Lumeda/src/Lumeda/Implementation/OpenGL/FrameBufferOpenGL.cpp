@@ -1,5 +1,5 @@
 #include <Lumeda/Implementation/OpenGL/FramebufferOpenGL.h>
-
+#include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #include <glad/glad.h>
 
 using namespace Lumeda;
@@ -28,7 +28,7 @@ void FramebufferOpenGL::Bind()
     glBindFramebuffer(GL_FRAMEBUFFER, m_Fbo);
 }
 
-void FramebufferOpenGL::Bind()
+void FramebufferOpenGL::UnBind()
 {
     LUMEDA_PROFILE;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -41,4 +41,25 @@ bool FramebufferOpenGL::IsComplete()
         return true;
     }
     return false;
+}
+
+void FramebufferOpenGL::AttachTexture2D(eFramebufferAttachment slot, std::shared_ptr<Texture2D> texture)
+{
+    GLenum flag;
+    switch (slot)
+    {
+    case eFramebufferAttachment::ColorAttachment:
+        flag = GL_COLOR_ATTACHMENT0;
+        break;
+    case eFramebufferAttachment::DepthStencilAttachment:
+        flag = GL_DEPTH_STENCIL_ATTACHMENT;
+        break;
+    default:
+        LUMEDA_CORE_WARN("[FramebufferOpenGL::AttachTexture2D] Specified slot is not recognized \'{0}\'", (int)slot);
+        return;
+        break;
+    }
+
+    std::shared_ptr<Texture2DOpenGL> casted_texture = std::dynamic_pointer_cast<Texture2DOpenGL>(texture);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, flag, GL_TEXTURE_2D, casted_texture->GetOpenGLHandle(), 0);
 }
