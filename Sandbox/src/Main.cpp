@@ -34,26 +34,50 @@ public:
 
 		Lumeda::Engine::Get().GetWindow().SetSize(glm::ivec2(980, 500));
 
+		Lumeda::Window& window = Lumeda::Engine::Get().GetWindow();
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
 
-		m_Texture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
-		m_Shader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
-		m_Material = renderer.CreateMaterial("default");
-		m_Material->SetShader(m_Shader);
-		m_Material->GetUniformsMap().Set("u_Color", m_Texture);
+		std::shared_ptr<Lumeda::Texture2D> defaultTexture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
+		std::shared_ptr<Lumeda::Shader> defaultShader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
+		std::shared_ptr<Lumeda::Material> defaultMaterial = renderer.CreateMaterial("default");
+		defaultMaterial->SetShader(defaultShader);
+		defaultMaterial->GetUniformsMap().Set("u_Color", defaultTexture);
 
-		m_Model = renderer.CreateModel("quad");
-		m_Model->AttachItem(
-			{ m_Mesh, m_Material }
-		);
+		std::shared_ptr<Lumeda::Texture2D> boxTexture = renderer.CreateTexture2D("box_Color", "assets/textures/box.png");
+		std::shared_ptr<Lumeda::Texture2D> barrelPondTexture = renderer.CreateTexture2D("barrelpond_Color", "assets/textures/barrel_pond.jpg");
+		std::shared_ptr<Lumeda::Texture2D> benchTexture = renderer.CreateTexture2D("bench_Color", "assets/textures/bench.jpg");
+		std::shared_ptr<Lumeda::Texture2D> dirtTexture = renderer.CreateTexture2D("dirt_Color", "assets/textures/dirt.jpg");
+
+		std::shared_ptr<Lumeda::Material> boxMaterial = renderer.CreateMaterial("box");
+		boxMaterial->SetShader(defaultShader);
+		boxMaterial->GetUniformsMap().Set("u_Color", boxTexture);
+
+		std::shared_ptr<Lumeda::Material> barrelPondMaterial = renderer.CreateMaterial("barrelpond");
+		barrelPondMaterial->SetShader(defaultShader);
+		barrelPondMaterial->GetUniformsMap().Set("u_Color", barrelPondTexture);
+
+		std::shared_ptr<Lumeda::Model> boxModel = renderer.CreateModel("box", "assets/models/box.fbx");
+		for (size_t i = 0; i < boxModel->ListItems().size(); i++)
+		{
+			Lumeda::ModelItem modelItem = boxModel->ListItems()[i];
+			modelItem.m_Material = boxMaterial;
+			boxModel->SetItem(i, modelItem);
+		}
+
+		std::shared_ptr<Lumeda::Model> barrelPondModel = renderer.CreateModel("barrel_pond", "assets/models/barrel_pond.fbx");
+		for (size_t i = 0; i < barrelPondModel->ListItems().size(); i++)
+		{
+			Lumeda::ModelItem modelItem = barrelPondModel->ListItems()[i];
+			modelItem.m_Material = barrelPondMaterial;
+			barrelPondModel->SetItem(i, modelItem);
+		}
 
 		std::shared_ptr<Lumeda::Model> model = renderer.CreateModel("cube", "assets/models/cube.fbx");
-
 		// Sets the material for testing
 		for (size_t i = 0; i < model->ListItems().size(); i++)
 		{
 			Lumeda::ModelItem modelItem = model->ListItems()[i];
-			modelItem.m_Material = m_Material;
+			modelItem.m_Material = defaultMaterial;
 			model->SetItem(i, modelItem);
 		}
 
@@ -63,7 +87,7 @@ public:
 		std::shared_ptr<Lumeda::LightNode> lightNode = std::make_shared<Lumeda::LightNode>();
 		lightNode->GetLight().Color = glm::vec3(1.0f);
 		lightNode->GetLight().Intensity = 1.0f;
-		lightNode->GetLight().LightCharacteristics = { 1.2f, 1.2f, 0.8f };
+		lightNode->GetLight().LightCharacteristics = { 5.0f, 5.0f, 0.0f };
 		lightNode->GetLight().LightType = Lumeda::eLightType::POINT;
 		cubeModelNode->GetTransform().SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.0f));
 		cubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.15f));
@@ -74,7 +98,7 @@ public:
 
 		std::shared_ptr<Lumeda::ModelNode> centerCubeModelNode = std::make_shared<Lumeda::ModelNode>();
 		centerCubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.1f));
-		centerCubeModelNode->SetModel(*model);
+		centerCubeModelNode->SetModel(*barrelPondModel);
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
@@ -91,7 +115,7 @@ public:
 		rootNode->AddChild(pivotNode);
 
 		renderTarget = renderer.CreateRenderTarget("RenderTarget", 600, 400);
-		otherRenderTarget = renderer.CreateRenderTarget("RenderTarget_half", 100, 100);
+		otherRenderTarget = renderer.CreateRenderTarget("RenderTargetOther", 600, 400);
 	}
 
 	void Update() override
@@ -408,12 +432,6 @@ public:
 		LUMEDA_PROFILE;
 		LUMEDA_TRACE("Terminate Sandbox");
 	}
-
-	std::shared_ptr<Lumeda::Material> m_Material;
-	std::shared_ptr<Lumeda::Shader> m_Shader;
-	std::shared_ptr<Lumeda::Mesh> m_Mesh;
-	std::shared_ptr<Lumeda::Texture2D> m_Texture;
-	std::shared_ptr<Lumeda::Model> m_Model;
 };
 
 int main()

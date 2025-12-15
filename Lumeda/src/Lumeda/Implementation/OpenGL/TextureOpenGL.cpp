@@ -23,7 +23,21 @@ Texture2DOpenGL::Texture2DOpenGL(const std::string& name, const std::string& pat
 		throw std::runtime_error("Failed to load image");
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Size.x, m_Size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	if (nrChannels == 3)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Size.x, m_Size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	}
+	else if (nrChannels == 4)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Size.x, m_Size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+	else
+	{
+		LUMEDA_CORE_ERROR("[Texture2DOpenGL] Number of channels is not supported ({0}, \'{1}\')", nrChannels, path);
+	}
+
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(data);
