@@ -72,7 +72,6 @@ void Engine::Run(std::unique_ptr<Layer> application)
 		{
 			LUMEDA_PROFILE_SECTION("Rendering");
 			m_Renderer->Clear();
-			m_Renderer->PrepareShaders();
 			m_Application->Render();
 		}
 

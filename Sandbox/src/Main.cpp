@@ -8,16 +8,13 @@
 class Sandbox : public Lumeda::Layer
 {
 private:
-	std::shared_ptr<Lumeda::Framebuffer> framebuffer;
-	std::shared_ptr<Lumeda::Shader> screenShader;
-	std::shared_ptr<Lumeda::Texture2D> colorTexture;
-	std::shared_ptr<Lumeda::Texture2D> depthstencilTexture;
+	std::shared_ptr<Lumeda::RenderTarget> renderTarget;
+	std::shared_ptr<Lumeda::RenderTarget> otherRenderTarget;
+
 
 	std::shared_ptr<Lumeda::RootNode> rootNode;
 	Lumeda::Node* selectedNode = nullptr;
 	Lumeda::Node* secondSeletedNode = nullptr;
-
-
 
 public:
 	Sandbox()
@@ -37,43 +34,50 @@ public:
 
 		Lumeda::Engine::Get().GetWindow().SetSize(glm::ivec2(980, 500));
 
+		Lumeda::Window& window = Lumeda::Engine::Get().GetWindow();
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
-		m_Shader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
-		m_Mesh = renderer.CreateMesh(
-			"quad",
-			{
-				-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Top Left
-				-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,  // Bottom Left
-				1.0f, 1.0f, 0.0f, 1.0f, 1.0f,   // Top Right
-				1.0f, -1.0f, 0.0f, 1.0f, 0.0f     // Bottom Right
-			},
-			{
-				0, 1, 2,
-				1, 2, 3
-			},
-			{
-				{ 0, 3, Lumeda::MeshAttribType::FLOAT },
-				{ 1, 2, Lumeda::MeshAttribType::FLOAT }
-			}
-		);
-		m_Texture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
 
-		m_Material = renderer.CreateMaterial("default");
-		m_Material->SetShader(m_Shader);
-		m_Material->SetUniform("u_Color", m_Texture);
+		std::shared_ptr<Lumeda::Texture2D> defaultTexture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
+		std::shared_ptr<Lumeda::Shader> defaultShader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
+		std::shared_ptr<Lumeda::Material> defaultMaterial = renderer.CreateMaterial("default");
+		defaultMaterial->SetShader(defaultShader);
+		defaultMaterial->GetUniformsMap().Set("u_Color", defaultTexture);
 
-		m_Model = renderer.CreateModel("quad");
-		m_Model->AttachItem(
-			{ m_Mesh, m_Material }
-		);
+		std::shared_ptr<Lumeda::Texture2D> boxTexture = renderer.CreateTexture2D("box_Color", "assets/textures/box.png");
+		std::shared_ptr<Lumeda::Texture2D> barrelPondTexture = renderer.CreateTexture2D("barrelpond_Color", "assets/textures/barrel_pond.jpg");
+		std::shared_ptr<Lumeda::Texture2D> benchTexture = renderer.CreateTexture2D("bench_Color", "assets/textures/bench.jpg");
+		std::shared_ptr<Lumeda::Texture2D> dirtTexture = renderer.CreateTexture2D("dirt_Color", "assets/textures/dirt.jpg");
+
+		std::shared_ptr<Lumeda::Material> boxMaterial = renderer.CreateMaterial("box");
+		boxMaterial->SetShader(defaultShader);
+		boxMaterial->GetUniformsMap().Set("u_Color", boxTexture);
+
+		std::shared_ptr<Lumeda::Material> barrelPondMaterial = renderer.CreateMaterial("barrelpond");
+		barrelPondMaterial->SetShader(defaultShader);
+		barrelPondMaterial->GetUniformsMap().Set("u_Color", barrelPondTexture);
+
+		std::shared_ptr<Lumeda::Model> boxModel = renderer.CreateModel("box", "assets/models/box.fbx");
+		for (size_t i = 0; i < boxModel->ListItems().size(); i++)
+		{
+			Lumeda::ModelItem modelItem = boxModel->ListItems()[i];
+			modelItem.m_Material = boxMaterial;
+			boxModel->SetItem(i, modelItem);
+		}
+
+		std::shared_ptr<Lumeda::Model> barrelPondModel = renderer.CreateModel("barrel_pond", "assets/models/barrel_pond.fbx");
+		for (size_t i = 0; i < barrelPondModel->ListItems().size(); i++)
+		{
+			Lumeda::ModelItem modelItem = barrelPondModel->ListItems()[i];
+			modelItem.m_Material = barrelPondMaterial;
+			barrelPondModel->SetItem(i, modelItem);
+		}
 
 		std::shared_ptr<Lumeda::Model> model = renderer.CreateModel("cube", "assets/models/cube.fbx");
-
 		// Sets the material for testing
 		for (size_t i = 0; i < model->ListItems().size(); i++)
 		{
 			Lumeda::ModelItem modelItem = model->ListItems()[i];
-			modelItem.m_Material = m_Material;
+			modelItem.m_Material = defaultMaterial;
 			model->SetItem(i, modelItem);
 		}
 
@@ -83,7 +87,7 @@ public:
 		std::shared_ptr<Lumeda::LightNode> lightNode = std::make_shared<Lumeda::LightNode>();
 		lightNode->GetLight().Color = glm::vec3(1.0f);
 		lightNode->GetLight().Intensity = 1.0f;
-		lightNode->GetLight().LightCharacteristics = { 1.2f, 1.2f, 0.8f };
+		lightNode->GetLight().LightCharacteristics = { 5.0f, 5.0f, 0.0f };
 		lightNode->GetLight().LightType = Lumeda::eLightType::POINT;
 		cubeModelNode->GetTransform().SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.0f));
 		cubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.15f));
@@ -94,7 +98,7 @@ public:
 
 		std::shared_ptr<Lumeda::ModelNode> centerCubeModelNode = std::make_shared<Lumeda::ModelNode>();
 		centerCubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.1f));
-		centerCubeModelNode->SetModel(*model);
+		centerCubeModelNode->SetModel(*barrelPondModel);
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
@@ -105,21 +109,13 @@ public:
 		// PlayerNode automatically add a CameraNode, but in order to access it, the child need to be really added, not pending.
 		playerNode->ProcessLifecycle();
 		std::shared_ptr<Lumeda::CameraNode> cameraNode = std::dynamic_pointer_cast<Lumeda::CameraNode>(playerNode->GetChildren()[0]);
-		cameraNode->GetCamera().SetCurrent();
+		cameraNode->GetCamera()->SetCurrent();
 
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
 
-		framebuffer = renderer.CreateFramebuffer("render");
-		framebuffer->Bind();
-		colorTexture = renderer.CreateTexture2D("colorTexture", 800, 600, Lumeda::eTextureFormat::RGB);
-		depthstencilTexture = renderer.CreateTexture2D("depthStencilTexture", 800, 600, Lumeda::eTextureFormat::DepthStencil);
-		framebuffer->AttachTexture2D(Lumeda::eFramebufferAttachment::ColorAttachment, colorTexture);
-		framebuffer->AttachTexture2D(Lumeda::eFramebufferAttachment::DepthStencilAttachment, depthstencilTexture);
-		LUMEDA_CORE_TRACE("[InitTest] Is framebuffer ready ? {0}", std::dynamic_pointer_cast<Lumeda::FramebufferOpenGL>(framebuffer)->IsComplete());
-		framebuffer->UnBind();
-
-		screenShader = renderer.CreateShader("screenShader", "assets/shaders/screenshader.vert", "assets/shaders/screenshader.frag");
+		renderTarget = renderer.CreateRenderTarget("RenderTarget", 600, 400);
+		otherRenderTarget = renderer.CreateRenderTarget("RenderTargetOther", 600, 400);
 	}
 
 	void Update() override
@@ -134,26 +130,14 @@ public:
 	{
 		LUMEDA_PROFILE;
 
-		// All of the below should be handled in the Renderer, not here.
-		// This is for testing !
-		framebuffer->Bind();
-		glViewport(0, 0, 800, 600);
-		glEnable(GL_DEPTH_TEST);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
+		renderer.BeginFrame();
 		rootNode->Render();
+		renderer.Render(Lumeda::Camera::GetCurrent(), renderTarget);
+		renderer.EndFrame();
 
-		framebuffer->UnBind();
-		glViewport(0, 0, Lumeda::Engine::Get().GetWindow().GetWidth(), Lumeda::Engine::Get().GetWindow().GetHeight());
-		glDisable(GL_DEPTH_TEST);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		screenShader->Bind();
-		colorTexture->Bind(0);
-		screenShader->SetUniform("u_ScreenTexture", 0);
-		depthstencilTexture->Bind(1);
-		screenShader->SetUniform("u_DepthStencilTexture", 1);
-		m_Mesh->Draw();
+		renderer.PrepareRenderScreen();
+		renderer.RenderToScreen(renderTarget);
 	}
 
 	void RenderImGui() override
@@ -173,16 +157,27 @@ public:
 				ImGui::EndMenu();
 			}
 
+			if (ImGui::BeginMenu("Resources"))
+			{
+				ImGui::SeparatorText("Graphics");
+				RenderGraphicsResourcesMenu();
+				ImGui::EndMenu();
+			}
+
 			if (ImGui::BeginMenu("Renderer"))
 			{
-				ImGui::SeparatorText("Resources");
-				RenderResourceMenu();
+				ImGui::SeparatorText("Framebuffer");
+				glm::ivec2 size = renderTarget->GetSize();
+				if (ImGui::InputInt2("Size", glm::value_ptr(size)))
+				{
+					renderTarget->SetSize(size);
+				}
 				ImGui::EndMenu();
 			}
 
 			if (ImGui::BeginMenu("Camera"))
 			{
-				Lumeda::Camera* m_Camera = Lumeda::Camera::GetCurrent();
+				std::shared_ptr<Lumeda::Camera> m_Camera = Lumeda::Camera::GetCurrent();
 
 				if (m_Camera != nullptr)
 				{
@@ -254,7 +249,7 @@ public:
 		}
 	}
 
-	void RenderResourceMenu()
+	void RenderGraphicsResourcesMenu()
 	{
 		LUMEDA_PROFILE;
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
@@ -281,6 +276,26 @@ public:
 					ImGui::LabelText("Pointer", "%x", texture);
 					ImGui::LabelText("Size", "%d x %d", texture->GetWidth(), texture->GetHeight());
 
+
+					const char* filterings[] = { "NEAREST", "LINEAR" };
+					int currentItem = (int)texture->GetFiltering();
+					if (ImGui::BeginCombo("Filtering", filterings[currentItem]))
+					{
+						for (int i = 0; i < sizeof(filterings) / sizeof(char*); i++)
+						{
+							bool selected = currentItem == i;
+							if (ImGui::Selectable(filterings[i], selected))
+							{
+								texture->Bind();
+								texture->SetFiltering((Lumeda::eTextureFiltering)i);
+							}
+							if (selected)
+							{
+								ImGui::SetItemDefaultFocus();
+							}
+						}
+						ImGui::EndCombo();
+					}
 #ifdef LUMEDA_USE_GLAD
 					std::shared_ptr<Lumeda::Texture2DOpenGL> castedTexture = std::dynamic_pointer_cast<Lumeda::Texture2DOpenGL>(texture);
 					ImGui::Image((ImTextureID)(intptr_t)castedTexture->GetOpenGLHandle(), ImVec2(128, 128));
@@ -417,12 +432,6 @@ public:
 		LUMEDA_PROFILE;
 		LUMEDA_TRACE("Terminate Sandbox");
 	}
-
-	std::shared_ptr<Lumeda::Material> m_Material;
-	std::shared_ptr<Lumeda::Shader> m_Shader;
-	std::shared_ptr<Lumeda::Mesh> m_Mesh;
-	std::shared_ptr<Lumeda::Texture2D> m_Texture;
-	std::shared_ptr<Lumeda::Model> m_Model;
 };
 
 int main()

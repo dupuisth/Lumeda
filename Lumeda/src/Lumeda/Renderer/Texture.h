@@ -3,13 +3,20 @@
 #include <Lumeda/Core/Base.h>
 
 #include <string>
+#include <glm/glm.hpp>
 
 namespace Lumeda
 {
-	enum class TextureFiltering
+	enum class eTextureFiltering
 	{
 		Nearest,
 		Linear
+	};
+
+	enum class eTextureWrapping
+	{
+		Repeat,
+		Clamp
 	};
 
 	enum class eTextureFormat
@@ -26,11 +33,6 @@ namespace Lumeda
 		virtual void Bind(int slot = 0) = 0;
 		virtual void UnBind() = 0;
 
-		virtual void SetFiltering(TextureFiltering filtering) = 0;
-
-		virtual int GetWidth() const = 0;
-		virtual int GetHeight() const = 0;
-
 		virtual const std::string& GetName() const = 0;
 	};
 
@@ -38,5 +40,15 @@ namespace Lumeda
 	{
 	public:
 		virtual ~Texture2D() = default;
+
+		virtual eTextureWrapping GetWrapping() const = 0;
+		virtual void SetWrapping(eTextureWrapping wrapping) = 0;
+
+		virtual eTextureFiltering GetFiltering() const = 0;
+		virtual void SetFiltering(eTextureFiltering filtering) = 0;
+
+		virtual const glm::ivec2& GetSize() const = 0;
+		virtual int GetWidth() const = 0;
+		virtual int GetHeight() const = 0;
 	};
 }

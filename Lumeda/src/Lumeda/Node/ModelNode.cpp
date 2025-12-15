@@ -2,6 +2,7 @@
 #include <Lumeda/Core/Engine.h>
 #include <Lumeda/Renderer/Renderer.h>
 #include <Lumeda/Renderer/Model.h>
+#include <Lumeda/Renderer/UniformsMap.h>
 #include <imgui.h>
 
 using namespace Lumeda;
@@ -13,7 +14,7 @@ ModelNode::ModelNode() : m_ModelName("")
 }
 
 ModelNode::~ModelNode()
-{ 
+{
 	LUMEDA_PROFILE;
 }
 
@@ -26,14 +27,15 @@ void ModelNode::OnRender()
 		std::shared_ptr<Model> model = renderer.GetModel(m_ModelName);
 		if (model != nullptr)
 		{
-			model->Draw(m_Transform.GetWorld());
+			sUniformsMap uniforms;
+			uniforms.Set("u_World", m_Transform.GetWorld());
+			renderer.Submit(model, uniforms);
 		}
 		else
 		{
 			LUMEDA_CORE_WARN("[ModelNode] The specified m_ModelName was not found in the renderer: '{0}'", m_ModelName);
 		}
 	}
-
 }
 
 void ModelNode::SetModel(Model& model)

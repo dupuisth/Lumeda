@@ -8,6 +8,8 @@ namespace Lumeda
 	{
 	public:
 		ShaderOpenGL(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
+		ShaderOpenGL(const std::string& name, const char* vertexPath, const char* fragmentPath, bool discriminator);
+
 		virtual ~ShaderOpenGL();
 
 		void Bind() override;
@@ -31,7 +33,7 @@ namespace Lumeda
 		std::string m_VertexPath;
 		std::string m_FragmentPath;
 		unsigned int m_Handle;
-		
+
 		std::string m_Name;
 	};
 }
