@@ -4,9 +4,10 @@
 
 using namespace Lumeda;
 
-CameraNode::CameraNode() : m_Camera(&m_Transform)
+CameraNode::CameraNode()
 {
     LUMEDA_PROFILE;
+    m_Camera = std::make_shared<Camera>(&m_Transform);
     SetName("CameraNode");
 }
 
@@ -16,7 +17,7 @@ CameraNode::~CameraNode()
 }
 
 
-Camera& Lumeda::CameraNode::GetCamera()
+std::shared_ptr<Camera> Lumeda::CameraNode::GetCamera()
 {
     LUMEDA_PROFILE;
     return m_Camera;
@@ -25,7 +26,7 @@ Camera& Lumeda::CameraNode::GetCamera()
 void CameraNode::OnUpdate()
 {
     LUMEDA_PROFILE;
-    m_Camera.SetDirty(); // For now, force rebuild each frames, a callback on transform will be needed
+    m_Camera->SetDirty(); // For now, force rebuild each frames, a callback on transform will be needed
 }
 
 void CameraNode::OnRenderImGui()
@@ -35,6 +36,6 @@ void CameraNode::OnRenderImGui()
     ImGui::SeparatorText("CameraNode");
     if (ImGui::Checkbox("IsMain", &m_IsMain))
     {
-        Camera::SetCurrent(&m_Camera);
+        m_Camera->SetCurrent();
     }
 }

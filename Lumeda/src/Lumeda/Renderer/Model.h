@@ -10,6 +10,7 @@ namespace Lumeda
 {
 	class Material;
 	class Mesh;
+	struct sUniformsMap;
 
 	struct ModelItem
 	{
@@ -25,6 +26,7 @@ namespace Lumeda
 
 		virtual void Draw();
 		virtual void Draw(const glm::mat4& world);
+		virtual void Draw(sUniformsMap& uniforms);
 
 		virtual const std::vector<ModelItem>& ListItems() const;
 		virtual void AttachItem(const ModelItem& modelItem);

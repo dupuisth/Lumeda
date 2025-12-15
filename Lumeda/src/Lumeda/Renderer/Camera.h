@@ -8,7 +8,7 @@
 
 namespace Lumeda
 {
-	class Camera
+	class Camera : public std::enable_shared_from_this<Camera>
 	{
 	public:
 		Camera(Transform* transform = nullptr);
@@ -29,8 +29,8 @@ namespace Lumeda
 		void SetZFar(float zFar);
 		void SetDirty(bool dirty = true) { m_IsDirty = dirty; }
 
-		static Camera* GetCurrent();
-		static void SetCurrent(Camera* camera);
+		static std::shared_ptr<Camera> GetCurrent();
+		static void SetCurrent(std::shared_ptr<Camera> camera);
 		void SetCurrent();
 
 	protected:

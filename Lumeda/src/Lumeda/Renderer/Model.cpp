@@ -3,6 +3,7 @@
 #include <Lumeda/Renderer/Material.h>
 #include <Lumeda/Renderer/Shader.h>
 #include <Lumeda/Renderer/Mesh.h>
+#include <Lumeda/Renderer/UniformsMap.h>
 
 using namespace Lumeda;
 
@@ -36,8 +37,21 @@ void Model::Draw(const glm::mat4& world)
 	{
 		if (modelItem.m_Material != nullptr && modelItem.m_Mesh != nullptr)
 		{
-			modelItem.m_Material->SetUniform("u_World", world);
+			modelItem.m_Material->GetUniformsMap().Set("u_World", world);
 			modelItem.m_Material->Use();
+			modelItem.m_Mesh->Draw();
+		}
+	}
+}
+
+void Model::Draw(sUniformsMap& uniforms)
+{
+	LUMEDA_PROFILE;
+	for (const auto& modelItem : m_ModelItems)
+	{
+		if (modelItem.m_Material != nullptr && modelItem.m_Mesh != nullptr)
+		{
+			modelItem.m_Material->Use(uniforms);
 			modelItem.m_Mesh->Draw();
 		}
 	}

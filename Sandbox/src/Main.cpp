@@ -9,13 +9,12 @@ class Sandbox : public Lumeda::Layer
 {
 private:
 	std::shared_ptr<Lumeda::RenderTarget> renderTarget;
-	std::shared_ptr<Lumeda::Shader> screenShader;
+	std::shared_ptr<Lumeda::RenderTarget> otherRenderTarget;
+
 
 	std::shared_ptr<Lumeda::RootNode> rootNode;
 	Lumeda::Node* selectedNode = nullptr;
 	Lumeda::Node* secondSeletedNode = nullptr;
-
-
 
 public:
 	Sandbox()
@@ -36,29 +35,12 @@ public:
 		Lumeda::Engine::Get().GetWindow().SetSize(glm::ivec2(980, 500));
 
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
-		m_Shader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
-		m_Mesh = renderer.CreateMesh(
-			"quad",
-			{
-				-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Top Left
-				-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,  // Bottom Left
-				1.0f, 1.0f, 0.0f, 1.0f, 1.0f,   // Top Right
-				1.0f, -1.0f, 0.0f, 1.0f, 0.0f     // Bottom Right
-			},
-			{
-				0, 1, 2,
-				1, 2, 3
-			},
-			{
-				{ 0, 3, Lumeda::MeshAttribType::FLOAT },
-				{ 1, 2, Lumeda::MeshAttribType::FLOAT }
-			}
-		);
-		m_Texture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
 
+		m_Texture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
+		m_Shader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
 		m_Material = renderer.CreateMaterial("default");
 		m_Material->SetShader(m_Shader);
-		m_Material->SetUniform("u_Color", m_Texture);
+		m_Material->GetUniformsMap().Set("u_Color", m_Texture);
 
 		m_Model = renderer.CreateModel("quad");
 		m_Model->AttachItem(
@@ -103,13 +85,13 @@ public:
 		// PlayerNode automatically add a CameraNode, but in order to access it, the child need to be really added, not pending.
 		playerNode->ProcessLifecycle();
 		std::shared_ptr<Lumeda::CameraNode> cameraNode = std::dynamic_pointer_cast<Lumeda::CameraNode>(playerNode->GetChildren()[0]);
-		cameraNode->GetCamera().SetCurrent();
+		cameraNode->GetCamera()->SetCurrent();
 
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
 
 		renderTarget = renderer.CreateRenderTarget("RenderTarget", 600, 400);
-		screenShader = renderer.CreateShader("screenShader", "assets/shaders/screenshader.vert", "assets/shaders/screenshader.frag");
+		otherRenderTarget = renderer.CreateRenderTarget("RenderTarget_half", 100, 100);
 	}
 
 	void Update() override
@@ -124,22 +106,14 @@ public:
 	{
 		LUMEDA_PROFILE;
 
-		// All of the below should be handled in the Renderer, not here.
-		// This is for testing !
-		renderTarget->Bind();
-		glViewport(0, 0, renderTarget->GetSize().x, renderTarget->GetSize().y);
-		glEnable(GL_DEPTH_TEST);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
+		renderer.BeginFrame();
 		rootNode->Render();
-		renderTarget->UnBind();
+		renderer.Render(Lumeda::Camera::GetCurrent(), renderTarget);
+		renderer.EndFrame();
 
-		glViewport(0, 0, Lumeda::Engine::Get().GetWindow().GetWidth(), Lumeda::Engine::Get().GetWindow().GetHeight());
-		glDisable(GL_DEPTH_TEST);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		std::static_pointer_cast<Lumeda::RenderTargetOpenGL>(renderTarget)->PrepareRender(screenShader);
-		m_Mesh->Draw();
+		renderer.PrepareRenderScreen();
+		renderer.RenderToScreen(renderTarget);
 	}
 
 	void RenderImGui() override
@@ -179,7 +153,7 @@ public:
 
 			if (ImGui::BeginMenu("Camera"))
 			{
-				Lumeda::Camera* m_Camera = Lumeda::Camera::GetCurrent();
+				std::shared_ptr<Lumeda::Camera> m_Camera = Lumeda::Camera::GetCurrent();
 
 				if (m_Camera != nullptr)
 				{

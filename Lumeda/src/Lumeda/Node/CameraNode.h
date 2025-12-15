@@ -12,14 +12,14 @@ namespace Lumeda
 		CameraNode();
 		virtual ~CameraNode();
 
-		Camera& GetCamera();
+		std::shared_ptr<Camera> GetCamera();
 
 	protected:
 		void OnUpdate() override;
 		void OnRenderImGui() override;
 
 	protected:
-		Camera m_Camera;
+		std::shared_ptr<Camera> m_Camera;
 		bool m_IsMain;
 	};
 }

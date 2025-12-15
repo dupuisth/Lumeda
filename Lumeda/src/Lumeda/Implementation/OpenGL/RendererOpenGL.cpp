@@ -10,12 +10,36 @@
 #include <Lumeda/Renderer/Model.h>
 #include <Lumeda/Renderer/Camera.h>
 #include <Lumeda/Renderer/ModelLoader.h>
+#include <Lumeda/Renderer/Camera.h>
 
 #include <glad/glad.h>
 
 using namespace Lumeda;
 
+const char* SCREEN_SHADER_VERT = "#version 460 core \n \
+layout (location = 0) in vec3 a_Pos; \
+layout (location = 1) in vec2 a_Uv; \
+out vec2 f_Uv; \
+void main() \
+{ \
+	f_Uv = a_Uv; \
+	gl_Position = vec4(a_Pos, 1.0); \
+}";
+
+const char* SCREEN_SHADER_FRAG = "#version 460 core \n \
+in vec2 f_Uv; \
+out vec4 FragColor; \
+uniform sampler2D u_ColorTexture; \
+uniform sampler2D u_DepthStencilTexture; \
+void main() \
+{ \
+    float ds = length(vec4(1.0) - texture(u_DepthStencilTexture, f_Uv)); \
+    vec4 color = texture(u_ColorTexture, f_Uv); \
+    FragColor = color; \
+}";
+
 RendererOpenGL::RendererOpenGL()
+	: m_RenderCallsMesh()
 {
 	LUMEDA_PROFILE;
 	if (!gladLoadGL())
@@ -28,8 +52,24 @@ RendererOpenGL::RendererOpenGL()
 		std::bind(&RendererOpenGL::OnWindowResize, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
 	);
 
-	// Enable depth test
-	glEnable(GL_DEPTH_TEST);
+	m_ScreenShader = CreateShaderFromSource("Renderer_ScreenShader", SCREEN_SHADER_VERT, SCREEN_SHADER_FRAG);
+	m_ScreenMesh = CreateMesh(
+		"Renderer_Quad",
+		{
+			-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Top Left
+			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,  // Bottom Left
+			1.0f, 1.0f, 0.0f, 1.0f, 1.0f,   // Top Right
+			1.0f, -1.0f, 0.0f, 1.0f, 0.0f     // Bottom Right
+		},
+			{
+				0, 1, 2,
+				1, 2, 3
+			},
+			{
+				{ 0, 3, Lumeda::MeshAttribType::FLOAT },
+				{ 1, 2, Lumeda::MeshAttribType::FLOAT }
+			}
+	);
 }
 
 RendererOpenGL::~RendererOpenGL()
@@ -85,29 +125,6 @@ void RendererOpenGL::SetViewport(int x, int y, int width, int height)
 {
 	LUMEDA_PROFILE;
 	glViewport(x, y, width, height);
-}
-
-void RendererOpenGL::PrepareShaders()
-{
-	LUMEDA_PROFILE;
-	glm::vec3 cameraPosition(0.0f);
-	glm::vec3 cameraForward(0.0f, 0.0f, 1.0f);
-	glm::mat4 cameraMatrix(1.0f);
-	float time = 0.0f; // TODO : Fix this when there is a Timer
-
-	Camera* currentCamera = Camera::GetCurrent();
-	if (currentCamera != nullptr)
-	{
-		cameraPosition = currentCamera->GetTransform().GetPosition();
-		cameraForward = currentCamera->GetTransform().GetForward();
-		cameraMatrix = currentCamera->GetProjectionView();
-	}
-
-	for (const auto& [name, shader] : m_Shaders)
-	{
-		shader->Bind();
-		shader->Prepare(time, cameraPosition, cameraForward, cameraMatrix);
-	}
 }
 
 const std::unordered_map<std::string, std::shared_ptr<Shader>>& Lumeda::RendererOpenGL::ListShaders()
@@ -212,6 +229,14 @@ std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& name, co
 	return shader;
 }
 
+std::shared_ptr<Shader> RendererOpenGL::CreateShaderFromSource(const std::string& name, const char* vertexCode, const char* fragmentCode)
+{
+	LUMEDA_PROFILE;
+	std::shared_ptr<ShaderOpenGL> shader = std::make_shared<ShaderOpenGL>(name, vertexCode, fragmentCode, 0);
+	m_Shaders.insert({ name, shader });
+	return shader;
+}
+
 std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& name, const std::string& path)
 {
 	LUMEDA_PROFILE;
@@ -276,6 +301,113 @@ std::shared_ptr<RenderTarget> RendererOpenGL::CreateRenderTarget(const std::stri
 	return renderTarget;
 }
 
+void RendererOpenGL::BeginFrame()
+{
+	LUMEDA_PROFILE;
+	m_RenderCallsMesh.clear();
+	m_RenderCallsModel.clear();
+}
+
+void RendererOpenGL::Submit(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material, sUniformsMap& uniforms)
+{
+	LUMEDA_PROFILE;
+	sRenderCallMesh renderCall;
+	renderCall.mesh = mesh;
+	renderCall.material = material;
+	renderCall.uniformMap = uniforms;
+
+	m_RenderCallsMesh.push_back(renderCall);
+}
+
+void RendererOpenGL::Submit(std::shared_ptr<Model> model, sUniformsMap& uniforms)
+{
+	LUMEDA_PROFILE;
+	sRenderCallModel renderCall;
+	renderCall.model = model;
+	renderCall.uniformMap = uniforms;
+
+	m_RenderCallsModel.push_back(renderCall);
+}
+
+void RendererOpenGL::Render(std::shared_ptr<Camera> camera, std::shared_ptr<RenderTarget> renderTarget)
+{
+	LUMEDA_PROFILE;
+	glm::vec3 cameraPosition(0.0f);
+	glm::vec3 cameraForward(0.0f, 0.0f, 1.0f);
+	glm::mat4 cameraMatrix(1.0f);
+	float time = 0.0f; // TODO : Fix this when there is a Timer
+
+	if (camera != nullptr)
+	{
+		cameraPosition = camera->GetTransform().GetPosition();
+		cameraForward = camera->GetTransform().GetForward();
+		cameraMatrix = camera->GetProjectionView();
+	}
+
+	for (const auto& [name, shader] : m_Shaders)
+	{
+		shader->Bind();
+		shader->Prepare(time, cameraPosition, cameraForward, cameraMatrix);
+	}
+
+	if (renderTarget != nullptr)
+	{
+		renderTarget->Bind();
+		glViewport(0, 0, renderTarget->GetSize().x, renderTarget->GetSize().y);
+
+	}
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	for (auto& renderCall : m_RenderCallsModel)
+	{
+		renderCall.model->Draw(renderCall.uniformMap);
+	}
+
+	for (auto& renderCall : m_RenderCallsMesh)
+	{
+		renderCall.material->Use(renderCall.uniformMap);
+		renderCall.mesh->Draw();
+	}
+
+	if (renderTarget != nullptr)
+	{
+		renderTarget->UnBind();
+	}
+}
+
+void RendererOpenGL::PrepareRenderScreen()
+{
+	LUMEDA_PROFILE;
+	glDisable(GL_DEPTH_TEST);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+}
+
+void RendererOpenGL::RenderToScreen(std::shared_ptr<RenderTarget> renderTarget, int x, int y, int width, int height)
+{
+	LUMEDA_PROFILE;
+	glViewport(x, y, width, height);
+
+	std::static_pointer_cast<RenderTargetOpenGL>(renderTarget)->PrepareRender(m_ScreenShader);
+	m_ScreenMesh->Draw();
+}
+
+void RendererOpenGL::RenderToScreen(std::shared_ptr<RenderTarget> renderTarget)
+{
+	LUMEDA_PROFILE;
+	glm::ivec2 size = Engine::Get().GetWindow().GetSize();
+	RenderToScreen(renderTarget, 0, 0, size.x, size.y);
+}
+
+void RendererOpenGL::EndFrame()
+{
+	LUMEDA_PROFILE;
+	m_RenderCallsMesh.clear();
+	m_RenderCallsModel.clear();
+}
 
 void RendererOpenGL::OnWindowResize(Window& window, int width, int height)
 {
