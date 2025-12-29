@@ -63,7 +63,7 @@ RendererOpenGL::RendererOpenGL()
 		},
 			{
 				0, 1, 2,
-				1, 2, 3
+				1, 3, 2
 			},
 			{
 				{ 0, 3, Lumeda::MeshAttribType::FLOAT },

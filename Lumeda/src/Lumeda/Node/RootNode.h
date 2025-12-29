@@ -15,6 +15,7 @@ namespace Lumeda
 
         void AddLightNode(std::shared_ptr<LightNode> lightNode);
         void RemoveLightNode(std::shared_ptr<LightNode> lightNode);
+        std::vector<std::shared_ptr<LightNode>>& GetLightNodes();
 
     protected:
         void OnRender() override;

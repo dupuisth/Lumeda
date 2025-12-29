@@ -129,10 +129,17 @@ public:
 	void Render() override
 	{
 		LUMEDA_PROFILE;
-
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
 		renderer.BeginFrame();
 		rootNode->Render();
+
+		Lumeda::Gizmos& gizmos = Lumeda::Engine::Get().GetGizmos();
+		for (const auto& light : rootNode->GetLightNodes())
+		{
+			gizmos.SetColor(glm::vec4(light->GetLight().Color, 1.0f));
+			gizmos.DrawCube(light->GetTransform().GetPosition(), light->GetTransform().GetRotationEulerAngles(), glm::vec3(0.1f));
+		}
+
 		renderer.Render(Lumeda::Camera::GetCurrent(), renderTarget);
 		renderer.EndFrame();
 
