@@ -15,6 +15,7 @@ namespace Lumeda
         virtual void Terminate() = 0;
 
         virtual void DrawCube(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale) = 0;
+        virtual void DrawGrid() = 0;
 
         virtual void SetColor(const glm::vec4& color) = 0;
 

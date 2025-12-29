@@ -139,6 +139,7 @@ public:
 			gizmos.SetColor(glm::vec4(light->GetLight().Color, 1.0f));
 			gizmos.DrawCube(light->GetTransform().GetPosition(), light->GetTransform().GetRotationEulerAngles(), glm::vec3(0.1f));
 		}
+		gizmos.DrawGrid();
 
 		renderer.Render(Lumeda::Camera::GetCurrent(), renderTarget);
 		renderer.EndFrame();

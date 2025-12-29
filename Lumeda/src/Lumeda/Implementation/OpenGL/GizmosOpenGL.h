@@ -21,14 +21,19 @@ namespace Lumeda
         void Terminate() override;
 
         void DrawCube(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale) override;
+        void DrawGrid() override;
 
         void SetColor(const glm::vec4& color) override;
 
     private:
         std::shared_ptr<Mesh> m_Cube;
+        std::shared_ptr<Mesh> m_Plane;
 
         std::shared_ptr<Shader> m_Shader;
         std::shared_ptr<Material> m_Material;
+
+        std::shared_ptr<Shader> m_GridShader;
+        std::shared_ptr<Material> m_GridMaterial;
 
         glm::vec4 m_CurrentColor;
     };
