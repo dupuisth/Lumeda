@@ -15,6 +15,7 @@ void sUniformsMap::Send(std::shared_ptr<Shader> shader)
     sUniformsMap_BrainlessSend(Mat4);
     sUniformsMap_BrainlessSend(Vec2);
     sUniformsMap_BrainlessSend(Vec3);
+    sUniformsMap_BrainlessSend(Vec4);
     sUniformsMap_BrainlessSend(Float);
     sUniformsMap_BrainlessSend(Int);
 
@@ -32,6 +33,7 @@ void sUniformsMap::Send(std::shared_ptr<Shader> shader)
     map[uniform] = val; \
 }
 sUniformsMap_SetImplementationMacro(const glm::mat4&, Mat4)
+sUniformsMap_SetImplementationMacro(const glm::vec4&, Vec4)
 sUniformsMap_SetImplementationMacro(const glm::vec3&, Vec3)
 sUniformsMap_SetImplementationMacro(const glm::vec2&, Vec2)
 sUniformsMap_SetImplementationMacro(float, Float)

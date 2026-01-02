@@ -48,6 +48,10 @@ Engine::Engine() : m_Application()
 	m_ImGuiLayer = std::make_unique<ImGuiLayer>();
 	m_ImGuiLayer->Initialize();
 	LUMEDA_CORE_INFO("ImGui initialized");
+
+	m_Gizmos = Gizmos::Create();
+	m_Gizmos->Initialize();
+	LUMEDA_CORE_INFO("Gizmos initialized");
 }
 
 Engine::~Engine() {}
@@ -93,6 +97,10 @@ void Engine::Run(std::unique_ptr<Layer> application)
 	m_Application->Terminate();
 	m_Application.reset();
 
+	// Destroy Gizmos
+	m_Gizmos->Terminate();
+	m_Gizmos.reset();
+
 	// Destroy ImGui
 	m_ImGuiLayer->Terminate();
 	m_ImGuiLayer.reset();
@@ -119,6 +127,12 @@ Renderer& Engine::GetRenderer()
 {
 	LUMEDA_PROFILE;
 	return *m_Renderer;
+}
+
+Gizmos& Engine::GetGizmos()
+{
+	LUMEDA_PROFILE;
+	return *m_Gizmos;
 }
 
 Engine& Engine::Get()

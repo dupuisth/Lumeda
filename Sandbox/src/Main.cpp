@@ -102,7 +102,7 @@ public:
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
-		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.2f, 0.05f, 0.1f));
+		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.05f, 0.0f));
 		std::shared_ptr<Lumeda::PlayerNode> playerNode = std::make_shared<Lumeda::PlayerNode>();
 		playerNode->GetTransform().SetLocalPosition({ 0.0f, 0.5f, -0.8f });
 		playerNode->GetTransform().SetLocalRotationEulerAngles({ 30.0f, 0.0f, 0.0f });
@@ -129,10 +129,18 @@ public:
 	void Render() override
 	{
 		LUMEDA_PROFILE;
-
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
 		renderer.BeginFrame();
 		rootNode->Render();
+
+		Lumeda::Gizmos& gizmos = Lumeda::Engine::Get().GetGizmos();
+		for (const auto& light : rootNode->GetLightNodes())
+		{
+			gizmos.SetColor(glm::vec4(light->GetLight().Color, 1.0f));
+			gizmos.DrawCube(light->GetTransform().GetPosition(), light->GetTransform().GetRotationEulerAngles(), glm::vec3(0.1f));
+		}
+		gizmos.DrawGrid();
+
 		renderer.Render(Lumeda::Camera::GetCurrent(), renderTarget);
 		renderer.EndFrame();
 

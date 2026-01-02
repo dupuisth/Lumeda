@@ -32,6 +32,7 @@ void RootNode::OnRenderImGui()
 
 void RootNode::AddLightNode(std::shared_ptr<LightNode> lightNode)
 {
+    LUMEDA_PROFILE;
     auto it = std::find(m_LightNodes.begin(), m_LightNodes.end(), lightNode);
     if (it == m_LightNodes.end())
     {
@@ -45,6 +46,8 @@ void RootNode::AddLightNode(std::shared_ptr<LightNode> lightNode)
 
 void RootNode::RemoveLightNode(std::shared_ptr<LightNode> lightNode)
 {
+    LUMEDA_PROFILE;
+
     auto it = std::find(m_LightNodes.begin(), m_LightNodes.end(), lightNode);
     if (it != m_LightNodes.end())
     {
@@ -56,8 +59,15 @@ void RootNode::RemoveLightNode(std::shared_ptr<LightNode> lightNode)
     }
 }
 
+std::vector<std::shared_ptr<LightNode>>& RootNode::GetLightNodes()
+{
+    LUMEDA_PROFILE;
+    return m_LightNodes;
+}
+
 void RootNode::OnRender()
 {
+    LUMEDA_PROFILE;
     // Prepare shaders
     Renderer& renderer = Engine::Get().GetRenderer();
 
