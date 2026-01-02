@@ -91,7 +91,6 @@ void Engine::Run(std::unique_ptr<Layer> application)
 			m_Window->Update();
 		}
 	}
-	m_Application->Terminate();
 
 	// Destroy Application
 	m_Application->Terminate();
