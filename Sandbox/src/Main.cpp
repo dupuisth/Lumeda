@@ -235,8 +235,8 @@ public:
 		if (ImGui::Begin("Scene"))
 		{
 			RenderSceneTree();
-			ImGui::End();
 		}
+		ImGui::End();
 
 		if (selectedNode != nullptr)
 		{
@@ -252,7 +252,7 @@ public:
 			if (ImGui::Begin("Second Selected Node"))
 			{
 				secondSeletedNode->RenderImGui();
-			}
+			}	
 			ImGui::End();
 		}
 	}
