@@ -32,7 +32,7 @@ namespace Lumeda
 		std::unique_ptr<Layer> m_Application;
 
 		std::unique_ptr<Window> m_Window;
-		std::unique_ptr<Renderer> m_Renderer;
+		Renderer* m_Renderer;
 		std::unique_ptr<ImGuiLayer> m_ImGuiLayer;
 		std::unique_ptr<InputsLayer> m_InputsLayer;
 		std::unique_ptr<Gizmos> m_Gizmos;

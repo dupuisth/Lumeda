@@ -42,6 +42,6 @@ namespace Lumeda
         float AngleRad;
         glm::vec3 Color;
 
-        void SendToShader(std::shared_ptr<Shader> shader, Transform* transform, sLightPassCounter& counter);
+        void SendToShader(Shader* shader, Transform* transform, sLightPassCounter& counter);
     };
 }

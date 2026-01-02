@@ -10,7 +10,7 @@ for (const auto& [uniform, val] : map) { \
 shader->SetUniform(uniform, val); \
 }
 
-void sUniformsMap::Send(std::shared_ptr<Shader> shader)
+void sUniformsMap::Send(Shader* shader)
 {
     sUniformsMap_BrainlessSend(Mat4);
     sUniformsMap_BrainlessSend(Vec2);
@@ -38,4 +38,4 @@ sUniformsMap_SetImplementationMacro(const glm::vec3&, Vec3)
 sUniformsMap_SetImplementationMacro(const glm::vec2&, Vec2)
 sUniformsMap_SetImplementationMacro(float, Float)
 sUniformsMap_SetImplementationMacro(int, Int)
-sUniformsMap_SetImplementationMacro(std::shared_ptr<Texture2D>, Texture)
+sUniformsMap_SetImplementationMacro(Texture2D*, Texture)

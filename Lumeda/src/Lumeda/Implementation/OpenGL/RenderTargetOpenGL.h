@@ -20,7 +20,7 @@ namespace Lumeda
         const std::string& GetName() const override;
 
         void Bind() override;
-        void PrepareRender(std::shared_ptr<Shader> shader);
+        void PrepareRender(Shader* shader);
         void UnBind() override;
 
         void SetSize(const glm::ivec2& size) override;
@@ -30,8 +30,8 @@ namespace Lumeda
         std::string m_Name;
         glm::ivec2 m_Size;
 
-        std::shared_ptr<Framebuffer> m_Framebuffer;
-        std::shared_ptr<Texture2D> m_ColorTexture;
-        std::shared_ptr<Texture2D> m_DepthStencilTexture;
+        Framebuffer* m_Framebuffer;
+        Texture2D* m_ColorTexture;
+        Texture2D* m_DepthStencilTexture;
     };
 }

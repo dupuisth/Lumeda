@@ -11,14 +11,14 @@ namespace Lumeda
 {
     struct sRenderCallMesh
     {
-        std::shared_ptr<Mesh> mesh;
-        std::shared_ptr<Material> material;
+        Mesh* mesh;
+        Material* material;
         sUniformsMap uniformMap;
     };
 
     struct sRenderCallModel
     {
-        std::shared_ptr<Model> model;
+        Model* model;
         sUniformsMap uniformMap;
     };
 }

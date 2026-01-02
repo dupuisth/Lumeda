@@ -16,6 +16,7 @@ namespace Lumeda
 	public:
 		static void Init();
 
+		// Can't use raw pointer with spdlog, the API uses shared_ptr
 		static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
 		static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 

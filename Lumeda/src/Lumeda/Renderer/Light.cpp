@@ -38,7 +38,7 @@ void sLightPassCounter::Reset()
     Counter = std::map<eLightType, int>();
 }
 
-void sLight::SendToShader(std::shared_ptr<Shader> shader, Transform* transform, sLightPassCounter& counter)
+void sLight::SendToShader(Shader* shader, Transform* transform, sLightPassCounter& counter)
 {
     LUMEDA_PROFILE;
     if (LightType == eLightType::POINT)

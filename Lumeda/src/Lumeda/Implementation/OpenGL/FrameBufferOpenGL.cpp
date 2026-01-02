@@ -43,7 +43,7 @@ bool FramebufferOpenGL::IsComplete()
     return false;
 }
 
-void FramebufferOpenGL::AttachTexture2D(eFramebufferAttachment slot, std::shared_ptr<Texture2D> texture)
+void FramebufferOpenGL::AttachTexture2D(eFramebufferAttachment slot, Texture2D* texture)
 {
     GLenum flag;
     switch (slot)
@@ -60,6 +60,6 @@ void FramebufferOpenGL::AttachTexture2D(eFramebufferAttachment slot, std::shared
         break;
     }
 
-    std::shared_ptr<Texture2DOpenGL> casted_texture = std::dynamic_pointer_cast<Texture2DOpenGL>(texture);
+    Texture2DOpenGL* casted_texture = static_cast<Texture2DOpenGL*>(texture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, flag, GL_TEXTURE_2D, casted_texture->GetOpenGLHandle(), 0);
 }

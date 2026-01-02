@@ -1,13 +1,12 @@
 #include <Lumeda/Node/CameraNode.h>
 #include <imgui.h>
-#include "CameraNode.h"
 
 using namespace Lumeda;
 
 CameraNode::CameraNode()
 {
     LUMEDA_PROFILE;
-    m_Camera = std::make_shared<Camera>(&m_Transform);
+    m_Camera = LUMEDA_NEW(Camera, MemTag::General, &m_Transform);
     SetName("CameraNode");
 }
 
@@ -17,7 +16,7 @@ CameraNode::~CameraNode()
 }
 
 
-std::shared_ptr<Camera> Lumeda::CameraNode::GetCamera()
+Camera* Lumeda::CameraNode::GetCamera()
 {
     LUMEDA_PROFILE;
     return m_Camera;

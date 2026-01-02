@@ -24,7 +24,7 @@ void ModelNode::OnRender()
 	if (m_ModelName != "")
 	{
 		Renderer& renderer = Engine::Get().GetRenderer();
-		std::shared_ptr<Model> model = renderer.GetModel(m_ModelName);
+		Model* model = renderer.GetModel(m_ModelName);
 		if (model != nullptr)
 		{
 			sUniformsMap uniforms;

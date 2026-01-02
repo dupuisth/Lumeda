@@ -12,7 +12,7 @@ namespace Lumeda
 {
     class RootNode;
 
-    class Node : public std::enable_shared_from_this<Node>
+    class Node
     {
     public:
         Node();
@@ -27,9 +27,9 @@ namespace Lumeda
         void RenderImGui();
 
         // Hierarchy management
-        void SetParent(std::shared_ptr<Node> newParent);
-        void AddChild(std::shared_ptr<Node> node, bool immediate = false);
-        void RemoveChild(std::shared_ptr<Node> node);
+        void SetParent(Node* newParent);
+        void AddChild(Node* node, bool immediate = false);
+        void RemoveChild(Node* node);
 
         // Enable/Disable
         void SetEnabled(bool enabled);
@@ -37,12 +37,12 @@ namespace Lumeda
         bool IsEnabled() const { LUMEDA_PROFILE; return m_isEnabled; }
 
         // Accessors
-        std::shared_ptr<Node> GetParent() const { LUMEDA_PROFILE; return m_Parent; }
-        const std::vector<std::shared_ptr<Node>>& GetChildren() const { LUMEDA_PROFILE; return m_Children; }
+        Node* GetParent() const { LUMEDA_PROFILE; return m_Parent; }
+        const std::vector<Node*>& GetChildren() const { LUMEDA_PROFILE; return m_Children; }
         const std::string& GetName() const { LUMEDA_PROFILE; return m_Name; }
         void SetName(const std::string& name) { LUMEDA_PROFILE; m_Name = name; }
         Transform& GetTransform() { LUMEDA_PROFILE; return m_Transform; }
-        std::shared_ptr<RootNode> GetRootNode();
+        RootNode* GetRootNode();
 
     protected:
         // Virtual methods for derived classes to override
@@ -59,16 +59,16 @@ namespace Lumeda
         bool m_isEnabled;
         Transform m_Transform;
 
-        std::shared_ptr<Node> m_Parent;
-        std::vector<std::shared_ptr<Node>> m_Children;
+        Node* m_Parent;
+        std::vector<Node*> m_Children;
     private:
         void ApplyPendingHierarchyChanges();
         void ApplyPendingEnableChanges();
 
         // Pending operations (deferred until ProcessLifecycle)
-        std::vector<std::shared_ptr<Node>> m_PendingAdd;
-        std::vector<std::shared_ptr<Node>> m_PendingRemove;
-        std::shared_ptr<Node> m_PendingParent;
+        std::vector<Node*> m_PendingAdd;
+        std::vector<Node*> m_PendingRemove;
+        Node* m_PendingParent;
         bool m_HasPendingParentChange;
         bool m_PendingEnabledState;
         bool m_HasPendingEnabledChange;

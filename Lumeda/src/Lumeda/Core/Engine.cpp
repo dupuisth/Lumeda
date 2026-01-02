@@ -105,7 +105,7 @@ void Engine::Run(std::unique_ptr<Layer> application)
 	m_ImGuiLayer.reset();
 
 	// Destroy the renderer
-	m_Renderer.reset();
+	Delete(m_Renderer);
 
 	// Destroy the inputs layer
 	m_InputsLayer.reset();

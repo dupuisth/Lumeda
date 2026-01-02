@@ -30,7 +30,7 @@ void RootNode::OnRenderImGui()
     ImGui::LabelText("Light count", "%d", m_LightNodes.size());
 }
 
-void RootNode::AddLightNode(std::shared_ptr<LightNode> lightNode)
+void RootNode::AddLightNode(LightNode* lightNode)
 {
     LUMEDA_PROFILE;
     auto it = std::find(m_LightNodes.begin(), m_LightNodes.end(), lightNode);
@@ -44,7 +44,7 @@ void RootNode::AddLightNode(std::shared_ptr<LightNode> lightNode)
     }
 }
 
-void RootNode::RemoveLightNode(std::shared_ptr<LightNode> lightNode)
+void RootNode::RemoveLightNode(LightNode* lightNode)
 {
     LUMEDA_PROFILE;
 
@@ -59,7 +59,7 @@ void RootNode::RemoveLightNode(std::shared_ptr<LightNode> lightNode)
     }
 }
 
-std::vector<std::shared_ptr<LightNode>>& RootNode::GetLightNodes()
+std::vector<LightNode*>& RootNode::GetLightNodes()
 {
     LUMEDA_PROFILE;
     return m_LightNodes;
@@ -72,7 +72,7 @@ void RootNode::OnRender()
     Renderer& renderer = Engine::Get().GetRenderer();
 
 
-    const std::unordered_map<std::string, std::shared_ptr<Shader>>& shadersMap = renderer.ListShaders();
+    const std::unordered_map<std::string, Shader*>& shadersMap = renderer.ListShaders();
     for (auto const& [name, shader] : shadersMap)
     {
         shader->Bind();

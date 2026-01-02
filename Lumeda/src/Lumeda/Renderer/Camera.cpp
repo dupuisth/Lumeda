@@ -7,7 +7,7 @@
 
 using namespace Lumeda;
 
-static std::shared_ptr<Camera> s_Instance = nullptr;
+static Camera* s_Instance = nullptr;
 
 Camera::Camera(Transform* transform)
 	: m_ProjectionView(1.0f), m_IsDirty(true), m_Transform(transform), m_HasTransformOwnership(false)
@@ -15,7 +15,7 @@ Camera::Camera(Transform* transform)
 	LUMEDA_PROFILE;
 	if (transform == nullptr)
 	{
-		m_Transform = new Transform();
+		m_Transform = LUMEDA_NEW(Transform, MemTag::General);
 		m_HasTransformOwnership = true;
 	}
 
@@ -36,7 +36,7 @@ Camera::~Camera()
 
 	if (m_HasTransformOwnership)
 	{
-		delete m_Transform;
+		Delete(m_Transform);
 	}
 }
 
@@ -57,13 +57,13 @@ const glm::mat4& Camera::GetProjectionView()
 	return m_ProjectionView;
 }
 
-std::shared_ptr<Camera>Camera::GetCurrent()
+Camera* Camera::GetCurrent()
 {
 	LUMEDA_PROFILE;
 	return s_Instance;
 }
 
-void Camera::SetCurrent(std::shared_ptr<Camera> camera)
+void Camera::SetCurrent(Camera* camera)
 {
 	LUMEDA_PROFILE;
 	s_Instance = camera;
@@ -72,7 +72,7 @@ void Camera::SetCurrent(std::shared_ptr<Camera> camera)
 void Camera::SetCurrent()
 {
 	LUMEDA_PROFILE;
-	s_Instance = shared_from_this();
+	s_Instance = this;
 }
 
 void Camera::SetAspectRatio(float aspectRatio)

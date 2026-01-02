@@ -8,11 +8,11 @@
 class Sandbox : public Lumeda::Layer
 {
 private:
-	std::shared_ptr<Lumeda::RenderTarget> renderTarget;
-	std::shared_ptr<Lumeda::RenderTarget> otherRenderTarget;
+	Lumeda::RenderTarget* renderTarget;
+	Lumeda::RenderTarget* otherRenderTarget;
 
 
-	std::shared_ptr<Lumeda::RootNode> rootNode;
+	Lumeda::RootNode* rootNode;
 	Lumeda::Node* selectedNode = nullptr;
 	Lumeda::Node* secondSeletedNode = nullptr;
 
@@ -37,26 +37,26 @@ public:
 		Lumeda::Window& window = Lumeda::Engine::Get().GetWindow();
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
 
-		std::shared_ptr<Lumeda::Texture2D> defaultTexture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
-		std::shared_ptr<Lumeda::Shader> defaultShader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
-		std::shared_ptr<Lumeda::Material> defaultMaterial = renderer.CreateMaterial("default");
+		Lumeda::Texture2D* defaultTexture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
+		Lumeda::Shader* defaultShader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
+		Lumeda::Material* defaultMaterial = renderer.CreateMaterial("default");
 		defaultMaterial->SetShader(defaultShader);
 		defaultMaterial->GetUniformsMap().Set("u_Color", defaultTexture);
 
-		std::shared_ptr<Lumeda::Texture2D> boxTexture = renderer.CreateTexture2D("box_Color", "assets/textures/box.png");
-		std::shared_ptr<Lumeda::Texture2D> barrelPondTexture = renderer.CreateTexture2D("barrelpond_Color", "assets/textures/barrel_pond.jpg");
-		std::shared_ptr<Lumeda::Texture2D> benchTexture = renderer.CreateTexture2D("bench_Color", "assets/textures/bench.jpg");
-		std::shared_ptr<Lumeda::Texture2D> dirtTexture = renderer.CreateTexture2D("dirt_Color", "assets/textures/dirt.jpg");
+		Lumeda::Texture2D* boxTexture = renderer.CreateTexture2D("box_Color", "assets/textures/box.png");
+		Lumeda::Texture2D* barrelPondTexture = renderer.CreateTexture2D("barrelpond_Color", "assets/textures/barrel_pond.jpg");
+		Lumeda::Texture2D* benchTexture = renderer.CreateTexture2D("bench_Color", "assets/textures/bench.jpg");
+		Lumeda::Texture2D* dirtTexture = renderer.CreateTexture2D("dirt_Color", "assets/textures/dirt.jpg");
 
-		std::shared_ptr<Lumeda::Material> boxMaterial = renderer.CreateMaterial("box");
+		Lumeda::Material* boxMaterial = renderer.CreateMaterial("box");
 		boxMaterial->SetShader(defaultShader);
 		boxMaterial->GetUniformsMap().Set("u_Color", boxTexture);
 
-		std::shared_ptr<Lumeda::Material> barrelPondMaterial = renderer.CreateMaterial("barrelpond");
+		Lumeda::Material* barrelPondMaterial = renderer.CreateMaterial("barrelpond");
 		barrelPondMaterial->SetShader(defaultShader);
 		barrelPondMaterial->GetUniformsMap().Set("u_Color", barrelPondTexture);
 
-		std::shared_ptr<Lumeda::Model> boxModel = renderer.CreateModel("box", "assets/models/box.fbx");
+		Lumeda::Model* boxModel = renderer.CreateModel("box", "assets/models/box.fbx");
 		for (size_t i = 0; i < boxModel->ListItems().size(); i++)
 		{
 			Lumeda::ModelItem modelItem = boxModel->ListItems()[i];
@@ -64,7 +64,7 @@ public:
 			boxModel->SetItem(i, modelItem);
 		}
 
-		std::shared_ptr<Lumeda::Model> barrelPondModel = renderer.CreateModel("barrel_pond", "assets/models/barrel_pond.fbx");
+		Lumeda::Model* barrelPondModel = renderer.CreateModel("barrel_pond", "assets/models/barrel_pond.fbx");
 		for (size_t i = 0; i < barrelPondModel->ListItems().size(); i++)
 		{
 			Lumeda::ModelItem modelItem = barrelPondModel->ListItems()[i];
@@ -72,7 +72,7 @@ public:
 			barrelPondModel->SetItem(i, modelItem);
 		}
 
-		std::shared_ptr<Lumeda::Model> model = renderer.CreateModel("cube", "assets/models/cube.fbx");
+		Lumeda::Model* model = renderer.CreateModel("cube", "assets/models/cube.fbx");
 		// Sets the material for testing
 		for (size_t i = 0; i < model->ListItems().size(); i++)
 		{
@@ -81,10 +81,10 @@ public:
 			model->SetItem(i, modelItem);
 		}
 
-		rootNode = std::make_shared<Lumeda::RootNode>();
-		std::shared_ptr<Lumeda::SpinNode> cubeNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.50f, 0.0f));
-		std::shared_ptr<Lumeda::ModelNode> cubeModelNode = std::make_shared<Lumeda::ModelNode>();
-		std::shared_ptr<Lumeda::LightNode> lightNode = std::make_shared<Lumeda::LightNode>();
+		rootNode = LUMEDA_NEW(Lumeda::RootNode, Lumeda::MemTag::General);
+		Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, Lumeda::MemTag::General, glm::vec3(0.0f, 0.50f, 0.0f));
+		Lumeda::ModelNode* cubeModelNode = LUMEDA_NEW(Lumeda::ModelNode, Lumeda::MemTag::General);
+		Lumeda::LightNode* lightNode = LUMEDA_NEW(Lumeda::LightNode, Lumeda::MemTag::General);
 		lightNode->GetLight().Color = glm::vec3(1.0f);
 		lightNode->GetLight().Intensity = 1.0f;
 		lightNode->GetLight().LightCharacteristics = { 5.0f, 5.0f, 0.0f };
@@ -96,19 +96,19 @@ public:
 		cubeNode->AddChild(lightNode);
 		rootNode->AddChild(cubeNode);
 
-		std::shared_ptr<Lumeda::ModelNode> centerCubeModelNode = std::make_shared<Lumeda::ModelNode>();
+		Lumeda::ModelNode* centerCubeModelNode = LUMEDA_NEW(Lumeda::ModelNode, Lumeda::MemTag::General);
 		centerCubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.1f));
 		centerCubeModelNode->SetModel(*barrelPondModel);
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
-		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.05f, 0.0f));
-		std::shared_ptr<Lumeda::PlayerNode> playerNode = std::make_shared<Lumeda::PlayerNode>();
+		Lumeda::SpinNode* pivotNode = LUMEDA_NEW(Lumeda::SpinNode, Lumeda::MemTag::General, glm::vec3(0.0f, 0.05f, 0.0f));
+		Lumeda::PlayerNode* playerNode = LUMEDA_NEW(Lumeda::PlayerNode, Lumeda::MemTag::General);
 		playerNode->GetTransform().SetLocalPosition({ 0.0f, 0.5f, -0.8f });
 		playerNode->GetTransform().SetLocalRotationEulerAngles({ 30.0f, 0.0f, 0.0f });
 		// PlayerNode automatically add a CameraNode, but in order to access it, the child need to be really added, not pending.
 		playerNode->ProcessLifecycle();
-		std::shared_ptr<Lumeda::CameraNode> cameraNode = std::dynamic_pointer_cast<Lumeda::CameraNode>(playerNode->GetChildren()[0]);
+		Lumeda::CameraNode* cameraNode = dynamic_cast<Lumeda::CameraNode*>(playerNode->GetChildren()[0]);
 		cameraNode->GetCamera()->SetCurrent();
 
 		pivotNode->AddChild(playerNode);
@@ -185,7 +185,7 @@ public:
 
 			if (ImGui::BeginMenu("Camera"))
 			{
-				std::shared_ptr<Lumeda::Camera> m_Camera = Lumeda::Camera::GetCurrent();
+				Lumeda::Camera* m_Camera = Lumeda::Camera::GetCurrent();
 
 				if (m_Camera != nullptr)
 				{
@@ -305,7 +305,7 @@ public:
 						ImGui::EndCombo();
 					}
 #ifdef LUMEDA_USE_GLAD
-					std::shared_ptr<Lumeda::Texture2DOpenGL> castedTexture = std::dynamic_pointer_cast<Lumeda::Texture2DOpenGL>(texture);
+					Lumeda::Texture2DOpenGL* castedTexture = dynamic_cast<Lumeda::Texture2DOpenGL*>(texture);
 					ImGui::Image((ImTextureID)(intptr_t)castedTexture->GetOpenGLHandle(), ImVec2(128, 128));
 #endif
 
@@ -397,7 +397,7 @@ public:
 	{
 		LUMEDA_PROFILE;
 
-		RenderNode(rootNode.get());
+		RenderNode(rootNode);
 	}
 
 	void RenderNode(Lumeda::Node* node, int treeNodeId = 0)
@@ -429,7 +429,7 @@ public:
 
 			for (auto it : node->GetChildren())
 			{
-				RenderNode(it.get(), ++treeNodeId);
+				RenderNode(it, ++treeNodeId);
 			}
 			ImGui::TreePop();
 		}

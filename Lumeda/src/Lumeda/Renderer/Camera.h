@@ -29,8 +29,8 @@ namespace Lumeda
 		void SetZFar(float zFar);
 		void SetDirty(bool dirty = true) { m_IsDirty = dirty; }
 
-		static std::shared_ptr<Camera> GetCurrent();
-		static void SetCurrent(std::shared_ptr<Camera> camera);
+		static Camera* GetCurrent();
+		static void SetCurrent(Camera* camera);
 		void SetCurrent();
 
 	protected:

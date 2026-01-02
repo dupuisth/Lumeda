@@ -79,31 +79,31 @@ RendererOpenGL::~RendererOpenGL()
 	// Force delete all materials
 	for (auto& material : m_Materials)
 	{
-		material.second.reset();
+		Delete(material.second);
 	}
 
 	// Force delete all shaders
 	for (auto& shader : m_Shaders)
 	{
-		shader.second.reset();
+		Delete(shader.second);
 	}
 
 	// Force delete all textures
 	for (auto& texture : m_Textures2D)
 	{
-		texture.second.reset();
+		Delete(texture.second);
 	}
 
 	// Force delete all meshes
 	for (auto& mesh : m_Meshes)
 	{
-		mesh.second.reset();
+		Delete(mesh.second);
 	}
 
 	// Force delete all framebuffers
 	for (auto& framebuffer : m_Framebuffers)
 	{
-		framebuffer.second.reset();
+		Delete(framebuffer.second);
 	}
 
 	Engine::Get().GetWindow().RemoveResizeCallback(m_WindowResizeCallbackToken);
@@ -127,43 +127,43 @@ void RendererOpenGL::SetViewport(int x, int y, int width, int height)
 	glViewport(x, y, width, height);
 }
 
-const std::unordered_map<std::string, std::shared_ptr<Shader>>& Lumeda::RendererOpenGL::ListShaders()
+const std::unordered_map<std::string, Shader*>& Lumeda::RendererOpenGL::ListShaders()
 {
 	LUMEDA_PROFILE;
 	return m_Shaders;
 }
 
-const std::unordered_map<std::string, std::shared_ptr<Texture2D>>& Lumeda::RendererOpenGL::ListTextures2D()
+const std::unordered_map<std::string, Texture2D*>& Lumeda::RendererOpenGL::ListTextures2D()
 {
 	LUMEDA_PROFILE;
 	return m_Textures2D;
 }
 
-const std::unordered_map<std::string, std::shared_ptr<Mesh>>& Lumeda::RendererOpenGL::ListMeshes()
+const std::unordered_map<std::string, Mesh*>& Lumeda::RendererOpenGL::ListMeshes()
 {
 	LUMEDA_PROFILE;
 	return m_Meshes;
 }
 
-const std::unordered_map<std::string, std::shared_ptr<Material>>& Lumeda::RendererOpenGL::ListMaterials()
+const std::unordered_map<std::string, Material*>& Lumeda::RendererOpenGL::ListMaterials()
 {
 	LUMEDA_PROFILE;
 	return m_Materials;
 }
 
-const std::unordered_map<std::string, std::shared_ptr<Model>>& Lumeda::RendererOpenGL::ListModels()
+const std::unordered_map<std::string, Model*>& Lumeda::RendererOpenGL::ListModels()
 {
 	LUMEDA_PROFILE;
 	return m_Models;
 }
 
-const std::unordered_map<std::string, std::shared_ptr<Framebuffer>>& RendererOpenGL::ListFramebuffers()
+const std::unordered_map<std::string,Framebuffer*>& RendererOpenGL::ListFramebuffers()
 {
 	LUMEDA_PROFILE;
 	return m_Framebuffers;
 }
 
-const std::unordered_map<std::string, std::shared_ptr<RenderTarget>>& RendererOpenGL::ListRenderTargets()
+const std::unordered_map<std::string, RenderTarget*>& RendererOpenGL::ListRenderTargets()
 {
 	LUMEDA_PROFILE;
 	return m_RenderTargets;
@@ -179,124 +179,124 @@ if (iterator == map.end()) \
 } \
 return iterator->second;
 
-std::shared_ptr<Shader> RendererOpenGL::GetShader(const std::string& name)
+Shader* RendererOpenGL::GetShader(const std::string& name)
 {
 	LUMEDA_PROFILE;
 	SAFE_RETURN_RESOURCE(m_Shaders, name);
 }
 
-std::shared_ptr<Texture2D> RendererOpenGL::GetTexture2D(const std::string& name)
+Texture2D* RendererOpenGL::GetTexture2D(const std::string& name)
 {
 	LUMEDA_PROFILE;
 	SAFE_RETURN_RESOURCE(m_Textures2D, name);
 }
 
-std::shared_ptr<Mesh> RendererOpenGL::GetMesh(const std::string& name)
+Mesh* RendererOpenGL::GetMesh(const std::string& name)
 {
 	LUMEDA_PROFILE;
 	SAFE_RETURN_RESOURCE(m_Meshes, name);
 }
 
-std::shared_ptr<Material> RendererOpenGL::GetMaterial(const std::string& name)
+Material* RendererOpenGL::GetMaterial(const std::string& name)
 {
 	LUMEDA_PROFILE;
 	SAFE_RETURN_RESOURCE(m_Materials, name);
 }
 
-std::shared_ptr<Model> RendererOpenGL::GetModel(const std::string& name)
+Model* RendererOpenGL::GetModel(const std::string& name)
 {
 	LUMEDA_PROFILE;
 	SAFE_RETURN_RESOURCE(m_Models, name);
 }
 
-std::shared_ptr<Framebuffer> RendererOpenGL::GetFramebuffer(const std::string& name)
+Framebuffer* RendererOpenGL::GetFramebuffer(const std::string& name)
 {
 	LUMEDA_PROFILE;
 	SAFE_RETURN_RESOURCE(m_Framebuffers, name);
 }
 
-std::shared_ptr<RenderTarget> RendererOpenGL::GetRenderTarget(const std::string& name)
+RenderTarget* RendererOpenGL::GetRenderTarget(const std::string& name)
 {
 	LUMEDA_PROFILE;
 	SAFE_RETURN_RESOURCE(m_RenderTargets, name);
 }
 
-std::shared_ptr<Shader> RendererOpenGL::CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
+Shader* RendererOpenGL::CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<ShaderOpenGL> shader = std::make_shared<ShaderOpenGL>(name, vertexPath, fragmentPath);
+	ShaderOpenGL* shader = LUMEDA_NEW(ShaderOpenGL, MemTag::Assets, name, vertexPath, fragmentPath);
 	m_Shaders.insert({ name, shader });
 	return shader;
 }
 
-std::shared_ptr<Shader> RendererOpenGL::CreateShaderFromSource(const std::string& name, const char* vertexCode, const char* fragmentCode)
+Shader* RendererOpenGL::CreateShaderFromSource(const std::string& name, const char* vertexCode, const char* fragmentCode)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<ShaderOpenGL> shader = std::make_shared<ShaderOpenGL>(name, vertexCode, fragmentCode, 0);
+	ShaderOpenGL* shader = LUMEDA_NEW(ShaderOpenGL, MemTag::Assets, name, vertexCode, fragmentCode, 0);
 	m_Shaders.insert({ name, shader });
 	return shader;
 }
 
-std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& name, const std::string& path)
+Texture2D* RendererOpenGL::CreateTexture2D(const std::string& name, const std::string& path)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<Texture2DOpenGL> texture2D = std::make_shared<Texture2DOpenGL>(name, path);
+	Texture2DOpenGL* texture2D = LUMEDA_NEW(Texture2DOpenGL, MemTag::Assets, name, path);
 	m_Textures2D.insert({ name, texture2D });
 	return texture2D;
 }
 
-std::shared_ptr<Texture2D> RendererOpenGL::CreateTexture2D(const std::string& name, unsigned int width, unsigned int height, eTextureFormat format)
+Texture2D* RendererOpenGL::CreateTexture2D(const std::string& name, unsigned int width, unsigned int height, eTextureFormat format)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<Texture2DOpenGL> texture2D = std::make_shared<Texture2DOpenGL>(name, width, height, format);
+	Texture2DOpenGL* texture2D = LUMEDA_NEW(Texture2DOpenGL, MemTag::Assets, name, width, height, format);
 	m_Textures2D.insert({ name, texture2D });
 	return texture2D;
 }
 
-std::shared_ptr<Mesh> RendererOpenGL::CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs)
+Mesh* RendererOpenGL::CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<MeshOpenGL> mesh = std::make_shared<MeshOpenGL>(name, vertices, indices, attribs);
+	MeshOpenGL* mesh = LUMEDA_NEW(MeshOpenGL, MemTag::Assets, name, vertices, indices, attribs);
 	m_Meshes.insert({ name, mesh });
 	return mesh;
 }
 
-std::shared_ptr<Material> RendererOpenGL::CreateMaterial(const std::string& name)
+Material* RendererOpenGL::CreateMaterial(const std::string& name)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<Material> material = std::make_shared<Material>(name);
+	Material* material = LUMEDA_NEW(Material, MemTag::Assets, name);
 	m_Materials.insert({ name, material });
 	return material;
 }
 
-std::shared_ptr<Model> RendererOpenGL::CreateModel(const std::string& name)
+Model* RendererOpenGL::CreateModel(const std::string& name)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<Model> model = std::make_shared<Model>(name);
+	Model* model = LUMEDA_NEW(Model, MemTag::Assets, name);
 	m_Models.insert({ name, model });
 	return model;
 }
 
-std::shared_ptr<Model> RendererOpenGL::CreateModel(const std::string& name, const std::string& fromFile)
+Model* RendererOpenGL::CreateModel(const std::string& name, const std::string& fromFile)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<Model> model = CreateModel(name);
+	Model* model = CreateModel(name);
 	ModelLoader::LoadModelFromFile(model, fromFile);
 	return model;
 }
 
-std::shared_ptr<Framebuffer> RendererOpenGL::CreateFramebuffer(const std::string& name)
+Framebuffer* RendererOpenGL::CreateFramebuffer(const std::string& name)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<Framebuffer> framebuffer = std::make_shared<FramebufferOpenGL>(name);
+	Framebuffer* framebuffer = LUMEDA_NEW(FramebufferOpenGL, MemTag::Assets, name);
 	m_Framebuffers.insert({ name, framebuffer });
 	return framebuffer;
 }
 
-std::shared_ptr<RenderTarget> RendererOpenGL::CreateRenderTarget(const std::string& name, int width, int height)
+RenderTarget* RendererOpenGL::CreateRenderTarget(const std::string& name, int width, int height)
 {
 	LUMEDA_PROFILE;
-	std::shared_ptr<RenderTarget> renderTarget = std::make_shared<RenderTargetOpenGL>(name, glm::ivec2(width, height));
+	RenderTargetOpenGL* renderTarget = LUMEDA_NEW(RenderTargetOpenGL, MemTag::Assets, name, glm::ivec2(width, height));
 	m_RenderTargets.insert({ name, renderTarget });
 	return renderTarget;
 }
@@ -308,7 +308,7 @@ void RendererOpenGL::BeginFrame()
 	m_RenderCallsModel.clear();
 }
 
-void RendererOpenGL::Submit(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material, sUniformsMap& uniforms)
+void RendererOpenGL::Submit(Mesh* mesh, Material* material, sUniformsMap& uniforms)
 {
 	LUMEDA_PROFILE;
 	sRenderCallMesh renderCall;
@@ -319,7 +319,7 @@ void RendererOpenGL::Submit(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material
 	m_RenderCallsMesh.push_back(renderCall);
 }
 
-void RendererOpenGL::Submit(std::shared_ptr<Model> model, sUniformsMap& uniforms)
+void RendererOpenGL::Submit(Model* model, sUniformsMap& uniforms)
 {
 	LUMEDA_PROFILE;
 	sRenderCallModel renderCall;
@@ -329,7 +329,7 @@ void RendererOpenGL::Submit(std::shared_ptr<Model> model, sUniformsMap& uniforms
 	m_RenderCallsModel.push_back(renderCall);
 }
 
-void RendererOpenGL::Render(std::shared_ptr<Camera> camera, std::shared_ptr<RenderTarget> renderTarget)
+void RendererOpenGL::Render(Camera* camera, RenderTarget* renderTarget)
 {
 	LUMEDA_PROFILE;
 	glm::vec3 cameraPosition(0.0f);
@@ -386,16 +386,16 @@ void RendererOpenGL::PrepareRenderScreen()
 
 }
 
-void RendererOpenGL::RenderToScreen(std::shared_ptr<RenderTarget> renderTarget, int x, int y, int width, int height)
+void RendererOpenGL::RenderToScreen(RenderTarget* renderTarget, int x, int y, int width, int height)
 {
 	LUMEDA_PROFILE;
 	glViewport(x, y, width, height);
 
-	std::static_pointer_cast<RenderTargetOpenGL>(renderTarget)->PrepareRender(m_ScreenShader);
+	static_cast<RenderTargetOpenGL*>(renderTarget)->PrepareRender(m_ScreenShader);
 	m_ScreenMesh->Draw();
 }
 
-void RendererOpenGL::RenderToScreen(std::shared_ptr<RenderTarget> renderTarget)
+void RendererOpenGL::RenderToScreen(RenderTarget* renderTarget)
 {
 	LUMEDA_PROFILE;
 	glm::ivec2 size = Engine::Get().GetWindow().GetSize();

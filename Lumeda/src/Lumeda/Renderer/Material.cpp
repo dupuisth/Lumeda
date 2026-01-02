@@ -43,7 +43,7 @@ void Material::Use(sUniformsMap& uniformsMap)
 }
 
 
-void Material::SetShader(std::shared_ptr<Shader> shader)
+void Material::SetShader(Shader* shader)
 {
 	LUMEDA_PROFILE;
 	m_Shader = shader;

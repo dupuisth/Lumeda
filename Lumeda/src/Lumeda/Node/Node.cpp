@@ -78,7 +78,7 @@ void Node::ApplyPendingHierarchyChanges()
             m_Children.push_back(nodeToAdd);
 
             // Set parent reference
-            nodeToAdd->m_Parent = shared_from_this();
+            nodeToAdd->m_Parent = this;
 
             // The child will recalculate its enabled state in its own ApplyPendingEnableChanges
         }
@@ -88,12 +88,12 @@ void Node::ApplyPendingHierarchyChanges()
     // Apply parent change for this node
     if (m_HasPendingParentChange)
     {
-        std::shared_ptr<Node> oldParent = m_Parent;
+        Node* oldParent = m_Parent;
         m_Parent = m_PendingParent;
         m_HasPendingParentChange = false;
 
         // Notify of parent change
-        OnParentChanged(oldParent.get(), m_Parent.get());
+        OnParentChanged(oldParent, m_Parent);
 
         // Enabled state will be recalculated in ApplyPendingEnableChanges
     }
@@ -214,7 +214,7 @@ void Node::OnParentChanged(Node* oldParent, Node* newParent)
 }
 
 
-void Node::SetParent(std::shared_ptr<Node> newParent)
+void Node::SetParent(Node* newParent)
 {
     LUMEDA_PROFILE;
 
@@ -223,13 +223,13 @@ void Node::SetParent(std::shared_ptr<Node> newParent)
         return;
 
     // Prevent setting self as parent
-    if (newParent.get() == this)
+    if (newParent == this)
         return;
 
     // Queue removal from old parent
     if (m_Parent)
     {
-        m_Parent->RemoveChild(shared_from_this());
+        m_Parent->RemoveChild(this);
     }
 
     // Queue parent change (will be applied in ProcessLifecycle)
@@ -239,11 +239,11 @@ void Node::SetParent(std::shared_ptr<Node> newParent)
     // Queue addition to new parent
     if (newParent)
     {
-        newParent->AddChild(shared_from_this());
+        newParent->AddChild(this);
     }
 }
 
-void Node::AddChild(std::shared_ptr<Node> node, bool immediate)
+void Node::AddChild(Node* node, bool immediate)
 {
     LUMEDA_PROFILE;
 
@@ -251,7 +251,7 @@ void Node::AddChild(std::shared_ptr<Node> node, bool immediate)
         return;
 
     // Prevent adding self as child
-    if (node.get() == this)
+    if (node == this)
         return;
 
     // Check if already in pending add list
@@ -268,7 +268,7 @@ void Node::AddChild(std::shared_ptr<Node> node, bool immediate)
     if (immediate)
     {
         m_Children.push_back(node);
-        node->m_Parent = shared_from_this();
+        node->m_Parent = this;
     }
     else
     {
@@ -276,7 +276,7 @@ void Node::AddChild(std::shared_ptr<Node> node, bool immediate)
     }
 }
 
-void Node::RemoveChild(std::shared_ptr<Node> node)
+void Node::RemoveChild(Node* node)
 {
     LUMEDA_PROFILE;
 
@@ -297,15 +297,15 @@ void Node::RemoveChild(std::shared_ptr<Node> node)
     m_PendingRemove.push_back(node);
 }
 
-std::shared_ptr<RootNode> Node::GetRootNode()
+RootNode* Node::GetRootNode()
 {
-    std::shared_ptr<Node> currentNode = shared_from_this();
+    Node* currentNode = this;
     while (currentNode->m_Parent != nullptr)
     {
         currentNode = currentNode->m_Parent;
     }
 
-    std::shared_ptr<RootNode> rootNode = std::dynamic_pointer_cast<RootNode>(currentNode);
+    RootNode* rootNode = dynamic_cast<RootNode*>(currentNode);
     return rootNode;
 }
 
