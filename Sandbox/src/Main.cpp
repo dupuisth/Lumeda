@@ -102,7 +102,7 @@ public:
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
-		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.2f, 0.05f, 0.1f));
+		std::shared_ptr<Lumeda::SpinNode> pivotNode = std::make_shared<Lumeda::SpinNode>(glm::vec3(0.0f, 0.05f, 0.0f));
 		std::shared_ptr<Lumeda::PlayerNode> playerNode = std::make_shared<Lumeda::PlayerNode>();
 		playerNode->GetTransform().SetLocalPosition({ 0.0f, 0.5f, -0.8f });
 		playerNode->GetTransform().SetLocalRotationEulerAngles({ 30.0f, 0.0f, 0.0f });
