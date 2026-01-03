@@ -347,10 +347,6 @@ RootNode* Node::GetRootNode()
         currentNode = currentNode->m_Parent;
     }
 
-    // If the Scene gets teared down from RootNode (Delete(rootNode))
-    // Then this dynamic_cast will fail, since the cascade of deletion is done in Node::~Node(), the RootNode::~RootNode() is already done and the RootNode subobject is already destroyed
-    // For now, this cause no real issue, just a warning that some lights counldn't be unregistered but it's ok since the scene is completly destroyed
-    // But if later this become criticial, consider moving some of the cascade deletion to the RootNode::~RootNode() so that it still lives long enough to be accessed from child nodes
     RootNode* rootNode = dynamic_cast<RootNode*>(currentNode);
     return rootNode;
 }
