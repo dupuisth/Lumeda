@@ -103,25 +103,43 @@ void Engine::Cleanup()
 	LUMEDA_CORE_INFO("[Engine] Cleaning up enigne");
 
 	// Destroy Application
-	m_Application->Terminate();
-	Delete(m_Application);
+	if (m_Application != nullptr)
+	{
+		m_Application->Terminate();
+		Delete(m_Application);
+	}
 
 	// Destroy Gizmos
-	m_Gizmos->Terminate();
-	Delete(m_Gizmos);
+	if (m_Gizmos != nullptr)
+	{
+		m_Gizmos->Terminate();
+		Delete(m_Gizmos);
+	}
 
 	// Destroy ImGui
-	m_ImGuiLayer->Terminate();
-	Delete(m_ImGuiLayer);
+	if (m_ImGuiLayer != nullptr)
+	{
+		m_ImGuiLayer->Terminate();
+		Delete(m_ImGuiLayer);
+	}
 
 	// Destroy the renderer
-	Delete(m_Renderer);
+	if (m_Renderer != nullptr)
+	{
+		Delete(m_Renderer);
+	}
 
 	// Destroy the inputs layer
-	Delete(m_InputsLayer);
+	if (m_InputsLayer != nullptr)
+	{
+		Delete(m_InputsLayer);
+	}
 
 	// Destroy the window
-	Delete(m_Window);
+	if (m_Window != nullptr)
+	{
+		Delete(m_Window);
+	}
 }
 
 Window& Engine::GetWindow()
