@@ -76,6 +76,12 @@ RendererOpenGL::~RendererOpenGL()
 {
 	LUMEDA_PROFILE;
 
+	// Force delete all models
+	for (auto& model : m_Models)
+	{
+		Delete(model.second);
+	}
+
 	// Force delete all materials
 	for (auto& material : m_Materials)
 	{
@@ -98,6 +104,12 @@ RendererOpenGL::~RendererOpenGL()
 	for (auto& mesh : m_Meshes)
 	{
 		Delete(mesh.second);
+	}
+
+	// Force delete all render targets
+	for (auto& renderTarget : m_RenderTargets)
+	{
+		Delete(renderTarget.second);
 	}
 
 	// Force delete all framebuffers
