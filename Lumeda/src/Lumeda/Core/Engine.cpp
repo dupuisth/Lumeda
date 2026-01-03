@@ -100,7 +100,7 @@ void Engine::Run(Layer* application)
 
 void Engine::Cleanup()
 {
-	LUMEDA_CORE_INFO("[Engine] Cleaning up enigne");
+	LUMEDA_CORE_INFO("[Engine] Cleaning up engine");
 
 	// Destroy Application
 	if (m_Application != nullptr)
