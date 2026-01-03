@@ -26,6 +26,10 @@ namespace Lumeda
         void SetSize(const glm::ivec2& size) override;
         const glm::ivec2& GetSize() const override;
 
+        Framebuffer* GetFramebuffer() const;
+        Texture2D* GetColorTexture() const;
+        Texture2D* GetDepthStencilTexture() const;
+
     private:
         std::string m_Name;
         glm::ivec2 m_Size;

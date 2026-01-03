@@ -85,3 +85,21 @@ const glm::ivec2& RenderTargetOpenGL::GetSize() const
     LUMEDA_PROFILE;
     return m_Size;
 }
+
+Framebuffer* RenderTargetOpenGL::GetFramebuffer() const
+{
+    LUMEDA_PROFILE;
+    return m_Framebuffer;
+}
+
+Texture2D* RenderTargetOpenGL::GetColorTexture() const
+{
+    LUMEDA_PROFILE;
+    return m_ColorTexture;
+}
+
+Texture2D* RenderTargetOpenGL::GetDepthStencilTexture() const
+{
+    LUMEDA_PROFILE;
+    return m_DepthStencilTexture;
+}
