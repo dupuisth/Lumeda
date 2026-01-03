@@ -30,7 +30,7 @@ namespace Lumeda
         void SetParent(Node* newParent);
         void AddChild(Node* node, bool immediate = false);
         void RemoveChild(Node* node);
-        void Destroy(bool alsoFree = true);
+        void Destroy();
 
         // Enable/Disable
         void SetEnabled(bool enabled);
@@ -75,7 +75,6 @@ namespace Lumeda
         bool m_PendingEnabledState;
         bool m_HasPendingEnabledChange;
         bool m_isDestroyPending;
-        bool m_freeWhileDestroy;
         
         bool m_HasStarted;
     };

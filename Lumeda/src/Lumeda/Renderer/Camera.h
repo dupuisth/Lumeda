@@ -8,7 +8,7 @@
 
 namespace Lumeda
 {
-	class Camera : public std::enable_shared_from_this<Camera>
+	class Camera
 	{
 	public:
 		Camera(Transform* transform = nullptr);

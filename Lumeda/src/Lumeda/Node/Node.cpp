@@ -8,7 +8,7 @@
 using namespace Lumeda;
 
 Node::Node()
-    : m_Name("Node"), m_IsSelfEnabled(true), m_isEnabled(true), m_Parent(nullptr), m_PendingParent(nullptr), m_HasPendingParentChange(false), m_PendingEnabledState(true), m_HasPendingEnabledChange(false), m_Transform(this), m_HasStarted(false), m_isDestroyPending(false), m_freeWhileDestroy(false)
+    : m_Name("Node"), m_IsSelfEnabled(true), m_isEnabled(true), m_Parent(nullptr), m_PendingParent(nullptr), m_HasPendingParentChange(false), m_PendingEnabledState(true), m_HasPendingEnabledChange(false), m_Transform(this), m_HasStarted(false), m_isDestroyPending(false)
 {
     LUMEDA_PROFILE;
     LUMEDA_CORE_TRACE("[Node] Created {0}", m_Name);
@@ -332,11 +332,10 @@ void Node::RemoveChild(Node* node)
     LUMEDA_CORE_TRACE("[NODE] ({0}) Pending removing \"{1}\" as a child", this->GetName(), node->GetName());
 }
 
-void Node::Destroy(bool alsoFree)
+void Node::Destroy()
 {
     LUMEDA_PROFILE;
     m_isDestroyPending = true;
-    m_freeWhileDestroy = alsoFree;
 }
 
 RootNode* Node::GetRootNode()
