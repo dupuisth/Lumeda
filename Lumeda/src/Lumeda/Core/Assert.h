@@ -1,13 +1,9 @@
 #pragma once
 #include <Lumeda/Core/Log.h>
 
-
-
 #if LUMEDA_DEBUG
 #define LUMEDA_ENABLE_ASSERTS
 #endif
-
-#pragma once
 
 #if defined(_MSC_VER)
 #define LUMEDA_DEBUGBREAK() __debugbreak()
@@ -17,7 +13,6 @@
 #include <cstdlib>
 #define LUMEDA_DEBUGBREAK() std::abort()
 #endif
-
 
 #ifdef LUMEDA_ENABLE_ASSERTS
 
