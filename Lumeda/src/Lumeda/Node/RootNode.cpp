@@ -52,6 +52,12 @@ void RootNode::OnRenderImGui()
 void RootNode::AddLightNode(LightNode* lightNode)
 {
     LUMEDA_PROFILE;
+    if (lightNode == nullptr)
+    {
+        LUMEDA_CORE_WARN("[RootNode] Trying to add a nullptr LightNode");
+        return;
+    }
+
     auto it = std::find(m_LightNodes.begin(), m_LightNodes.end(), lightNode);
     if (it == m_LightNodes.end())
     {
@@ -68,6 +74,11 @@ void RootNode::AddLightNode(LightNode* lightNode)
 void RootNode::RemoveLightNode(LightNode* lightNode)
 {
     LUMEDA_PROFILE;
+    if (lightNode == nullptr)
+    {
+        LUMEDA_CORE_WARN("[RootNode] Trying to remove a nullptr LightNode");
+        return;
+    }
 
     auto it = std::find(m_LightNodes.begin(), m_LightNodes.end(), lightNode);
     if (it != m_LightNodes.end())
