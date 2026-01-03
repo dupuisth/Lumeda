@@ -438,6 +438,8 @@ public:
 	void Terminate() override
 	{
 		LUMEDA_PROFILE;
+
+		Lumeda::Delete(rootNode);
 		LUMEDA_TRACE("Terminate Sandbox");
 	}
 };

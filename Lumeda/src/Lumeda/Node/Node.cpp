@@ -11,6 +11,7 @@ Node::Node()
     : m_Name("Node"), m_IsSelfEnabled(true), m_isEnabled(true), m_Parent(nullptr), m_PendingParent(nullptr), m_HasPendingParentChange(false), m_PendingEnabledState(true), m_HasPendingEnabledChange(false), m_Transform(this), m_HasStarted(false)
 {
     LUMEDA_PROFILE;
+    LUMEDA_CORE_TRACE("[Node] Created {0}", m_Name);
 }
 
 Node::~Node()
@@ -20,10 +21,17 @@ Node::~Node()
     // Clear parent reference
     m_Parent = nullptr;
 
-    // Clear children
-    m_Children.clear();
-    m_PendingAdd.clear();
-    m_PendingRemove.clear();
+    // All of the lifecycle should be processed, we don't want to remove a node that is no longer a child
+    ProcessLifecycle();
+    
+    LUMEDA_CORE_TRACE("[Node] Deleted {0}", m_Name);
+    LUMEDA_CORE_ASSERT(m_PendingAdd.size() == 0, "There should be no pending children after ProcessLifecycle");
+
+    // Delete the child nodes
+    for (auto child : m_Children)
+    {
+        Delete(child);
+    }
 }
 
 void Node::ProcessLifecycle()
