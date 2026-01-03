@@ -30,6 +30,7 @@ namespace Lumeda
         void SetParent(Node* newParent);
         void AddChild(Node* node, bool immediate = false);
         void RemoveChild(Node* node);
+        void Destroy(bool alsoFree = true);
 
         // Enable/Disable
         void SetEnabled(bool enabled);
@@ -43,6 +44,7 @@ namespace Lumeda
         void SetName(const std::string& name) { LUMEDA_PROFILE; m_Name = name; }
         Transform& GetTransform() { LUMEDA_PROFILE; return m_Transform; }
         RootNode* GetRootNode();
+        bool IsDestroyPending() { LUMEDA_PROFILE; return m_isDestroyPending; }
 
     protected:
         // Virtual methods for derived classes to override
@@ -72,7 +74,9 @@ namespace Lumeda
         bool m_HasPendingParentChange;
         bool m_PendingEnabledState;
         bool m_HasPendingEnabledChange;
-
+        bool m_isDestroyPending;
+        bool m_freeWhileDestroy;
+        
         bool m_HasStarted;
     };
 

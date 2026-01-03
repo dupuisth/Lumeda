@@ -8,7 +8,7 @@
 using namespace Lumeda;
 
 Node::Node()
-    : m_Name("Node"), m_IsSelfEnabled(true), m_isEnabled(true), m_Parent(nullptr), m_PendingParent(nullptr), m_HasPendingParentChange(false), m_PendingEnabledState(true), m_HasPendingEnabledChange(false), m_Transform(this), m_HasStarted(false)
+    : m_Name("Node"), m_IsSelfEnabled(true), m_isEnabled(true), m_Parent(nullptr), m_PendingParent(nullptr), m_HasPendingParentChange(false), m_PendingEnabledState(true), m_HasPendingEnabledChange(false), m_Transform(this), m_HasStarted(false), m_isDestroyPending(false), m_freeWhileDestroy(false)
 {
     LUMEDA_PROFILE;
     LUMEDA_CORE_TRACE("[Node] Created {0}", m_Name);
@@ -17,14 +17,10 @@ Node::Node()
 Node::~Node()
 {
     LUMEDA_PROFILE;
-
-    // Clear parent reference
-    m_Parent = nullptr;
-
+    
     // All of the lifecycle should be processed, we don't want to remove a node that is no longer a child
     ProcessLifecycle();
     
-    LUMEDA_CORE_TRACE("[Node] Deleted {0}", m_Name);
     LUMEDA_CORE_ASSERT(m_PendingAdd.size() == 0, "There should be no pending children after ProcessLifecycle");
 
     // Delete the child nodes
@@ -32,6 +28,14 @@ Node::~Node()
     {
         Delete(child);
     }
+
+    // Remove the reference to the parent
+    if (m_Parent != nullptr)
+    {
+        SetParent(nullptr);
+    }
+
+    LUMEDA_CORE_TRACE("[Node] Deleted {0}", m_Name);
 }
 
 void Node::ProcessLifecycle()
@@ -52,6 +56,8 @@ void Node::ProcessLifecycle()
             child->ProcessLifecycle();
         }
     }
+
+    ApplyPendingHierarchyChanges();
 }
 
 void Node::ApplyPendingHierarchyChanges()
@@ -64,6 +70,8 @@ void Node::ApplyPendingHierarchyChanges()
         auto it = std::find(m_Children.begin(), m_Children.end(), nodeToRemove);
         if (it != m_Children.end())
         {
+            std::string name = nodeToRemove->GetName();
+
             // Clear parent reference
             nodeToRemove->m_Parent = nullptr;
 
@@ -71,6 +79,7 @@ void Node::ApplyPendingHierarchyChanges()
             m_Children.erase(it);
 
             // The child will recalculate its enabled state in its own ApplyPendingEnableChanges
+            LUMEDA_CORE_TRACE("[NODE] ({0}) Removed \"{1}\" as a child", this->GetName(), name);
         }
     }
     m_PendingRemove.clear();
@@ -89,9 +98,21 @@ void Node::ApplyPendingHierarchyChanges()
             nodeToAdd->m_Parent = this;
 
             // The child will recalculate its enabled state in its own ApplyPendingEnableChanges
+            LUMEDA_CORE_TRACE("[NODE] ({0}) Added \"{1}\" as a child", this->GetName(), nodeToAdd->GetName());
         }
     }
     m_PendingAdd.clear();
+
+    
+    for (size_t i = 0; i < m_Children.size(); i++)
+    {
+        if (m_Children[i]->m_isDestroyPending)
+        {
+            Delete(m_Children[i]);
+            m_Children.erase(std::begin(m_Children) + i);
+            i--;
+        }
+    }
 
     // Apply parent change for this node
     if (m_HasPendingParentChange)
@@ -142,7 +163,7 @@ void Node::Update()
     LUMEDA_PROFILE;
 
     // Only process if enabled
-    if (!m_isEnabled)
+    if (!m_isEnabled || m_isDestroyPending)
         return;
 
     if (!m_HasStarted)
@@ -258,10 +279,11 @@ void Node::AddChild(Node* node, bool immediate)
     if (!node)
         return;
 
+
     // Prevent adding self as child
     if (node == this)
         return;
-
+    
     // Check if already in pending add list
     auto it = std::find(m_PendingAdd.begin(), m_PendingAdd.end(), node);
     if (it != m_PendingAdd.end())
@@ -277,10 +299,13 @@ void Node::AddChild(Node* node, bool immediate)
     {
         m_Children.push_back(node);
         node->m_Parent = this;
+        LUMEDA_CORE_TRACE("[NODE] ({0}) Added \"{1}\" as a child (immediate)", this->GetName(), node->GetName());
+
     }
     else
     {
         m_PendingAdd.push_back(node);
+        LUMEDA_CORE_TRACE("[NODE] ({0}) Pending adding \"{1}\" as a child", this->GetName(), node->GetName());
     }
 }
 
@@ -290,6 +315,7 @@ void Node::RemoveChild(Node* node)
 
     if (!node)
         return;
+
 
     // Check if already in pending remove list
     auto it = std::find(m_PendingRemove.begin(), m_PendingRemove.end(), node);
@@ -303,6 +329,14 @@ void Node::RemoveChild(Node* node)
 
     // Queue for removal (will be applied in ProcessLifecycle)
     m_PendingRemove.push_back(node);
+    LUMEDA_CORE_TRACE("[NODE] ({0}) Pending removing \"{1}\" as a child", this->GetName(), node->GetName());
+}
+
+void Node::Destroy(bool alsoFree)
+{
+    LUMEDA_PROFILE;
+    m_isDestroyPending = true;
+    m_freeWhileDestroy = alsoFree;
 }
 
 RootNode* Node::GetRootNode()
@@ -313,6 +347,10 @@ RootNode* Node::GetRootNode()
         currentNode = currentNode->m_Parent;
     }
 
+    // If the Scene gets teared down from RootNode (Delete(rootNode))
+    // Then this dynamic_cast will fail, since the cascade of deletion is done in Node::~Node(), the RootNode::~RootNode() is already done and the RootNode subobject is already destroyed
+    // For now, this cause no real issue, just a warning that some lights counldn't be unregistered but it's ok since the scene is completly destroyed
+    // But if later this become criticial, consider moving some of the cascade deletion to the RootNode::~RootNode() so that it still lives long enough to be accessed from child nodes
     RootNode* rootNode = dynamic_cast<RootNode*>(currentNode);
     return rootNode;
 }
@@ -341,6 +379,11 @@ void Node::OnRenderImGui()
     if (ImGui::InputText("Label", labelBuffer, 512))
     {
         m_Name = labelBuffer;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Destroy"))
+    {
+        Destroy();
     }
 
     if (ImGui::DragFloat3("Position", glm::value_ptr(m_Transform.GetLocalPositionRef()), 0.05f, -100.0f, 100.0f))

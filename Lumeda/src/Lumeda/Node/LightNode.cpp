@@ -16,6 +16,7 @@ LightNode::LightNode() : m_Light()
 LightNode::~LightNode()
 {
     LUMEDA_PROFILE;
+    OnDisable(); // Explicit call, overidden methods are not called in the destructor
 }
 
 sLight& LightNode::GetLight()
@@ -81,7 +82,7 @@ void LightNode::OnEnable()
     RootNode* rootNode = GetRootNode();
     if (rootNode == nullptr)
     {
-        LUMEDA_CORE_WARN("[LightNode::OnEnable] Root not was not found");
+        LUMEDA_CORE_WARN("[LightNode::OnEnable] RootNode was not found");
         return;
     }
 
@@ -94,7 +95,7 @@ void LightNode::OnDisable()
     RootNode* rootNode = GetRootNode();
     if (rootNode == nullptr)
     {
-        LUMEDA_CORE_WARN("[LightNode::OnDisable] Root not was not found");
+        LUMEDA_CORE_WARN("[LightNode::OnDisable] RootNode was not found");
         return;
     }
 

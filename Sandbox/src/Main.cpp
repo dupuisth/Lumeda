@@ -124,6 +124,7 @@ public:
 
 		rootNode->ProcessLifecycle();
 		rootNode->Update();
+		rootNode->ProcessLifecycle();
 	}
 
 	void Render() override
@@ -244,6 +245,10 @@ public:
 			{
 				selectedNode->RenderImGui();
 			}
+			if (selectedNode->IsDestroyPending())
+			{
+				selectedNode = nullptr;
+			}
 			ImGui::End();
 		}
 
@@ -252,7 +257,11 @@ public:
 			if (ImGui::Begin("Second Selected Node"))
 			{
 				secondSeletedNode->RenderImGui();
-			}	
+			}
+			if (secondSeletedNode->IsDestroyPending())
+			{
+				secondSeletedNode = nullptr;
+			}
 			ImGui::End();
 		}
 	}

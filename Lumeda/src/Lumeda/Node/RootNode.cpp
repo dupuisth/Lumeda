@@ -37,11 +37,13 @@ void RootNode::AddLightNode(LightNode* lightNode)
     if (it == m_LightNodes.end())
     {
         m_LightNodes.push_back(lightNode);
+        LUMEDA_CORE_TRACE("[RootNode] Registered a new light to the RootNode (total: {0})", m_LightNodes.size());
     }
     else
     {
         LUMEDA_CORE_WARN("[RootNode] Trying to add a light that is already registered");
     }
+    
 }
 
 void RootNode::RemoveLightNode(LightNode* lightNode)
@@ -52,6 +54,7 @@ void RootNode::RemoveLightNode(LightNode* lightNode)
     if (it != m_LightNodes.end())
     {
         m_LightNodes.erase(it);
+        LUMEDA_CORE_TRACE("[RootNode] Removed a light from the RootNode (total: {0})", m_LightNodes.size());
     }
     else
     {

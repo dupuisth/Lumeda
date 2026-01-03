@@ -38,6 +38,11 @@ Camera::~Camera()
 	{
 		Delete(m_Transform);
 	}
+
+	if (s_Instance == this)
+	{
+		s_Instance = nullptr;
+	}
 }
 
 const glm::mat4& Camera::GetProjectionView()
