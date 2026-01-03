@@ -5,10 +5,10 @@
 // Create a GLFW Window
 #include <Lumeda/Implementation/GLFW/WindowGLFW.h>
 using namespace Lumeda;
-std::unique_ptr<Window> Window::Create()
+Window* Window::Create()
 {
 	LUMEDA_PROFILE;
-	std::unique_ptr<WindowGLFW> window = std::make_unique<WindowGLFW>();
+	WindowGLFW* window = LUMEDA_NEW(WindowGLFW, MemTag::General);
 	return window;
 }
 #else

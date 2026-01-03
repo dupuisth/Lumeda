@@ -41,7 +41,7 @@ namespace Lumeda
 		virtual void* GetNativeWindow() const = 0;
 
 
-		static std::unique_ptr<Window> Create();
+		static Window* Create();
 
 	protected:
 		int m_NextCallbackToken;

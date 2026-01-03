@@ -14,8 +14,8 @@ namespace Lumeda
 
 	struct ModelItem
 	{
-		std::shared_ptr<Mesh> m_Mesh;
-		std::shared_ptr<Material> m_Material;
+		Mesh* m_Mesh;
+		Material* m_Material;
 	};
 
 	class Model

@@ -12,7 +12,7 @@
 
 using namespace Lumeda;
 
-std::shared_ptr<Mesh> ProcessMesh(const std::string& name, aiMesh* aiMesh)
+Mesh* ProcessMesh(const std::string& name, aiMesh* aiMesh)
 {
 	LUMEDA_PROFILE;
 	std::vector<float> vertices;
@@ -39,7 +39,7 @@ std::shared_ptr<Mesh> ProcessMesh(const std::string& name, aiMesh* aiMesh)
 		}
 	}
 
-	std::shared_ptr<Mesh> mesh = Engine::Get().GetRenderer().CreateMesh(
+	Mesh* mesh = Engine::Get().GetRenderer().CreateMesh(
 		name,
 		vertices,
 		indices,
@@ -52,7 +52,7 @@ std::shared_ptr<Mesh> ProcessMesh(const std::string& name, aiMesh* aiMesh)
 	return mesh;
 }
 
-void ModelLoader::LoadModelFromFile(std::shared_ptr<Model> model, const std::string& path)
+void ModelLoader::LoadModelFromFile(Model* model, const std::string& path)
 {
 	LUMEDA_PROFILE;
 	Assimp::Importer importer;
@@ -64,7 +64,7 @@ void ModelLoader::LoadModelFromFile(std::shared_ptr<Model> model, const std::str
 		return;
 	}
 
-	std::shared_ptr<Material> material = Engine::Get().GetRenderer().CreateMaterial(model->GetName() + "_material");
+	Material* material = Engine::Get().GetRenderer().CreateMaterial(model->GetName() + "_material");
 	
 	int numModelsItem = 0;
 	std::queue<aiNode*> nodes;
@@ -78,7 +78,7 @@ void ModelLoader::LoadModelFromFile(std::shared_ptr<Model> model, const std::str
 			aiMesh* aiMesh = scene->mMeshes[node->mMeshes[i]];
 			
 			std::string name = model->GetName() + "_" + std::to_string(numModelsItem++);
-			std::shared_ptr<Mesh> mesh = ProcessMesh(name, aiMesh);
+			Mesh* mesh = ProcessMesh(name, aiMesh);
 			model->AttachItem({ mesh,  material });
 		}
 

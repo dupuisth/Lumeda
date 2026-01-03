@@ -19,6 +19,6 @@ namespace Lumeda
 
         virtual void SetColor(const glm::vec4& color) = 0;
 
-        static std::unique_ptr<Gizmos> Create();
+        static Gizmos* Create();
     };
 }

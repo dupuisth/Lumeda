@@ -21,7 +21,7 @@ namespace Lumeda
 		virtual void Use();
 		virtual void Use(sUniformsMap& uniformsMap);
 
-		void SetShader(std::shared_ptr<Shader> shader);
+		void SetShader(Shader* shader);
 		sUniformsMap& GetUniformsMap();
 
 		const std::string& GetName();
@@ -29,7 +29,7 @@ namespace Lumeda
 	protected:
 		std::string m_Name;
 
-		std::shared_ptr<Shader> m_Shader;
+		Shader* m_Shader;
 		sUniformsMap m_UniformsMap;
 	};
 }

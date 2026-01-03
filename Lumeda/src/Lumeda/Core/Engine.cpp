@@ -13,55 +13,59 @@ Engine::Engine() : m_Application()
 
 	// Initialize the Logger
 	Log::Init();
-	LUMEDA_CORE_TRACE("Logger initialized");
+	LUMEDA_CORE_TRACE("[Engine] Logger initialized");
 
 	// Initialize the Window
 	m_Window = Window::Create();
 	if (m_Window == nullptr)
 	{
-		LUMEDA_CORE_CRITICAL("Failed to create window");
+		LUMEDA_CORE_CRITICAL("[Engine] Failed to create window");
 		throw std::runtime_error("Failed to create window");
 	}
-	LUMEDA_CORE_INFO("Window initialized");
+	LUMEDA_CORE_INFO("[Engine] Window initialized");
 
 	// Initialize the input layer
 	m_InputsLayer = InputsLayer::Create();
 	if (m_InputsLayer == nullptr)
 	{
-		LUMEDA_CORE_CRITICAL("Failed to create inputs layer");
+		LUMEDA_CORE_CRITICAL("[Engine] Failed to create inputs layer");
 		throw std::runtime_error("Failed to create inputs layer");
 	}
-	LUMEDA_CORE_INFO("Inputs layer initialized");
+	LUMEDA_CORE_INFO("[Engine] Inputs layer initialized");
 
 	// Initialize the Renderer
 	m_Renderer = Renderer::Create();
 	if (m_Renderer == nullptr)
 	{
-		LUMEDA_CORE_CRITICAL("Failed to create renderer");
+		LUMEDA_CORE_CRITICAL("[Engine] Failed to create renderer");
 		throw std::runtime_error("Failed to create renderer");
 	}
 	m_Renderer->SetViewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	m_Renderer->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	LUMEDA_CORE_INFO("Renderer initialized");
+	LUMEDA_CORE_INFO("[Engine] Renderer initialized");
 
 	// Initialize ImGui
-	m_ImGuiLayer = std::make_unique<ImGuiLayer>();
+	m_ImGuiLayer = LUMEDA_NEW(ImGuiLayer, MemTag::General);
 	m_ImGuiLayer->Initialize();
-	LUMEDA_CORE_INFO("ImGui initialized");
+	LUMEDA_CORE_INFO("[Engine] ImGui initialized");
 
 	m_Gizmos = Gizmos::Create();
 	m_Gizmos->Initialize();
-	LUMEDA_CORE_INFO("Gizmos initialized");
+	LUMEDA_CORE_INFO("[Engine] Gizmos initialized");
 }
 
-Engine::~Engine() {}
-
-void Engine::Run(std::unique_ptr<Layer> application)
+Engine::~Engine() 
 {
 	LUMEDA_PROFILE;
-	m_Application = std::move(application);
+	Cleanup();
+}
 
-	LUMEDA_CORE_INFO("Starting the game loop");
+void Engine::Run(Layer* application)
+{
+	LUMEDA_PROFILE;
+	m_Application = application;
+
+	LUMEDA_CORE_INFO("[Engine] Starting the game loop");
 
 	m_Application->Initialize();
 	while (!m_Window->ShouldClose())
@@ -91,29 +95,51 @@ void Engine::Run(std::unique_ptr<Layer> application)
 			m_Window->Update();
 		}
 	}
+	LUMEDA_CORE_INFO("[Engine] Game loop ended");
+}
+
+void Engine::Cleanup()
+{
+	LUMEDA_CORE_INFO("[Engine] Cleaning up engine");
 
 	// Destroy Application
-	m_Application->Terminate();
-	m_Application.reset();
+	if (m_Application != nullptr)
+	{
+		m_Application->Terminate();
+		Delete(m_Application);
+	}
 
 	// Destroy Gizmos
-	m_Gizmos->Terminate();
-	m_Gizmos.reset();
+	if (m_Gizmos != nullptr)
+	{
+		m_Gizmos->Terminate();
+		Delete(m_Gizmos);
+	}
 
 	// Destroy ImGui
-	m_ImGuiLayer->Terminate();
-	m_ImGuiLayer.reset();
+	if (m_ImGuiLayer != nullptr)
+	{
+		m_ImGuiLayer->Terminate();
+		Delete(m_ImGuiLayer);
+	}
 
 	// Destroy the renderer
-	m_Renderer.reset();
+	if (m_Renderer != nullptr)
+	{
+		Delete(m_Renderer);
+	}
 
 	// Destroy the inputs layer
-	m_InputsLayer.reset();
+	if (m_InputsLayer != nullptr)
+	{
+		Delete(m_InputsLayer);
+	}
 
 	// Destroy the window
-	m_Window.reset();
-
-	LUMEDA_CORE_INFO("Game loop ended");
+	if (m_Window != nullptr)
+	{
+		Delete(m_Window);
+	}
 }
 
 Window& Engine::GetWindow()

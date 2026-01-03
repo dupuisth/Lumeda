@@ -26,7 +26,7 @@ RenderTargetOpenGL::RenderTargetOpenGL(const std::string& name, const glm::ivec2
     m_Framebuffer->UnBind();
     renderTargetCounter++;
 
-    if (!std::static_pointer_cast<FramebufferOpenGL>(m_Framebuffer)->IsComplete())
+    if (!static_cast<FramebufferOpenGL*>(m_Framebuffer)->IsComplete())
     {
         LUMEDA_CORE_ERROR("[RenderTargetOpenGL] Framebuffer not ready, something went wrong when initializing");
     }
@@ -35,8 +35,10 @@ RenderTargetOpenGL::RenderTargetOpenGL(const std::string& name, const glm::ivec2
 RenderTargetOpenGL::~RenderTargetOpenGL()
 {
     LUMEDA_PROFILE;
-    // Should remove the texture and fbo ...
-    //Renderer& renderer = Engine::Get().GetRenderer();
+    Renderer& renderer = Engine::Get().GetRenderer();
+    renderer.DeleteFramebuffer(m_Framebuffer);
+    renderer.DeleteTexture2D(m_ColorTexture);
+    renderer.DeleteTexture2D(m_DepthStencilTexture);
 }
 
 const std::string& RenderTargetOpenGL::GetName() const
@@ -51,7 +53,7 @@ void RenderTargetOpenGL::Bind()
     m_Framebuffer->Bind();
 }
 
-void RenderTargetOpenGL::PrepareRender(std::shared_ptr<Shader> shader)
+void RenderTargetOpenGL::PrepareRender(Shader* shader)
 {
     shader->Bind();
     shader->SetUniform("u_ColorTexture", 0);
@@ -71,10 +73,10 @@ void RenderTargetOpenGL::SetSize(const glm::ivec2& size)
     LUMEDA_PROFILE;
     m_Size = size;
 
-    std::shared_ptr<Texture2DOpenGL> colorTexture = std::static_pointer_cast<Texture2DOpenGL>(m_ColorTexture);
+    Texture2DOpenGL* colorTexture = static_cast<Texture2DOpenGL*>(m_ColorTexture);
     colorTexture->Build(size.x, size.y, eTextureFormat::RGB);
 
-    std::shared_ptr<Texture2DOpenGL> depthStencilTexture = std::static_pointer_cast<Texture2DOpenGL>(m_DepthStencilTexture);
+    Texture2DOpenGL* depthStencilTexture = static_cast<Texture2DOpenGL*>(m_DepthStencilTexture);
     depthStencilTexture->Build(size.x, size.y, eTextureFormat::DepthStencil);
 }
 

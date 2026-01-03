@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Lumeda/Core/Log.h>
+#include <Lumeda/Core/Assert.h>
+#include <Lumeda/Core/Allocator.h>
 
 // Don't use tracy for Linux build (spent too much time on the Linux support so it's ok for now)
 #if defined(LUMEDA_RELEASE) || defined(LUMEDA_PLATFORM_LINUX)
@@ -10,6 +12,8 @@
 #define LUMEDA_PROFILE_TAG(x)
 #define LUMEDA_PROFILE_LOG(text, size)
 #define LUMEDA_PROFILE_VALUE(text, value)
+#define LUMEDA_PROFILE_MEMORY_ALLOC(p, size)
+#define LUMEDA_PROFILE_MEMORY_FREE(p)
 
 #elif defined(LUMEDA_PLATFORM_WINDOWS)
 // Enable tracy profiling
@@ -23,6 +27,8 @@
 #define LUMEDA_PROFILE_TAG(x) ZoneScoped
 #define LUMEDA_PROFILE_LOG(text, size) TracyMessage(text, size)
 #define LUMEDA_PROFILE_VALUE(text, value) TracyPlot(text, value)
+#define LUMEDA_PROFILE_MEMORY_ALLOC(p, size) TracyAlloc(p, size);
+#define LUMEDA_PROFILE_MEMORY_FREE(p) TracyFree(p);
 #else
 #error "Undefined profiling macros!"
 #endif

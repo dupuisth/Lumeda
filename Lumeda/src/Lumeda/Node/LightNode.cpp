@@ -16,6 +16,7 @@ LightNode::LightNode() : m_Light()
 LightNode::~LightNode()
 {
     LUMEDA_PROFILE;
+    OnDisable(); // Explicit call, overidden methods are not called in the destructor
 }
 
 sLight& LightNode::GetLight()
@@ -78,25 +79,25 @@ void LightNode::OnRenderImGui()
 void LightNode::OnEnable()
 {
     LUMEDA_PROFILE;
-    std::shared_ptr<RootNode> rootNode = GetRootNode();
+    RootNode* rootNode = GetRootNode();
     if (rootNode == nullptr)
     {
-        LUMEDA_CORE_WARN("[LightNode::OnEnable] Root not was not found");
+        LUMEDA_CORE_WARN("[LightNode::OnEnable] RootNode was not found");
         return;
     }
 
-    rootNode->AddLightNode(std::static_pointer_cast<LightNode>(shared_from_this()));
+    rootNode->AddLightNode(this);
 }
 
 void LightNode::OnDisable()
 {
     LUMEDA_PROFILE;
-    std::shared_ptr<RootNode> rootNode = GetRootNode();
+    RootNode* rootNode = GetRootNode();
     if (rootNode == nullptr)
     {
-        LUMEDA_CORE_WARN("[LightNode::OnDisable] Root not was not found");
+        LUMEDA_CORE_WARN("[LightNode::OnDisable] RootNode was not found");
         return;
     }
 
-    rootNode->RemoveLightNode(std::static_pointer_cast<LightNode>(shared_from_this()));
+    rootNode->RemoveLightNode(this);
 }

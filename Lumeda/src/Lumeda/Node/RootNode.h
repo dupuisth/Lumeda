@@ -13,15 +13,15 @@ namespace Lumeda
         RootNode();
         virtual ~RootNode();
 
-        void AddLightNode(std::shared_ptr<LightNode> lightNode);
-        void RemoveLightNode(std::shared_ptr<LightNode> lightNode);
-        std::vector<std::shared_ptr<LightNode>>& GetLightNodes();
+        void AddLightNode(LightNode* lightNode);
+        void RemoveLightNode(LightNode* lightNode);
+        std::vector<LightNode*>& GetLightNodes();
 
     protected:
         void OnRender() override;
         void OnRenderImGui() override;
 
     private:
-        std::vector<std::shared_ptr<LightNode>> m_LightNodes;
+        std::vector<LightNode*> m_LightNodes;
     };
 }

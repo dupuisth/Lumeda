@@ -44,7 +44,7 @@ Texture2DOpenGL::Texture2DOpenGL(const std::string& name, const std::string& pat
 }
 
 Texture2DOpenGL::Texture2DOpenGL(const std::string& name, int width, int height, eTextureFormat format)
-	: m_Size(width, height), m_Wrapping(eTextureWrapping::Repeat), m_Filtering(eTextureFiltering::Linear)
+	: m_Name(name), m_Size(width, height), m_Wrapping(eTextureWrapping::Repeat), m_Filtering(eTextureFiltering::Linear)
 {
 	LUMEDA_PROFILE;
 	glGenTextures(1, &m_Handle);

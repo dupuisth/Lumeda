@@ -21,20 +21,24 @@ namespace Lumeda
 		Engine();
 		~Engine();
 
-		void Run(std::unique_ptr<Layer> application);
+		void Run(Layer* application);
 
 		Window& GetWindow();
 		Renderer& GetRenderer();
 		Gizmos& GetGizmos();
 
 		static Engine& Get();
-	private:
-		std::unique_ptr<Layer> m_Application;
 
-		std::unique_ptr<Window> m_Window;
-		std::unique_ptr<Renderer> m_Renderer;
-		std::unique_ptr<ImGuiLayer> m_ImGuiLayer;
-		std::unique_ptr<InputsLayer> m_InputsLayer;
-		std::unique_ptr<Gizmos> m_Gizmos;
+	private:
+		void Cleanup();
+
+	private:
+		Layer* m_Application;
+
+		Window* m_Window;
+		Renderer* m_Renderer;
+		ImGuiLayer* m_ImGuiLayer;
+		InputsLayer* m_InputsLayer;
+		Gizmos* m_Gizmos;
 	};
 }

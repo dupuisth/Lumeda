@@ -26,14 +26,14 @@ namespace Lumeda
         void SetColor(const glm::vec4& color) override;
 
     private:
-        std::shared_ptr<Mesh> m_Cube;
-        std::shared_ptr<Mesh> m_Plane;
+        Mesh* m_Cube;
+        Mesh* m_Plane;
 
-        std::shared_ptr<Shader> m_Shader;
-        std::shared_ptr<Material> m_Material;
+        Shader* m_Shader;
+        Material* m_Material;
 
-        std::shared_ptr<Shader> m_GridShader;
-        std::shared_ptr<Material> m_GridMaterial;
+        Shader* m_GridShader;
+        Material* m_GridMaterial;
 
         glm::vec4 m_CurrentColor;
     };

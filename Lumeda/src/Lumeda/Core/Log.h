@@ -8,21 +8,22 @@
 
 namespace Lumeda
 {
-	/// <summary>
-	/// Handles logging
-	/// </summary>
-	class Log
-	{
-	public:
-		static void Init();
+/// <summary>
+/// Handles logging
+/// </summary>
+class Log
+{
+public:
+	static void Init();
 
-		static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
-		static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+	// Can't use raw pointer with spdlog, the API uses shared_ptr
+	static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+	static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 
-	private:
-		static std::shared_ptr<spdlog::logger> s_CoreLogger;
-		static std::shared_ptr<spdlog::logger> s_ClientLogger;
-	};
+private:
+	static std::shared_ptr<spdlog::logger> s_CoreLogger;
+	static std::shared_ptr<spdlog::logger> s_ClientLogger;
+};
 }
 
 #define LUMEDA_CORE_TRACE(...)    ::Lumeda::Log::GetCoreLogger()->trace(__VA_ARGS__)

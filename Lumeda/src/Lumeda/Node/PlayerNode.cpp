@@ -8,7 +8,7 @@ PlayerNode::PlayerNode()
     LUMEDA_PROFILE;
 
     // Directly add a CameraNode
-    std::shared_ptr<CameraNode> cameraNode = std::make_shared<CameraNode>();
+    CameraNode* cameraNode = LUMEDA_NEW(CameraNode, MemTag::Scene);
     AddChild(cameraNode);
     SetName("PlayerNode");
 }

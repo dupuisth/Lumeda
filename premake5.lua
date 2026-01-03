@@ -78,6 +78,8 @@ project "Lumeda"
             "LUMEDA_BUILD_DLL"
         }
 
+        buildoptions { "/Zc:preprocessor" }
+
     filter "system:linux"
         cppdialect "C++20"
         staticruntime "Off"
@@ -161,6 +163,8 @@ project "Sandbox"
         {
             "LUMEDA_PLATFORM_WINDOWS"
         }
+
+        buildoptions { "/Zc:preprocessor" }
 
         postbuildcommands
         {

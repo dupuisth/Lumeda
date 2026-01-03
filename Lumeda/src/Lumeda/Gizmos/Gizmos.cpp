@@ -4,9 +4,9 @@ using namespace Lumeda;
 
 #ifdef LUMEDA_USE_GLAD
 #include <Lumeda/Implementation/OpenGL/GizmosOpenGL.h>
-std::unique_ptr<Gizmos> Gizmos::Create()
+Gizmos* Gizmos::Create()
 {
-    std::unique_ptr<GizmosOpenGL> gizmos = std::make_unique<GizmosOpenGL>();
+    GizmosOpenGL* gizmos = LUMEDA_NEW(GizmosOpenGL, MemTag::General);
     return gizmos;
 }
 #else
