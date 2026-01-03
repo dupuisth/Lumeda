@@ -35,8 +35,10 @@ RenderTargetOpenGL::RenderTargetOpenGL(const std::string& name, const glm::ivec2
 RenderTargetOpenGL::~RenderTargetOpenGL()
 {
     LUMEDA_PROFILE;
-    // Should remove the texture and fbo ...
-    //Renderer& renderer = Engine::Get().GetRenderer();
+    Renderer& renderer = Engine::Get().GetRenderer();
+    renderer.DeleteFramebuffer(m_Framebuffer);
+    renderer.DeleteTexture2D(m_ColorTexture);
+    renderer.DeleteTexture2D(m_DepthStencilTexture);
 }
 
 const std::string& RenderTargetOpenGL::GetName() const

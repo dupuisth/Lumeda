@@ -10,7 +10,6 @@
 #include <Lumeda/Renderer/Model.h>
 #include <Lumeda/Renderer/Camera.h>
 #include <Lumeda/Renderer/ModelLoader.h>
-#include <Lumeda/Renderer/Camera.h>
 
 #include <glad/glad.h>
 
@@ -76,6 +75,18 @@ RendererOpenGL::~RendererOpenGL()
 {
 	LUMEDA_PROFILE;
 
+	// Force delete all render targets
+	for (auto& renderTarget : m_RenderTargets)
+	{
+		Delete(renderTarget.second);
+	}
+
+	// Force delete all framebuffers
+	for (auto& framebuffer : m_Framebuffers)
+	{
+		Delete(framebuffer.second);
+	}
+
 	// Force delete all models
 	for (auto& model : m_Models)
 	{
@@ -104,18 +115,6 @@ RendererOpenGL::~RendererOpenGL()
 	for (auto& mesh : m_Meshes)
 	{
 		Delete(mesh.second);
-	}
-
-	// Force delete all render targets
-	for (auto& renderTarget : m_RenderTargets)
-	{
-		Delete(renderTarget.second);
-	}
-
-	// Force delete all framebuffers
-	for (auto& framebuffer : m_Framebuffers)
-	{
-		Delete(framebuffer.second);
 	}
 
 	Engine::Get().GetWindow().RemoveResizeCallback(m_WindowResizeCallbackToken);
@@ -169,7 +168,7 @@ const std::unordered_map<std::string, Model*>& Lumeda::RendererOpenGL::ListModel
 	return m_Models;
 }
 
-const std::unordered_map<std::string,Framebuffer*>& RendererOpenGL::ListFramebuffers()
+const std::unordered_map<std::string, Framebuffer*>& RendererOpenGL::ListFramebuffers()
 {
 	LUMEDA_PROFILE;
 	return m_Framebuffers;
@@ -180,7 +179,6 @@ const std::unordered_map<std::string, RenderTarget*>& RendererOpenGL::ListRender
 	LUMEDA_PROFILE;
 	return m_RenderTargets;
 }
-
 
 #define SAFE_RETURN_RESOURCE(map, resourceName) \
 const auto& iterator = map.find(resourceName); \
@@ -311,6 +309,63 @@ RenderTarget* RendererOpenGL::CreateRenderTarget(const std::string& name, int wi
 	RenderTargetOpenGL* renderTarget = LUMEDA_NEW(RenderTargetOpenGL, MemTag::Assets, name, glm::ivec2(width, height));
 	m_RenderTargets.insert({ name, renderTarget });
 	return renderTarget;
+}
+
+#define SAFE_DELETE_RESOURCE(map, ptr) \
+if (ptr == nullptr) \
+{ \
+	LUMEDA_CORE_WARN("[RendererOpenGL] Trying to remove a nullptr from the map {0}", #map); \
+	return; \
+} \
+int result = map.erase(ptr->GetName()); \
+if (result == 0) \
+{ \
+	LUMEDA_CORE_WARN("[RendererOpenGL] Cannot remove the resource \"{0}\" in the map {1} (not found)", ptr->GetName(), #map); \
+	return; \
+} \
+Delete(ptr)
+
+
+void RendererOpenGL::DeleteShader(Shader* shader)
+{
+	LUMEDA_PROFILE;
+	SAFE_DELETE_RESOURCE(m_Shaders, shader);
+}
+
+void RendererOpenGL::DeleteTexture2D(Texture2D* texture)
+{
+	LUMEDA_PROFILE;
+	SAFE_DELETE_RESOURCE(m_Textures2D, texture);
+}
+
+void RendererOpenGL::DeleteMesh(Mesh* mesh)
+{
+	LUMEDA_PROFILE;
+	SAFE_DELETE_RESOURCE(m_Meshes, mesh);
+}
+
+void RendererOpenGL::DeleteMaterial(Material* material)
+{
+	LUMEDA_PROFILE;
+	SAFE_DELETE_RESOURCE(m_Materials, material);
+}
+
+void RendererOpenGL::DeleteModel(Model* model)
+{
+	LUMEDA_PROFILE;
+	SAFE_DELETE_RESOURCE(m_Models, model);
+}
+
+void RendererOpenGL::DeleteFramebuffer(Framebuffer* framebuffer)
+{
+	LUMEDA_PROFILE;
+	SAFE_DELETE_RESOURCE(m_Framebuffers, framebuffer);
+}
+
+void RendererOpenGL::DeleteRenderTarget(RenderTarget* renderTarget)
+{
+	LUMEDA_PROFILE;
+	SAFE_DELETE_RESOURCE(m_RenderTargets, renderTarget);
 }
 
 void RendererOpenGL::BeginFrame()

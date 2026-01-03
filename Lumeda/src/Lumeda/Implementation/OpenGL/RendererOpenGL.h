@@ -52,6 +52,14 @@ namespace Lumeda
 		Framebuffer* CreateFramebuffer(const std::string& name) override;
 		RenderTarget* CreateRenderTarget(const std::string& name, int width, int height) override;
 
+		void DeleteShader(Shader* shader) override;
+		void DeleteTexture2D(Texture2D* texture) override;
+		void DeleteMesh(Mesh* mesh) override;
+		void DeleteMaterial(Material* material) override;
+		void DeleteModel(Model* model) override;
+		void DeleteFramebuffer(Framebuffer* framebuffer) override;
+		void DeleteRenderTarget(RenderTarget* renderTarget) override;
+
 		void BeginFrame() override;
 		void Submit(Mesh* mesh, Material* material, sUniformsMap& uniforms) override;
 		void Submit(Model* model, sUniformsMap& uniforms) override;

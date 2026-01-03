@@ -62,6 +62,14 @@ namespace Lumeda
 		virtual Framebuffer* CreateFramebuffer(const std::string& name) = 0;
 		virtual RenderTarget* CreateRenderTarget(const std::string& name, int width, int height) = 0;
 
+		virtual void DeleteShader(Shader* shader) = 0;
+		virtual void DeleteTexture2D(Texture2D* texture) = 0;
+		virtual void DeleteMesh(Mesh* mesh) = 0;
+		virtual void DeleteMaterial(Material* material) = 0;
+		virtual void DeleteModel(Model* model) = 0;
+		virtual void DeleteFramebuffer(Framebuffer* framebuffer) = 0;
+		virtual void DeleteRenderTarget(RenderTarget* renderTarget) = 0;
+
 		virtual void BeginFrame() = 0;
 		virtual void Submit(Mesh* mesh, Material* material, sUniformsMap& uniforms) = 0;
 		virtual void Submit(Model* model, sUniformsMap& uniforms) = 0;

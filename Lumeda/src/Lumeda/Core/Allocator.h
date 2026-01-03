@@ -55,5 +55,4 @@ namespace Lumeda
 
     #define LUMEDA_ALLOC(T, tag) Alloc<T>(tag, __FILE__, __LINE__)
     #define LUMEDA_NEW(T, tag, ...) New<T>(tag, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__)
-
 }
