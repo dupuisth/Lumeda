@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Lumeda/Core/Log.h>
+#include <Lumeda/Core/Assert.h>
 #include <Lumeda/Core/Allocator.h>
 
 // Don't use tracy for Linux build (spent too much time on the Linux support so it's ok for now)
