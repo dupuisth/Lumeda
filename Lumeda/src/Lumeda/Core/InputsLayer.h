@@ -21,6 +21,6 @@ public:
 	virtual bool IsMouseButtonDown(LumedaMouseButtons button) = 0;
 	virtual bool IsMouseButtonUp(LumedaMouseButtons button) = 0;
 
-	static std::unique_ptr<InputsLayer> Create();
+	static InputsLayer* Create();
 };
 }

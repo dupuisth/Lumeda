@@ -5,10 +5,10 @@ using namespace Lumeda;
 #ifdef LUMEDA_USE_GLFW
 #include <Lumeda/Implementation/GLFW/InputsLayerGLFW.h>
 using namespace Lumeda;
-std::unique_ptr<InputsLayer> InputsLayer::Create()
+InputsLayer* InputsLayer::Create()
 {
 	LUMEDA_PROFILE;
-	std::unique_ptr<InputsLayerGLFW> window = std::make_unique<InputsLayerGLFW>();
+	InputsLayerGLFW* window = LUMEDA_NEW(InputsLayerGLFW, MemTag::General);
 	return window;
 }
 #else

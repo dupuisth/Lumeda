@@ -448,6 +448,6 @@ int main()
 {
 	{
 		Lumeda::Engine engine;
-		engine.Run(std::make_unique<Sandbox>());
+		engine.Run(LUMEDA_NEW(Sandbox, Lumeda::MemTag::General));
 	}
 }

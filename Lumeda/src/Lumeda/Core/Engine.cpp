@@ -45,7 +45,7 @@ Engine::Engine() : m_Application()
 	LUMEDA_CORE_INFO("Renderer initialized");
 
 	// Initialize ImGui
-	m_ImGuiLayer = std::make_unique<ImGuiLayer>();
+	m_ImGuiLayer = LUMEDA_NEW(ImGuiLayer, MemTag::General);
 	m_ImGuiLayer->Initialize();
 	LUMEDA_CORE_INFO("ImGui initialized");
 
@@ -54,12 +54,16 @@ Engine::Engine() : m_Application()
 	LUMEDA_CORE_INFO("Gizmos initialized");
 }
 
-Engine::~Engine() {}
-
-void Engine::Run(std::unique_ptr<Layer> application)
+Engine::~Engine() 
 {
 	LUMEDA_PROFILE;
-	m_Application = std::move(application);
+	Cleanup();
+}
+
+void Engine::Run(Layer* application)
+{
+	LUMEDA_PROFILE;
+	m_Application = application;
 
 	LUMEDA_CORE_INFO("Starting the game loop");
 
@@ -91,29 +95,31 @@ void Engine::Run(std::unique_ptr<Layer> application)
 			m_Window->Update();
 		}
 	}
+	LUMEDA_CORE_INFO("Game loop ended");
+}
 
+void Engine::Cleanup()
+{
 	// Destroy Application
 	m_Application->Terminate();
-	m_Application.reset();
+	Delete(m_Application);
 
 	// Destroy Gizmos
 	m_Gizmos->Terminate();
-	m_Gizmos.reset();
+	Delete(m_Gizmos);
 
 	// Destroy ImGui
 	m_ImGuiLayer->Terminate();
-	m_ImGuiLayer.reset();
+	Delete(m_ImGuiLayer);
 
 	// Destroy the renderer
 	Delete(m_Renderer);
 
 	// Destroy the inputs layer
-	m_InputsLayer.reset();
+	Delete(m_InputsLayer);
 
 	// Destroy the window
-	m_Window.reset();
-
-	LUMEDA_CORE_INFO("Game loop ended");
+	Delete(m_Window);
 }
 
 Window& Engine::GetWindow()
