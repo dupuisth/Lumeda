@@ -9,8 +9,6 @@ class Sandbox : public Lumeda::Layer
 {
 private:
 	Lumeda::RenderTarget* renderTarget;
-	Lumeda::RenderTarget* otherRenderTarget;
-
 
 	Lumeda::RootNode* rootNode;
 	Lumeda::Node* selectedNode = nullptr;
@@ -115,7 +113,19 @@ public:
 		rootNode->AddChild(pivotNode);
 
 		renderTarget = renderer.CreateRenderTarget("RenderTarget", 600, 400);
-		otherRenderTarget = renderer.CreateRenderTarget("RenderTargetOther", 600, 400);
+#ifdef LUMEDA_USE_GLAD
+		Lumeda::RenderTargetOpenGL* castedRenderTarget = dynamic_cast<Lumeda::RenderTargetOpenGL*>(renderTarget);
+		if (castedRenderTarget != nullptr)
+		{
+			castedRenderTarget->GetColorTexture()->Bind();
+			castedRenderTarget->GetColorTexture()->SetFiltering(Lumeda::eTextureFiltering::Nearest);
+			castedRenderTarget->GetColorTexture()->UnBind();
+		}
+		else
+		{
+			LUMEDA_WARN("Couldn't cast RenderTarget to RenderTargetOpenGL... Shouldn't happen since the backend is defined as GLAD");
+		}
+#endif
 	}
 
 	void Update() override
@@ -179,6 +189,11 @@ public:
 				glm::ivec2 size = renderTarget->GetSize();
 				if (ImGui::InputInt2("Size", glm::value_ptr(size)))
 				{
+					renderTarget->SetSize(size);
+				}
+				if (ImGui::Button("Match window size"))
+				{
+					glm::ivec2 size = Lumeda::Engine::Get().GetWindow().GetSize();
 					renderTarget->SetSize(size);
 				}
 				ImGui::EndMenu();
