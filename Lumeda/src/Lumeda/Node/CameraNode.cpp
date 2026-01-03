@@ -3,7 +3,7 @@
 
 using namespace Lumeda;
 
-CameraNode::CameraNode()
+CameraNode::CameraNode() : m_IsMain(false)
 {
     LUMEDA_PROFILE;
     m_Camera = LUMEDA_NEW(Camera, MemTag::General, &m_Transform);
@@ -13,6 +13,7 @@ CameraNode::CameraNode()
 CameraNode::~CameraNode()
 {
     LUMEDA_PROFILE;
+    Delete(m_Camera);
 }
 
 
