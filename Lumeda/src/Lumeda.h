@@ -5,6 +5,7 @@
 #include <Lumeda/Core/Log.h>
 #include <Lumeda/Core/Window.h>
 #include <Lumeda/Core/Layer.h>
+#include <Lumeda/Core/Time.h>
 
 #include <Lumeda/Renderer/Renderer.h>
 #include <Lumeda/Renderer/Shader.h>
@@ -27,6 +28,8 @@
 
 #ifdef LUMEDA_USE_GLFW
 #include <Lumeda/Implementation/GLFW/WindowGLFW.h>
+#include <Lumeda/Implementation/GLFW/InputsLayerGLFW.h>
+#include <Lumeda/Implementation/GLFW/TimeGLFW.h>
 #endif
 
 #ifdef LUMEDA_USE_GLAD
