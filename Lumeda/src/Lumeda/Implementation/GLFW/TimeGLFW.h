@@ -22,6 +22,6 @@ namespace Lumeda
         float m_PreviousTime;
         size_t m_FrameCount;
         float m_DeltaTime;
-        float m_time;
+        float m_Time;
     };
 }

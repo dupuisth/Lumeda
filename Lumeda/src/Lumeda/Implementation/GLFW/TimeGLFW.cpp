@@ -5,9 +5,10 @@
 using namespace Lumeda;
 
 TimeGLFW::TimeGLFW()
-    : m_DeltaTime(0.0f), m_FrameCount(0), m_PreviousTime(0.0f), m_time(0.0f)
+    : m_DeltaTime(0.0f), m_FrameCount(0), m_PreviousTime(0.0f)
 {
     LUMEDA_PROFILE;
+    m_Time = (float)glfwGetTime();
 }
 
 TimeGLFW::~TimeGLFW()
@@ -18,17 +19,17 @@ TimeGLFW::~TimeGLFW()
 void TimeGLFW::Tick()
 {
     LUMEDA_PROFILE;
-    m_PreviousTime = m_time;
-    m_time = (float)glfwGetTime();
+    m_PreviousTime = m_Time;
+    m_Time = (float)glfwGetTime();
 
-    m_DeltaTime = m_time - m_PreviousTime;
+    m_DeltaTime = m_Time - m_PreviousTime;
     m_FrameCount++;
 }
 
 float TimeGLFW::GetTime()
 {
     LUMEDA_PROFILE;
-    return m_time;
+    return m_Time;
 }
 
 float TimeGLFW::GetPreciseTime()
