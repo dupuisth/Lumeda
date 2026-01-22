@@ -1,5 +1,6 @@
-#include <Lumeda/Core/Base.h>
+#pragma once
 
+#include <Lumeda/Core/Base.h>
 #include <Lumeda/Core/Time.h>
 
 #include <GLFW/glfw3.h>
