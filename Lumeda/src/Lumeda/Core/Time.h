@@ -7,8 +7,7 @@ namespace Lumeda
     class Time
     {
     public:
-        virtual ~Time();
-
+        virtual ~Time() = default;
         virtual void Tick() = 0;
 
         virtual float GetPreciseTime() = 0;
