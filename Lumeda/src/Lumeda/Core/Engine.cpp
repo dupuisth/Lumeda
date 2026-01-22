@@ -24,6 +24,15 @@ Engine::Engine() : m_Application()
 	}
 	LUMEDA_CORE_INFO("[Engine] Window initialized");
 
+	// Initialize the Time layer
+	m_Time = Time::Create();
+	if (m_Time == nullptr)
+	{
+		LUMEDA_CORE_CRITICAL("[Engine] Failed to create time layer");
+		throw std::runtime_error("Failed to create time layer");
+	}
+	LUMEDA_CORE_INFO("[ENGINE] Time initialized");
+
 	// Initialize the input layer
 	m_InputsLayer = InputsLayer::Create();
 	if (m_InputsLayer == nullptr)
@@ -54,7 +63,7 @@ Engine::Engine() : m_Application()
 	LUMEDA_CORE_INFO("[Engine] Gizmos initialized");
 }
 
-Engine::~Engine() 
+Engine::~Engine()
 {
 	LUMEDA_PROFILE;
 	Cleanup();
@@ -71,6 +80,9 @@ void Engine::Run(Layer* application)
 	while (!m_Window->ShouldClose())
 	{
 		LUMEDA_PROFILE_FRAME;
+
+		m_Time->Tick();
+
 		{
 			LUMEDA_PROFILE_SECTION("Update");
 			m_InputsLayer->Update();
@@ -135,6 +147,12 @@ void Engine::Cleanup()
 		Delete(m_InputsLayer);
 	}
 
+	// Destroy the time layer
+	if (m_Time != nullptr)
+	{
+		Delete(m_Time);
+	}
+
 	// Destroy the window
 	if (m_Window != nullptr)
 	{
@@ -158,6 +176,12 @@ Gizmos& Engine::GetGizmos()
 {
 	LUMEDA_PROFILE;
 	return *m_Gizmos;
+}
+
+Time& Engine::GetTime()
+{
+	LUMEDA_PROFILE;
+	return *m_Time;
 }
 
 Engine& Engine::Get()

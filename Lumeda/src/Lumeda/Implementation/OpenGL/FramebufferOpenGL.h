@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Lumeda/Renderer/Framebuffer.h>
 #include <Lumeda/Core/Base.h>
 

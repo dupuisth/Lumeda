@@ -132,8 +132,8 @@ namespace
 
     TEST(TransformTest, GlobalPositionWithoutRotationTest)
     {
-        std::shared_ptr<Lumeda::Node> parentNode = std::make_shared<Lumeda::Node>();
-        std::shared_ptr<Lumeda::Node> childNode = std::make_shared<Lumeda::Node>();
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -149,12 +149,15 @@ namespace
         parentNode->GetTransform().SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
         childNode->GetTransform().SetLocalPosition(glm::vec3(5.0f, 0.0f, 0.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(5.0f, 0.0f, 0.0f));
+
+        Lumeda::Delete(parentNode);
+        Lumeda::Delete(childNode);
     }
 
     TEST(TransformTest, GlobalPositionWithXRotationTest)
     {
-        std::shared_ptr<Lumeda::Node> parentNode = std::make_shared<Lumeda::Node>();
-        std::shared_ptr<Lumeda::Node> childNode = std::make_shared<Lumeda::Node>();
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -163,12 +166,15 @@ namespace
         parentNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(90.0f, 0.0f, 0.0f));
         childNode->GetTransform().SetLocalPosition(glm::vec3(10.0f, 15.0f, 5.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(10.0f, -5.0f, 15.0f));
+
+        Lumeda::Delete(parentNode);
+        Lumeda::Delete(childNode);
     }
 
     TEST(TransformTest, GlobalPositionWithYRotationTest)
     {
-        std::shared_ptr<Lumeda::Node> parentNode = std::make_shared<Lumeda::Node>();
-        std::shared_ptr<Lumeda::Node> childNode = std::make_shared<Lumeda::Node>();
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -177,12 +183,15 @@ namespace
         parentNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(0.0f, 90.0f, 0.0f));
         childNode->GetTransform().SetLocalPosition(glm::vec3(5.0f, 10.0f, 15.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(15.0f, 10.0f, -5.0f));
+
+        Lumeda::Delete(parentNode);
+        Lumeda::Delete(childNode);
     }
 
     TEST(TransformTest, GlobalPositionWithZRotationTest)
     {
-        std::shared_ptr<Lumeda::Node> parentNode = std::make_shared<Lumeda::Node>();
-        std::shared_ptr<Lumeda::Node> childNode = std::make_shared<Lumeda::Node>();
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -191,12 +200,15 @@ namespace
         parentNode->GetTransform().SetLocalRotationEulerAngles(glm::vec3(0.0f, 0.0f, 90.0f));
         childNode->GetTransform().SetLocalPosition(glm::vec3(5.0f, 10.0f, 15.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(-10.0f, 5.0f, 15.0f));
+
+        Lumeda::Delete(parentNode);
+        Lumeda::Delete(childNode);
     }
 
     TEST(TransformTest, GlobalRotationTest)
     {
-        std::shared_ptr<Lumeda::Node> parentNode = std::make_shared<Lumeda::Node>();
-        std::shared_ptr<Lumeda::Node> childNode = std::make_shared<Lumeda::Node>();
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -209,12 +221,15 @@ namespace
         childNode->GetTransform().SetLocalRotation(b);
 
         ASSERT_QUAT_EQ(childNode->GetTransform().GetRotation(), res);
+
+        Lumeda::Delete(parentNode);
+        Lumeda::Delete(childNode);
     }
 
     TEST(TransformTest, GlobalScaleTest)
     {
-        std::shared_ptr<Lumeda::Node> parentNode = std::make_shared<Lumeda::Node>();
-        std::shared_ptr<Lumeda::Node> childNode = std::make_shared<Lumeda::Node>();
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -223,5 +238,8 @@ namespace
         childNode->GetTransform().SetLocalScale(glm::vec3(5.0f, 6.0f, 7.0f));
 
         ASSERT_VEC3_EQ(childNode->GetTransform().GetScale(), glm::vec3(10.0f, 18.0f, 28.0f));
+
+        Lumeda::Delete(parentNode);
+        Lumeda::Delete(childNode);
     }
 }

@@ -7,38 +7,38 @@
 using namespace Lumeda;
 
 const char* SHADER_VERT = "#version 460 core \n \
-layout (location = 0) in vec3 a_Pos; \
-uniform mat4 u_CameraMatrix; \
-uniform mat4 u_World; \
-out vec3 f_WorldPosition; \
-out vec4 f_ScreenPosition; \
-void main() \
-{ \
-    f_WorldPosition = (u_World * vec4(a_Pos, 1.0)).xyz; \
-    f_ScreenPosition = u_CameraMatrix * vec4(f_WorldPosition, 1.0); \
-    gl_Position = f_ScreenPosition; \
+layout (location = 0) in vec3 a_Pos; \n\
+uniform mat4 u_CameraMatrix;\n\
+uniform mat4 u_World;\n\
+out vec3 f_WorldPosition;\n\
+out vec4 f_ScreenPosition;\n\
+void main()\n\
+{\n\
+    f_WorldPosition = (u_World * vec4(a_Pos, 1.0)).xyz;\n\
+    f_ScreenPosition = u_CameraMatrix * vec4(f_WorldPosition, 1.0);\n\
+    gl_Position = f_ScreenPosition;\n\
 }";
 
-const char* SHADER_FRAG = "#version 460 core \n \
-out vec4 FragColor; \
-uniform vec4 u_Color; \
-void main() \
-{ \
-FragColor = u_Color; \
+const char* SHADER_FRAG = "#version 460 core\n\
+out vec4 FragColor;\n\
+uniform vec4 u_Color;\n\
+void main()\n\
+{\n\
+FragColor = u_Color;\n\
 }";
 
-const char* GRID_SHADER_FRAG = "#version 460 core\n \
-in vec3 f_WorldPosition; \
-const float TRESHOLD = 0.05; \
-out vec4 FragColor; \
-uniform vec4 u_Color; \
-void main() \
-{ \
-    vec3 absModPos = vec3(mod(abs(f_WorldPosition.x), 1.0), 0.0, mod(abs(f_WorldPosition.z), 1.0)); \
-    if (absModPos.x + TRESHOLD / 2 < TRESHOLD) {}\
-    else if (absModPos.z + TRESHOLD / 2 < TRESHOLD) {}\
-    else discard; \
-    FragColor = vec4(absModPos.length / (TRESHOLD * 2)); \
+const char* GRID_SHADER_FRAG = "#version 460 core\n\
+in vec3 f_WorldPosition;\n\
+const float TRESHOLD = 0.05;\n\
+out vec4 FragColor;\n\
+uniform vec4 u_Color;\n\
+void main()\n\
+{\n\
+    vec3 absModPos = vec3(mod(abs(f_WorldPosition.x), 1.0), 0.0, mod(abs(f_WorldPosition.z), 1.0));\n\
+    if (absModPos.x + TRESHOLD / 2 < TRESHOLD) {}\n\
+    else if (absModPos.z + TRESHOLD / 2 < TRESHOLD) {}\n\
+    else discard;\n\
+    FragColor = vec4(length(absModPos) / (TRESHOLD * 2)); \
 }";
 
 const float CUBE_OFF = 1.0f;
