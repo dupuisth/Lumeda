@@ -175,7 +175,7 @@ public:
 
 				ImGui::LabelText("Time", "%f", Lumeda::Engine::Get().GetTime().GetTime());
 				ImGui::LabelText("DeltaTime", "%f", Lumeda::Engine::Get().GetTime().GetDeltaTime());
-				ImGui::LabelText("Framecount", "%d", Lumeda::Engine::Get().GetTime().GetFrameCount());
+				ImGui::LabelText("Framecount", "%lu", Lumeda::Engine::Get().GetTime().GetFrameCount());
 
 				ImGui::EndMenu();
 			}
