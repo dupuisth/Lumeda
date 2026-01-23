@@ -63,6 +63,7 @@ namespace Lumeda
 		void BeginFrame() override;
 		void Submit(Mesh* mesh, Material* material, sUniformsMap& uniforms) override;
 		void Submit(Model* model, sUniformsMap& uniforms) override;
+		void Submit(sParticleSystemDescriptor* particleSystem) override;
 		void Render(Camera* camera, RenderTarget* renderTarget) override;
 		void PrepareRenderScreen() override;
 		void RenderToScreen(RenderTarget* renderTarget, int x, int y, int width, int height) override;

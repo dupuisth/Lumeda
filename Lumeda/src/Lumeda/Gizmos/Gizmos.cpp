@@ -6,7 +6,7 @@ using namespace Lumeda;
 #include <Lumeda/Implementation/OpenGL/GizmosOpenGL.h>
 Gizmos* Gizmos::Create()
 {
-    GizmosOpenGL* gizmos = LUMEDA_NEW(GizmosOpenGL, MemTag::General);
+    GizmosOpenGL* gizmos = LUMEDA_NEW(GizmosOpenGL);
     return gizmos;
 }
 #else

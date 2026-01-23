@@ -15,6 +15,9 @@
 #define LUMEDA_PROFILE_MEMORY_ALLOC(p, size)
 #define LUMEDA_PROFILE_MEMORY_FREE(p)
 
+#define LUMEDA_RANDINT(a, b) (rand() % (b-a) + a)
+#define LUMEDA_RANDFLOAT(a, b) (((float)rand() / (float)(RAND_MAX)) * (b-a) + a)
+
 #elif defined(LUMEDA_PLATFORM_WINDOWS)
 // Enable tracy profiling
 #define TRACY_ENABLE

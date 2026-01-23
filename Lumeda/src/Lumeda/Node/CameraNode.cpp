@@ -6,14 +6,14 @@ using namespace Lumeda;
 CameraNode::CameraNode() : m_IsMain(false)
 {
     LUMEDA_PROFILE;
-    m_Camera = LUMEDA_NEW(Camera, MemTag::General, &m_Transform);
+    m_Camera = LUMEDA_NEW(Camera, &m_Transform);
     SetName("CameraNode");
 }
 
 CameraNode::~CameraNode()
 {
     LUMEDA_PROFILE;
-    Delete(m_Camera);
+    LUMEDA_FREE(m_Camera);
 }
 
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Lumeda/Core/Base.h>
+#include <Lumeda/Renderer/ParticleSystemDescriptor.h>
 
 #include <vector>
 #include <memory>
@@ -73,6 +74,7 @@ namespace Lumeda
 		virtual void BeginFrame() = 0;
 		virtual void Submit(Mesh* mesh, Material* material, sUniformsMap& uniforms) = 0;
 		virtual void Submit(Model* model, sUniformsMap& uniforms) = 0;
+		virtual void Submit(sParticleSystemDescriptor* particleSystem) = 0;
 		virtual void Render(Camera* camera, RenderTarget* renderTarget) = 0;
 		virtual void PrepareRenderScreen() = 0;
 		virtual void RenderToScreen(RenderTarget* renderTarget, int x, int y, int width, int height) = 0;

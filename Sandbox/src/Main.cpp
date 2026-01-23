@@ -79,10 +79,10 @@ public:
 			model->SetItem(i, modelItem);
 		}
 
-		rootNode = LUMEDA_NEW(Lumeda::RootNode, Lumeda::MemTag::General);
-		Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, Lumeda::MemTag::General, glm::vec3(0.0f, 0.50f, 0.0f));
-		Lumeda::ModelNode* cubeModelNode = LUMEDA_NEW(Lumeda::ModelNode, Lumeda::MemTag::General);
-		Lumeda::LightNode* lightNode = LUMEDA_NEW(Lumeda::LightNode, Lumeda::MemTag::General);
+		rootNode = LUMEDA_NEW(Lumeda::RootNode);
+		Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 0.50f, 0.0f));
+		Lumeda::ModelNode* cubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
+		Lumeda::LightNode* lightNode = LUMEDA_NEW(Lumeda::LightNode);
 		lightNode->GetLight().Color = glm::vec3(1.0f);
 		lightNode->GetLight().Intensity = 1.0f;
 		lightNode->GetLight().LightCharacteristics = { 5.0f, 5.0f, 0.0f };
@@ -94,14 +94,14 @@ public:
 		cubeNode->AddChild(lightNode);
 		rootNode->AddChild(cubeNode);
 
-		Lumeda::ModelNode* centerCubeModelNode = LUMEDA_NEW(Lumeda::ModelNode, Lumeda::MemTag::General);
+		Lumeda::ModelNode* centerCubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
 		centerCubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.1f));
 		centerCubeModelNode->SetModel(*barrelPondModel);
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
-		Lumeda::SpinNode* pivotNode = LUMEDA_NEW(Lumeda::SpinNode, Lumeda::MemTag::General, glm::vec3(0.0f, 0.05f, 0.0f));
-		Lumeda::PlayerNode* playerNode = LUMEDA_NEW(Lumeda::PlayerNode, Lumeda::MemTag::General);
+		Lumeda::SpinNode* pivotNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 0.05f, 0.0f));
+		Lumeda::PlayerNode* playerNode = LUMEDA_NEW(Lumeda::PlayerNode);
 		playerNode->GetTransform().SetLocalPosition({ 0.0f, 0.5f, -0.8f });
 		playerNode->GetTransform().SetLocalRotationEulerAngles({ 30.0f, 0.0f, 0.0f });
 		// PlayerNode automatically add a CameraNode, but in order to access it, the child need to be really added, not pending.
@@ -173,7 +173,7 @@ public:
 				ImGui::LabelText("Profiling", "Disabled");
 #endif // LUMEDA_PROFILING_ENABLED
 
-				ImGui::LabelText("Time", "%f", Lumeda::Engine::Get().GetTime().GetTime());
+				ImGui::LabelText("Time", "%f", Lumeda::Engine::Get().GetTime().GetElapsedTime());
 				ImGui::LabelText("DeltaTime", "%f", Lumeda::Engine::Get().GetTime().GetDeltaTime());
 				ImGui::LabelText("Framecount", "%lu", Lumeda::Engine::Get().GetTime().GetFrameCount());
 
@@ -467,7 +467,7 @@ public:
 	{
 		LUMEDA_PROFILE;
 
-		Lumeda::Delete(rootNode);
+		LUMEDA_FREE(rootNode);
 		LUMEDA_TRACE("Terminate Sandbox");
 	}
 };
@@ -476,6 +476,6 @@ int main()
 {
 	{
 		Lumeda::Engine engine;
-		engine.Run(LUMEDA_NEW(Sandbox, Lumeda::MemTag::General));
+		engine.Run(LUMEDA_NEW(Sandbox));
 	}
 }

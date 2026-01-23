@@ -54,7 +54,7 @@ Engine::Engine() : m_Application()
 	LUMEDA_CORE_INFO("[Engine] Renderer initialized");
 
 	// Initialize ImGui
-	m_ImGuiLayer = LUMEDA_NEW(ImGuiLayer, MemTag::General);
+	m_ImGuiLayer = LUMEDA_NEW(ImGuiLayer);
 	m_ImGuiLayer->Initialize();
 	LUMEDA_CORE_INFO("[Engine] ImGui initialized");
 
@@ -118,45 +118,45 @@ void Engine::Cleanup()
 	if (m_Application != nullptr)
 	{
 		m_Application->Terminate();
-		Delete(m_Application);
+		LUMEDA_FREE(m_Application);
 	}
 
 	// Destroy Gizmos
 	if (m_Gizmos != nullptr)
 	{
 		m_Gizmos->Terminate();
-		Delete(m_Gizmos);
+		LUMEDA_FREE(m_Gizmos);
 	}
 
 	// Destroy ImGui
 	if (m_ImGuiLayer != nullptr)
 	{
 		m_ImGuiLayer->Terminate();
-		Delete(m_ImGuiLayer);
+		LUMEDA_FREE(m_ImGuiLayer);
 	}
 
 	// Destroy the renderer
 	if (m_Renderer != nullptr)
 	{
-		Delete(m_Renderer);
+		LUMEDA_FREE(m_Renderer);
 	}
 
 	// Destroy the inputs layer
 	if (m_InputsLayer != nullptr)
 	{
-		Delete(m_InputsLayer);
+		LUMEDA_FREE(m_InputsLayer);
 	}
 
 	// Destroy the time layer
 	if (m_Time != nullptr)
 	{
-		Delete(m_Time);
+		LUMEDA_FREE(m_Time);
 	}
 
 	// Destroy the window
 	if (m_Window != nullptr)
 	{
-		Delete(m_Window);
+		LUMEDA_FREE(m_Window);
 	}
 }
 

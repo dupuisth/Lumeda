@@ -25,7 +25,7 @@ RootNode::~RootNode()
      // Then this dynamic_cast will fail, since the cascade of deletion is done in Node::~Node(), the RootNode::~RootNode() is already done and the RootNode subobject is already destroyed
      // For now, this cause no real issue, just a warning that some lights counldn't be unregistered but it's ok since the scene is completly destroyed
      // But if later this become criticial, consider moving some of the cascade deletion to the RootNode::~RootNode() so that it still lives long enough to be accessed from child nodes
-    
+
     // This code allows the use of GetRootNode() until the last moment, since it is RootNode that calls Delete on the childs,
     // the RootNode subobject is not destroyed until all the childrens are.
 
@@ -35,7 +35,7 @@ RootNode::~RootNode()
     // Delete the child nodes
     for (auto child : m_Children)
     {
-        Delete(child);
+        LUMEDA_FREE(child);
     }
     m_Children.clear();
 }
@@ -68,7 +68,7 @@ void RootNode::AddLightNode(LightNode* lightNode)
     {
         LUMEDA_CORE_WARN("[RootNode] Trying to add a light that is already registered");
     }
-    
+
 }
 
 void RootNode::RemoveLightNode(LightNode* lightNode)

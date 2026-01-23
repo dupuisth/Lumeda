@@ -15,7 +15,7 @@ Camera::Camera(Transform* transform)
 	LUMEDA_PROFILE;
 	if (transform == nullptr)
 	{
-		m_Transform = LUMEDA_NEW(Transform, MemTag::General);
+		m_Transform = LUMEDA_NEW(Transform);
 		m_HasTransformOwnership = true;
 	}
 
@@ -36,7 +36,7 @@ Camera::~Camera()
 
 	if (m_HasTransformOwnership)
 	{
-		Delete(m_Transform);
+		LUMEDA_FREE(m_Transform);
 	}
 
 	if (s_Instance == this)
