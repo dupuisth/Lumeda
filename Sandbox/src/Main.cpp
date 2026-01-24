@@ -118,20 +118,18 @@ public:
 		}
 
 		rootNode = LUMEDA_NEW(Lumeda::RootNode);
-		Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 0.50f, 0.0f));
+		Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 1.00f, 0.0f));
 		Lumeda::ModelNode* cubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
 		Lumeda::LightNode* lightNode = LUMEDA_NEW(Lumeda::LightNode);
-		Lumeda::ParticleSystemNode* particleSystem = LUMEDA_NEW(Lumeda::ParticleSystemNode);
 		lightNode->GetLight().Color = glm::vec3(1.0f);
 		lightNode->GetLight().Intensity = 1.0f;
-		lightNode->GetLight().LightCharacteristics = { 5.0f, 5.0f, 0.0f };
+		lightNode->GetLight().LightCharacteristics = { 2.0f, 1.0f, 0.0f };
 		lightNode->GetLight().LightType = Lumeda::eLightType::POINT;
 		cubeModelNode->GetTransform().SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.0f));
 		cubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.15f));
 		cubeNode->AddChild(cubeModelNode);
 		cubeModelNode->SetModel(*model);
 		cubeNode->AddChild(lightNode);
-		rootNode->AddChild(particleSystem);
 		rootNode->AddChild(cubeNode);
 
 		Lumeda::ModelNode* centerCubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
@@ -140,7 +138,7 @@ public:
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
-		Lumeda::SpinNode* pivotNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 0.05f, 0.0f));
+		Lumeda::SpinNode* pivotNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 5.00f, 0.0f));
 		Lumeda::PlayerNode* playerNode = LUMEDA_NEW(Lumeda::PlayerNode);
 		playerNode->GetTransform().SetLocalPosition({ 0.0f, 0.5f, -0.8f });
 		playerNode->GetTransform().SetLocalRotationEulerAngles({ 30.0f, 0.0f, 0.0f });
@@ -148,9 +146,23 @@ public:
 		playerNode->ProcessLifecycle();
 		Lumeda::CameraNode* cameraNode = dynamic_cast<Lumeda::CameraNode*>(playerNode->GetChildren()[0]);
 		cameraNode->GetCamera()->SetCurrent();
-
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
+
+		// Particle System
+		// Benchmark
+		Lumeda::ParticleSystemNode* particleSystem = LUMEDA_NEW(Lumeda::ParticleSystemNode);
+		particleSystem->GetDescriptor().ParticleMesh = "cube_0";
+		particleSystem->GetDescriptor().ParticleMaterial = boxMaterial->GetName();
+		particleSystem->GetDescriptor().InitialVelocityXRange = { -0.1f, 0.1f };
+		particleSystem->GetDescriptor().InitialVelocityYRange = { -0.1f, 0.1f };
+		particleSystem->GetDescriptor().InitialVelocityZRange = { -0.1f, 0.1f };
+		particleSystem->GetDescriptor().InitialAngularVelocityRange = { -1.0f, 1.0f };
+		particleSystem->GetDescriptor().ParticleDelay = 0.0001f;
+		particleSystem->GetDescriptor().InitialLifetimeRange = { 0.1f, 0.3f };
+		particleSystem->GetDescriptor().InitialSizeRange = { 0.01f, 0.2f };
+		particleSystem->GetDescriptor().SetMaxParticles(2500);
+		rootNode->AddChild(particleSystem);
 	}
 
 	void Update() override
