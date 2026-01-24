@@ -396,21 +396,38 @@ void RendererOpenGL::Submit(Model* model, sUniformsMap& uniforms)
 	m_RenderCallsModel.push_back(renderCall);
 }
 
-#include <Lumeda/Gizmos/Gizmos.h>
 void RendererOpenGL::Submit(sParticleSystemDescriptor* particleSystem)
 {
 	LUMEDA_PROFILE;
-	Gizmos& gizmos = Engine::Get().GetGizmos();
+	Transform dummyTransform;
+	sUniformsMap uniformMap;
+	sRenderCallMesh renderCall;
+
+	Mesh* mesh = GetMesh(particleSystem->ParticleMesh);
+	Material* material = GetMaterial(particleSystem->ParticleMaterial);
+
+	if (mesh == nullptr || material == nullptr)
+	{
+		LUMEDA_CORE_WARN("[RendererOpenGL::Submit(sParticleSystemDescriptor*)] Cannot render particle system, undefined Mesh and/or Material");
+		return;
+	}
+	
 	for (size_t i = 0; i < particleSystem->GetMaxParticles(); i++)
 	{
 		sParticle& particle = particleSystem->Particles[i];
-		if (particle.Lifetime > 0.0f)
-		{
-			gizmos.DrawCube(particleSystem->OriginTransform->GetPosition() + particle.Position, glm::vec3(particle.Rotation), glm::vec3(particle.Size));
-		}
+		if (particle.Lifetime <= 0.0f) continue;
+		
+		dummyTransform.SetLocalPosition(particle.Position);
+		dummyTransform.SetLocalRotation(glm::vec3(particle.Rotation));
+		dummyTransform.SetLocalScale(glm::vec3(particle.Size));
+
+		glm::mat4 world = particleSystem->OriginTransform->GetWorld() * dummyTransform.GetWorld();
+		uniformMap.Set("u_World", world);
+
+		renderCall.uniformMap = uniformMap;
+		Submit(mesh, material, uniformMap);
 	}
 }
-
 
 void RendererOpenGL::Render(Camera* camera, RenderTarget* renderTarget)
 {

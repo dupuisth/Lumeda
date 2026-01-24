@@ -31,9 +31,8 @@ namespace Lumeda
         sParticle* Particles = nullptr;
 
         Transform* OriginTransform = nullptr;
-        Shader* ParticleShader = nullptr;
-        Mesh* ParticleMesh = nullptr;
-        Texture2D* ParticleTexture = nullptr;
+        std::string ParticleMesh = "";
+        std::string ParticleMaterial = "";
 
         glm::vec2 InitialVelocityXRange = { 0.0f, 0.0f };
         glm::vec2 InitialVelocityYRange = { 0.0f, 0.0f };

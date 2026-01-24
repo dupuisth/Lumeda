@@ -37,6 +37,34 @@ void ParticleSystemNode::OnRenderImGui()
 	Node::OnRenderImGui();
 
 	ImGui::SeparatorText("Particle System");
+
+	Renderer& renderer = LUMEDA_RENDERER;
+	auto meshes = renderer.ListMeshes();
+	if (ImGui::BeginCombo("Mesh", m_Descriptor.ParticleMesh.c_str()))
+	{
+		for (auto& mesh : meshes)
+		{
+			if (ImGui::Selectable(mesh.first.c_str(), mesh.first == m_Descriptor.ParticleMesh))
+			{
+				m_Descriptor.ParticleMesh = mesh.first;
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	auto materials = renderer.ListMaterials();
+	if (ImGui::BeginCombo("Material", m_Descriptor.ParticleMaterial.c_str()))
+	{
+		for (auto& material : materials)
+		{
+			if (ImGui::Selectable(material.first.c_str(), material.first == m_Descriptor.ParticleMaterial))
+			{
+				m_Descriptor.ParticleMaterial = material.first;
+			}
+		}
+		ImGui::EndCombo();
+	}
+
 	int maxParticles = m_Descriptor.GetMaxParticles();
 	if (ImGui::DragInt("Max Particles", &maxParticles, 1.0f))
 	{

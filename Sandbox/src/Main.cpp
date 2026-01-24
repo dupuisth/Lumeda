@@ -45,6 +45,21 @@ public:
 		Lumeda::Window& window = Lumeda::Engine::Get().GetWindow();
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
 
+		renderTarget = renderer.CreateRenderTarget("RenderTarget", 600, 400);
+#ifdef LUMEDA_USE_GLAD
+		Lumeda::RenderTargetOpenGL* castedRenderTarget = dynamic_cast<Lumeda::RenderTargetOpenGL*>(renderTarget);
+		if (castedRenderTarget != nullptr)
+		{
+			castedRenderTarget->GetColorTexture()->Bind();
+			castedRenderTarget->GetColorTexture()->SetFiltering(Lumeda::eTextureFiltering::Nearest);
+			castedRenderTarget->GetColorTexture()->UnBind();
+		}
+		else
+		{
+			LUMEDA_WARN("Couldn't cast RenderTarget to RenderTargetOpenGL... Shouldn't happen since the backend is defined as GLAD");
+		}
+#endif
+
 		Lumeda::Texture2D* defaultTexture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
 		Lumeda::Shader* defaultShader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
 		Lumeda::Material* defaultMaterial = renderer.CreateMaterial("default");
@@ -63,6 +78,19 @@ public:
 		Lumeda::Material* barrelPondMaterial = renderer.CreateMaterial("barrelpond");
 		barrelPondMaterial->SetShader(defaultShader);
 		barrelPondMaterial->GetUniformsMap().Set("u_Color", barrelPondTexture);
+
+		Lumeda::Material* screenMaterial = renderer.CreateMaterial("screen");
+		screenMaterial->SetShader(defaultShader);
+#ifdef LUMEDA_USE_GLAD
+		if (castedRenderTarget != nullptr)
+		{
+			screenMaterial->GetUniformsMap().Set("u_Color", castedRenderTarget->GetColorTexture());
+		}
+		else
+		{
+			LUMEDA_WARN("Couldn't cast RenderTarget to RenderTargetOpenGL... Shouldn't happen since the backend is defined as GLAD");
+		}
+#endif
 
 		Lumeda::Model* boxModel = renderer.CreateModel("box", "assets/models/box.fbx");
 		for (size_t i = 0; i < boxModel->ListItems().size(); i++)
@@ -123,21 +151,6 @@ public:
 
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
-
-		renderTarget = renderer.CreateRenderTarget("RenderTarget", 600, 400);
-#ifdef LUMEDA_USE_GLAD
-		Lumeda::RenderTargetOpenGL* castedRenderTarget = dynamic_cast<Lumeda::RenderTargetOpenGL*>(renderTarget);
-		if (castedRenderTarget != nullptr)
-		{
-			castedRenderTarget->GetColorTexture()->Bind();
-			castedRenderTarget->GetColorTexture()->SetFiltering(Lumeda::eTextureFiltering::Nearest);
-			castedRenderTarget->GetColorTexture()->UnBind();
-		}
-		else
-		{
-			LUMEDA_WARN("Couldn't cast RenderTarget to RenderTargetOpenGL... Shouldn't happen since the backend is defined as GLAD");
-		}
-#endif
 	}
 
 	void Update() override
