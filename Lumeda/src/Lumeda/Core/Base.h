@@ -4,8 +4,12 @@
 #include <Lumeda/Core/Assert.h>
 #include <Lumeda/Core/Allocator.h>
 
+#define LUMEDA_RANDINT(a, b) (rand() % (b-a) + a)
+#define LUMEDA_RANDFLOAT(a, b) (((float)rand() / (float)(RAND_MAX)) * (b-a) + a)
+// #define LUMEDA_FORCE_NO_PROFILE
+
 // Don't use tracy for Linux build (spent too much time on the Linux support so it's ok for now)
-#if defined(LUMEDA_RELEASE) || defined(LUMEDA_PLATFORM_LINUX)
+#if defined(LUMEDA_RELEASE) || defined(LUMEDA_PLATFORM_LINUX) || defined(LUMEDA_FORCE_NO_PROFILE)
 #define LUMEDA_PROFILE
 #define LUMEDA_PROFILE_FRAME
 #define LUMEDA_PROFILE_SECTION(x)
@@ -14,9 +18,6 @@
 #define LUMEDA_PROFILE_VALUE(text, value)
 #define LUMEDA_PROFILE_MEMORY_ALLOC(p, size)
 #define LUMEDA_PROFILE_MEMORY_FREE(p)
-
-#define LUMEDA_RANDINT(a, b) (rand() % (b-a) + a)
-#define LUMEDA_RANDFLOAT(a, b) (((float)rand() / (float)(RAND_MAX)) * (b-a) + a)
 
 #elif defined(LUMEDA_PLATFORM_WINDOWS)
 // Enable tracy profiling
