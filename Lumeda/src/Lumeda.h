@@ -17,6 +17,7 @@
 #include <Lumeda/Renderer/Framebuffer.h>
 #include <Lumeda/Renderer/RenderTarget.h>
 #include <Lumeda/Renderer/Light.h>
+#include <Lumeda/Renderer/ParticleSystemDescriptor.h>
 
 #include <Lumeda/Node/Node.h>
 #include <Lumeda/Node/RootNode.h>
@@ -25,6 +26,7 @@
 #include <Lumeda/Node/PlayerNode.h>
 #include <Lumeda/Node/CameraNode.h>
 #include <Lumeda/Node/LightNode.h>
+#include <Lumeda/Node/ParticleSystemNode.h>
 
 #ifdef LUMEDA_USE_GLFW
 #include <Lumeda/Implementation/GLFW/WindowGLFW.h>

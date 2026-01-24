@@ -14,10 +14,20 @@ private:
 	Lumeda::Node* selectedNode = nullptr;
 	Lumeda::Node* secondSeletedNode = nullptr;
 
+#define FPS_VECTOR_COUNT 60
+	int fpsIndex = 0;
+	float fpsVector[FPS_VECTOR_COUNT];
+
 public:
 	Sandbox()
 	{
 		LUMEDA_PROFILE;
+
+		for (int i = 0; i < FPS_VECTOR_COUNT; i++)
+		{
+			fpsVector[i] = 0.0f;
+		}
+		fpsIndex = 0;
 	}
 
 	~Sandbox()
@@ -83,6 +93,7 @@ public:
 		Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 0.50f, 0.0f));
 		Lumeda::ModelNode* cubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
 		Lumeda::LightNode* lightNode = LUMEDA_NEW(Lumeda::LightNode);
+		Lumeda::ParticleSystemNode* particleSystem = LUMEDA_NEW(Lumeda::ParticleSystemNode);
 		lightNode->GetLight().Color = glm::vec3(1.0f);
 		lightNode->GetLight().Intensity = 1.0f;
 		lightNode->GetLight().LightCharacteristics = { 5.0f, 5.0f, 0.0f };
@@ -92,6 +103,7 @@ public:
 		cubeNode->AddChild(cubeModelNode);
 		cubeModelNode->SetModel(*model);
 		cubeNode->AddChild(lightNode);
+		rootNode->AddChild(particleSystem);
 		rootNode->AddChild(cubeNode);
 
 		Lumeda::ModelNode* centerCubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
@@ -135,6 +147,15 @@ public:
 		rootNode->ProcessLifecycle();
 		rootNode->Update();
 		rootNode->ProcessLifecycle();
+
+		if (fpsIndex >= FPS_VECTOR_COUNT) fpsIndex = 0;
+		fpsVector[fpsIndex++] = 1 / Lumeda::Engine::Get().GetTime().GetDeltaTime();
+
+		float fps = 1 / Lumeda::Engine::Get().GetTime().GetDeltaTime();
+		if (fps > 80.0f)
+		{
+			LUMEDA_TRACE("{0}", fps);
+		}
 	}
 
 	void Render() override
@@ -173,8 +194,24 @@ public:
 				ImGui::LabelText("Profiling", "Disabled");
 #endif // LUMEDA_PROFILING_ENABLED
 
+				// Search the min/max FPS
+				float minFps = FLT_MAX;
+				float maxFps = FLT_MIN;
+				float fpsAverage = 0.0f;
+				for (int i = 0; i < FPS_VECTOR_COUNT; i++)
+				{
+					if (fpsVector[i] < minFps) minFps = fpsVector[i];
+					if (fpsVector[i] > maxFps) maxFps = fpsVector[i];
+					fpsAverage += fpsVector[i];
+				}
+				fpsAverage /= FPS_VECTOR_COUNT;
+
 				ImGui::LabelText("Time", "%f", Lumeda::Engine::Get().GetTime().GetElapsedTime());
 				ImGui::LabelText("DeltaTime", "%f", Lumeda::Engine::Get().GetTime().GetDeltaTime());
+				ImGui::LabelText("FPS", "%.2f", 1 / Lumeda::Engine::Get().GetTime().GetDeltaTime());
+				ImGui::LabelText("Average FPS", "%.2f", fpsAverage);
+				ImGui::LabelText("Max FPS", "%.2f", maxFps);
+				ImGui::LabelText("Min FPS", "%.2f", minFps);
 				ImGui::LabelText("Framecount", "%lu", Lumeda::Engine::Get().GetTime().GetFrameCount());
 
 				ImGui::EndMenu();

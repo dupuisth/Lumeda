@@ -396,9 +396,19 @@ void RendererOpenGL::Submit(Model* model, sUniformsMap& uniforms)
 	m_RenderCallsModel.push_back(renderCall);
 }
 
+#include <Lumeda/Gizmos/Gizmos.h>
 void RendererOpenGL::Submit(sParticleSystemDescriptor* particleSystem)
 {
 	LUMEDA_PROFILE;
+	Gizmos& gizmos = Engine::Get().GetGizmos();
+	for (size_t i = 0; i < particleSystem->GetMaxParticles(); i++)
+	{
+		sParticle& particle = particleSystem->Particles[i];
+		if (particle.Lifetime > 0.0f)
+		{
+			gizmos.DrawCube(particleSystem->OriginTransform->GetPosition() + particle.Position, glm::vec3(particle.Rotation), glm::vec3(particle.Size));
+		}
+	}
 }
 
 
