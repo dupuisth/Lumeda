@@ -86,6 +86,12 @@ void WindowGLFW::SetSize(const glm::ivec2& size) const
 	glfwSetWindowSize(m_NativeWindow, size.x, size.y);
 }
 
+void WindowGLFW::SetMaximize()
+{
+	LUMEDA_PROFILE;
+	glfwMaximizeWindow(m_NativeWindow);
+}
+
 void WindowGLFW::SetVSync(bool enabled)
 {
 	LUMEDA_PROFILE;
