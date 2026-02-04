@@ -8,7 +8,7 @@ using namespace Lumeda;
 void sParticleSystemDescriptor::Update()
 {
     LUMEDA_PROFILE;
-    float currentTime = Engine::Get().GetTime().GetElapsedTime();
+    float currentTime = LUMEDA_TIME.GetElapsedTime();
     float deltaSpawn = currentTime - m_LastSpawnTime;
     int spawnCount = deltaSpawn / ParticleDelay;
     int leftToSpawn = spawnCount;
@@ -50,7 +50,7 @@ void sParticleSystemDescriptor::Update()
 
 
     // Update the others
-    float deltaTime = Engine::Get().GetTime().GetDeltaTime();
+    float deltaTime = LUMEDA_TIME.GetDeltaTime();
     for (int i = 0; i < m_MaxParticles; i++)
     {
         sParticle& part = Particles[i];

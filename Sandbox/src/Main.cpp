@@ -45,7 +45,7 @@ public:
 		Lumeda::Window& window = Lumeda::Engine::Get().GetWindow();
 		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
 
-		renderTarget = renderer.CreateRenderTarget("RenderTarget", 600, 400);
+		renderTarget = renderer.CreateRenderTarget("RenderTarget", LUMEDA_WINDOW.GetWidth(), LUMEDA_WINDOW.GetHeight());
 #ifdef LUMEDA_USE_GLAD
 		Lumeda::RenderTargetOpenGL* castedRenderTarget = dynamic_cast<Lumeda::RenderTargetOpenGL*>(renderTarget);
 		if (castedRenderTarget != nullptr)
@@ -70,6 +70,7 @@ public:
 		Lumeda::Texture2D* barrelPondTexture = renderer.CreateTexture2D("barrelpond_Color", "assets/textures/barrel_pond.jpg");
 		Lumeda::Texture2D* benchTexture = renderer.CreateTexture2D("bench_Color", "assets/textures/bench.jpg");
 		Lumeda::Texture2D* dirtTexture = renderer.CreateTexture2D("dirt_Color", "assets/textures/dirt.jpg");
+		Lumeda::Texture2D* fireTexture = renderer.CreateTexture2D("fire_Color", "assets/textures/fire_1.png");
 
 		Lumeda::Material* boxMaterial = renderer.CreateMaterial("box");
 		boxMaterial->SetShader(defaultShader);
@@ -78,6 +79,10 @@ public:
 		Lumeda::Material* barrelPondMaterial = renderer.CreateMaterial("barrelpond");
 		barrelPondMaterial->SetShader(defaultShader);
 		barrelPondMaterial->GetUniformsMap().Set("u_Color", barrelPondTexture);
+
+		Lumeda::Material* fireMaterial = renderer.CreateMaterial("fire");
+		fireMaterial->SetShader(defaultShader);
+		fireMaterial->GetUniformsMap().Set("u_Color", fireTexture);
 
 		Lumeda::Material* screenMaterial = renderer.CreateMaterial("screen");
 		screenMaterial->SetShader(defaultShader);
@@ -151,16 +156,28 @@ public:
 
 		// Particle System
 		// Benchmark
+		//Lumeda::ParticleSystemNode* particleSystem = LUMEDA_NEW(Lumeda::ParticleSystemNode);
+		//particleSystem->GetDescriptor().ParticleMesh = "cube_0";
+		//particleSystem->GetDescriptor().ParticleMaterial = boxMaterial->GetName();
+		//particleSystem->GetDescriptor().InitialVelocityXRange = { -0.1f, 0.1f };
+		//particleSystem->GetDescriptor().InitialVelocityYRange = { -0.1f, 0.1f };
+		//particleSystem->GetDescriptor().InitialVelocityZRange = { -0.1f, 0.1f };
+		//particleSystem->GetDescriptor().InitialAngularVelocityRange = { -1.0f, 1.0f };
+		//particleSystem->GetDescriptor().ParticleDelay = 0.0001f;
+		//particleSystem->GetDescriptor().InitialLifetimeRange = { 0.1f, 0.3f };
+		//particleSystem->GetDescriptor().InitialSizeRange = { 0.01f, 0.2f };
+		//particleSystem->GetDescriptor().SetMaxParticles(2500);
+		// Ok test
 		Lumeda::ParticleSystemNode* particleSystem = LUMEDA_NEW(Lumeda::ParticleSystemNode);
-		particleSystem->GetDescriptor().ParticleMesh = "cube_0";
-		particleSystem->GetDescriptor().ParticleMaterial = boxMaterial->GetName();
-		particleSystem->GetDescriptor().InitialVelocityXRange = { -0.1f, 0.1f };
-		particleSystem->GetDescriptor().InitialVelocityYRange = { -0.1f, 0.1f };
-		particleSystem->GetDescriptor().InitialVelocityZRange = { -0.1f, 0.1f };
+		particleSystem->GetDescriptor().ParticleMesh = "Renderer_Quad";
+		particleSystem->GetDescriptor().ParticleMaterial = fireMaterial->GetName();
+		particleSystem->GetDescriptor().InitialVelocityXRange = { -0.1f, 2.0f };
+		particleSystem->GetDescriptor().InitialVelocityYRange = { -0.1f, 2.5f };
+		particleSystem->GetDescriptor().InitialVelocityZRange = { -0.1f, 2.0f };
 		particleSystem->GetDescriptor().InitialAngularVelocityRange = { -1.0f, 1.0f };
-		particleSystem->GetDescriptor().ParticleDelay = 0.0001f;
-		particleSystem->GetDescriptor().InitialLifetimeRange = { 0.1f, 0.3f };
-		particleSystem->GetDescriptor().InitialSizeRange = { 0.01f, 0.2f };
+		particleSystem->GetDescriptor().ParticleDelay = 1.0f / 5.0f;
+		particleSystem->GetDescriptor().InitialLifetimeRange = { 0.5f, 4.75f };
+		particleSystem->GetDescriptor().InitialSizeRange = { 0.1f, 0.2f };
 		particleSystem->GetDescriptor().SetMaxParticles(2500);
 		rootNode->AddChild(particleSystem);
 	}

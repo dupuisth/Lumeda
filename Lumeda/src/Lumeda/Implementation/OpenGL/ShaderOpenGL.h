@@ -15,7 +15,7 @@ namespace Lumeda
 		void Bind() override;
 		void UnBind() override;
 
-		void Prepare(float time, const glm::vec3& cameraPosition, const glm::vec3& cameraForward, const glm::mat4 cameraMatrix) override;
+		void Prepare(const sShaderPrepareData& prepareData) override;
 
 		void SetUniform(const std::string& uniform, int value) override;
 		void SetUniform(const std::string& uniform, float value) override;

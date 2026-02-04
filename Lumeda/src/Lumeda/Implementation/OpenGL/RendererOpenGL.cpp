@@ -432,22 +432,24 @@ void RendererOpenGL::Submit(sParticleSystemDescriptor* particleSystem)
 void RendererOpenGL::Render(Camera* camera, RenderTarget* renderTarget)
 {
 	LUMEDA_PROFILE;
-	glm::vec3 cameraPosition(0.0f);
-	glm::vec3 cameraForward(0.0f, 0.0f, 1.0f);
-	glm::mat4 cameraMatrix(1.0f);
-	float time = 0.0f; // TODO : Fix this when there is a Timer
+	
+	sShaderPrepareData shaderPrepareData;
+	
+	shaderPrepareData.Time = LUMEDA_TIME.GetElapsedTime();
 
 	if (camera != nullptr)
 	{
-		cameraPosition = camera->GetTransform().GetPosition();
-		cameraForward = camera->GetTransform().GetForward();
-		cameraMatrix = camera->GetProjectionView();
+		shaderPrepareData.CameraPosition = camera->GetTransform().GetPosition();
+		shaderPrepareData.CameraForward = camera->GetTransform().GetForward();
+		shaderPrepareData.CameraMatrix = camera->GetProjectionView();
+		shaderPrepareData.CameraProjection = camera->GetProjection();
+		shaderPrepareData.CameraView = camera->GetView();
 	}
 
 	for (const auto& [name, shader] : m_Shaders)
 	{
 		shader->Bind();
-		shader->Prepare(time, cameraPosition, cameraForward, cameraMatrix);
+		shader->Prepare(shaderPrepareData);
 	}
 
 	if (renderTarget != nullptr)
