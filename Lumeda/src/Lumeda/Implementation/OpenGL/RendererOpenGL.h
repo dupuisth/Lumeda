@@ -83,6 +83,7 @@ namespace Lumeda
 		std::unordered_map<std::string, RenderTarget*> m_RenderTargets;
 
 		std::vector<sRenderCallMesh> m_RenderCallsMesh;
+		std::vector<sRenderCallMesh> m_RenderCallsMeshTransparent;
 		std::vector<sRenderCallModel> m_RenderCallsModel;
 
 		Mesh* m_ScreenMesh;

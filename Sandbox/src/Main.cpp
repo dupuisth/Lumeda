@@ -40,10 +40,10 @@ public:
 		LUMEDA_PROFILE;
 		LUMEDA_TRACE("Initialized Sandbox");
 
-		Lumeda::Engine::Get().GetWindow().SetSize(glm::ivec2(980, 500));
+		Lumeda::Window& window = LUMEDA_WINDOW;
+		Lumeda::Renderer& renderer = LUMEDA_RENDERER;
 
-		Lumeda::Window& window = Lumeda::Engine::Get().GetWindow();
-		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
+		window.SetMaximize();
 
 		renderTarget = renderer.CreateRenderTarget("RenderTarget", LUMEDA_WINDOW.GetWidth(), LUMEDA_WINDOW.GetHeight());
 #ifdef LUMEDA_USE_GLAD
@@ -128,17 +128,15 @@ public:
 		Lumeda::LightNode* lightNode = LUMEDA_NEW(Lumeda::LightNode);
 		lightNode->GetLight().Color = glm::vec3(1.0f);
 		lightNode->GetLight().Intensity = 1.0f;
-		lightNode->GetLight().LightCharacteristics = { 2.0f, 1.0f, 0.0f };
+		lightNode->GetLight().LightCharacteristics = { 0.5f, 0.1f, 0.0f };
 		lightNode->GetLight().LightType = Lumeda::eLightType::POINT;
 		cubeModelNode->GetTransform().SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.0f));
-		cubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.15f));
 		cubeNode->AddChild(cubeModelNode);
 		cubeModelNode->SetModel(*model);
 		cubeNode->AddChild(lightNode);
 		rootNode->AddChild(cubeNode);
 
 		Lumeda::ModelNode* centerCubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
-		centerCubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.1f));
 		centerCubeModelNode->SetModel(*barrelPondModel);
 		rootNode->AddChild(centerCubeModelNode);
 
@@ -151,6 +149,7 @@ public:
 		playerNode->ProcessLifecycle();
 		Lumeda::CameraNode* cameraNode = dynamic_cast<Lumeda::CameraNode*>(playerNode->GetChildren()[0]);
 		cameraNode->GetCamera()->SetCurrent();
+		cameraNode->GetTransform().SetLocalPosition({ 0.0f, 0.0f, -15.0f });
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
 

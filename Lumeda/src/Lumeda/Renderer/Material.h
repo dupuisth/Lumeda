@@ -21,6 +21,9 @@ namespace Lumeda
 		virtual void Use();
 		virtual void Use(sUniformsMap& uniformsMap);
 
+		void SetTransparent(bool transparent);
+		bool GetTransparent();
+
 		void SetShader(Shader* shader);
 		sUniformsMap& GetUniformsMap();
 
@@ -28,6 +31,7 @@ namespace Lumeda
 
 	protected:
 		std::string m_Name;
+		bool m_isTransparent;
 
 		Shader* m_Shader;
 		sUniformsMap m_UniformsMap;

@@ -38,7 +38,7 @@ void main() \
 }";
 
 RendererOpenGL::RendererOpenGL()
-	: m_RenderCallsMesh()
+	: m_RenderCallsMesh(), m_RenderCallsMeshTransparent(), m_RenderCallsModel()
 {
 	LUMEDA_PROFILE;
 	if (!gladLoadGL())
@@ -383,7 +383,14 @@ void RendererOpenGL::Submit(Mesh* mesh, Material* material, sUniformsMap& unifor
 	renderCall.material = material;
 	renderCall.uniformMap = uniforms;
 
-	m_RenderCallsMesh.push_back(renderCall);
+	if (material->GetTransparent())
+	{
+		m_RenderCallsMeshTransparent.push_back(renderCall);
+	}
+	else
+	{
+		m_RenderCallsMesh.push_back(renderCall);
+	}
 }
 
 void RendererOpenGL::Submit(Model* model, sUniformsMap& uniforms)
@@ -456,8 +463,8 @@ void RendererOpenGL::Render(Camera* camera, RenderTarget* renderTarget)
 	{
 		renderTarget->Bind();
 		glViewport(0, 0, renderTarget->GetSize().x, renderTarget->GetSize().y);
-
 	}
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -473,6 +480,17 @@ void RendererOpenGL::Render(Camera* camera, RenderTarget* renderTarget)
 		renderCall.mesh->Draw();
 	}
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthMask(GL_FALSE);
+	for (auto& renderCall : m_RenderCallsMeshTransparent)
+	{
+		renderCall.material->Use(renderCall.uniformMap);
+		renderCall.mesh->Draw();
+	}
+	glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
+
 	if (renderTarget != nullptr)
 	{
 		renderTarget->UnBind();
@@ -485,7 +503,6 @@ void RendererOpenGL::PrepareRenderScreen()
 	glDisable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-
 }
 
 void RendererOpenGL::RenderToScreen(RenderTarget* renderTarget, int x, int y, int width, int height)
@@ -508,6 +525,7 @@ void RendererOpenGL::EndFrame()
 {
 	LUMEDA_PROFILE;
 	m_RenderCallsMesh.clear();
+	m_RenderCallsMeshTransparent.clear();
 	m_RenderCallsModel.clear();
 }
 
