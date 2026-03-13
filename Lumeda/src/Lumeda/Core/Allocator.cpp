@@ -27,7 +27,7 @@ void* Lumeda::EngineAllocRaw(std::size_t size, const char* file, int line)
 void* Lumeda::EngineReAllocRaw(void* ptr, std::size_t size, const char* file, int line)
 {
     void* newPtr = realloc(ptr, size);
-    if (newPtr == nullptr)
+    if (newPtr != nullptr)
     {
         LUMEDA_PROFILE_MEMORY_FREE(ptr);
         LUMEDA_PROFILE_MEMORY_ALLOC(newPtr, size);
