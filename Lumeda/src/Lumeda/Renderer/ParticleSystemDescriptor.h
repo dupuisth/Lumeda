@@ -28,6 +28,8 @@ namespace Lumeda
     struct sParticleSystemDescriptor
     {
     public:
+        ~sParticleSystemDescriptor();
+    public:
         sParticle* Particles = nullptr;
 
         Transform* OriginTransform = nullptr;

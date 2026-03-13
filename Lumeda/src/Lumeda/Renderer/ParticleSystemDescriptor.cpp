@@ -4,13 +4,29 @@
 
 using namespace Lumeda;
 
+sParticleSystemDescriptor::~sParticleSystemDescriptor()
+{
+    if (Particles != nullptr)
+    {
+        LUMEDA_FREE(Particles);
+        Particles = nullptr;
+    }
+}
 
 void sParticleSystemDescriptor::Update()
 {
     LUMEDA_PROFILE;
     float currentTime = LUMEDA_TIME.GetElapsedTime();
     float deltaSpawn = currentTime - m_LastSpawnTime;
-    int spawnCount = deltaSpawn / ParticleDelay;
+    int spawnCount;
+    if (ParticleDelay > 0)
+    {
+        spawnCount = deltaSpawn / ParticleDelay;
+    }
+    else
+    {
+        spawnCount = m_MaxParticles;
+    }
     int leftToSpawn = spawnCount;
 
     // Spawn the particles

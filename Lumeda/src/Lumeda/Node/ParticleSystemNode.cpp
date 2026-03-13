@@ -68,7 +68,10 @@ void ParticleSystemNode::OnRenderImGui()
 	int maxParticles = m_Descriptor.GetMaxParticles();
 	if (ImGui::DragInt("Max Particles", &maxParticles, 1.0f))
 	{
-		m_Descriptor.SetMaxParticles(maxParticles);
+		if (maxParticles > 0)
+		{
+			m_Descriptor.SetMaxParticles(maxParticles);
+		}
 	}
 	ImGui::DragFloat2("Velocity X Range", glm::value_ptr(m_Descriptor.InitialVelocityXRange), 0.05f);
 	ImGui::DragFloat2("Velocity Y Range", glm::value_ptr(m_Descriptor.InitialVelocityYRange), 0.05f);
