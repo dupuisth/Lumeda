@@ -4,8 +4,11 @@
 #include <Lumeda/Core/Assert.h>
 #include <Lumeda/Core/Allocator.h>
 
+#define LUMEDA_RANDINT(a, b) ((a) + (int)((double)rand() / (RAND_MAX + 1.0) * ((b) - (a))))
+#define LUMEDA_RANDFLOAT(a, b) (((float)rand() / (float)(RAND_MAX)) * (b-a) + a)
+
 // Don't use tracy for Linux build (spent too much time on the Linux support so it's ok for now)
-#if defined(LUMEDA_RELEASE) || defined(LUMEDA_PLATFORM_LINUX)
+#if defined(LUMEDA_RELEASE) || defined(LUMEDA_PLATFORM_LINUX) || defined(LUMEDA_FORCE_NO_PROFILE)
 #define LUMEDA_PROFILE
 #define LUMEDA_PROFILE_FRAME
 #define LUMEDA_PROFILE_SECTION(x)

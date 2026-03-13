@@ -1,4 +1,7 @@
 #include <Lumeda/Node/SpinNode.h>
+
+#include <Lumeda/Core/Engine.h>
+
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -19,7 +22,7 @@ SpinNode::~SpinNode()
 void SpinNode::OnUpdate()
 {
 	LUMEDA_PROFILE;
-	m_Transform.Rotate(RotationDelta);
+	m_Transform.Rotate(RotationDelta * LUMEDA_TIME.GetDeltaTime());
 }
 
 void SpinNode::OnRenderImGui()

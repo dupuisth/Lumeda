@@ -26,7 +26,7 @@ void TimeGLFW::Tick()
     m_FrameCount++;
 }
 
-float TimeGLFW::GetTime()
+float TimeGLFW::GetElapsedTime()
 {
     LUMEDA_PROFILE;
     return m_Time;

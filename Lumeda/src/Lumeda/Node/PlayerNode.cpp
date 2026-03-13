@@ -8,7 +8,7 @@ PlayerNode::PlayerNode()
     LUMEDA_PROFILE;
 
     // Directly add a CameraNode
-    CameraNode* cameraNode = LUMEDA_NEW(CameraNode, MemTag::Scene);
+    CameraNode* cameraNode = LUMEDA_NEW(CameraNode);
     AddChild(cameraNode);
     SetName("PlayerNode");
 }

@@ -8,7 +8,7 @@ using namespace Lumeda;
 InputsLayer* InputsLayer::Create()
 {
 	LUMEDA_PROFILE;
-	InputsLayerGLFW* window = LUMEDA_NEW(InputsLayerGLFW, MemTag::General);
+	InputsLayerGLFW* window = LUMEDA_NEW(InputsLayerGLFW);
 	return window;
 }
 #else

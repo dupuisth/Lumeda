@@ -26,6 +26,7 @@ namespace Lumeda
 		virtual float GetAspectRatio() const = 0;
 
 		virtual void SetSize(const glm::ivec2& size) const = 0;
+		virtual void SetMaximize() = 0;
 
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;

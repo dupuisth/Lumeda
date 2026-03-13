@@ -17,16 +17,16 @@ Node::Node()
 Node::~Node()
 {
     LUMEDA_PROFILE;
-    
+
     // All of the lifecycle should be processed, we don't want to remove a node that is no longer a child
     ProcessLifecycle();
-    
+
     LUMEDA_CORE_ASSERT(m_PendingAdd.size() == 0, "There should be no pending children after ProcessLifecycle");
 
     // Delete the child nodes
     for (auto child : m_Children)
     {
-        Delete(child);
+        LUMEDA_FREE(child);
     }
 
     // Remove the reference to the parent
@@ -103,12 +103,12 @@ void Node::ApplyPendingHierarchyChanges()
     }
     m_PendingAdd.clear();
 
-    
+
     for (size_t i = 0; i < m_Children.size(); i++)
     {
         if (m_Children[i]->m_isDestroyPending)
         {
-            Delete(m_Children[i]);
+            LUMEDA_FREE(m_Children[i]);
             m_Children.erase(std::begin(m_Children) + i);
             i--;
         }
@@ -283,7 +283,7 @@ void Node::AddChild(Node* node, bool immediate)
     // Prevent adding self as child
     if (node == this)
         return;
-    
+
     // Check if already in pending add list
     auto it = std::find(m_PendingAdd.begin(), m_PendingAdd.end(), node);
     if (it != m_PendingAdd.end())

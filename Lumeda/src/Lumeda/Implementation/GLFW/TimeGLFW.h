@@ -14,7 +14,7 @@ namespace Lumeda
         virtual ~TimeGLFW();
 
         void Tick() override;
-        float GetTime() override;
+        float GetElapsedTime() override;
         float GetPreciseTime() override;
         float GetDeltaTime() override;
         size_t GetFrameCount() override;

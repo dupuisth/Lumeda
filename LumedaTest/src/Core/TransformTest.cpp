@@ -132,8 +132,8 @@ namespace
 
     TEST(TransformTest, GlobalPositionWithoutRotationTest)
     {
-        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
-        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -150,14 +150,14 @@ namespace
         childNode->GetTransform().SetLocalPosition(glm::vec3(5.0f, 0.0f, 0.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(5.0f, 0.0f, 0.0f));
 
-        Lumeda::Delete(parentNode);
-        Lumeda::Delete(childNode);
+        LUMEDA_FREE(parentNode);
+        LUMEDA_FREE(childNode);
     }
 
     TEST(TransformTest, GlobalPositionWithXRotationTest)
     {
-        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
-        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -167,14 +167,14 @@ namespace
         childNode->GetTransform().SetLocalPosition(glm::vec3(10.0f, 15.0f, 5.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(10.0f, -5.0f, 15.0f));
 
-        Lumeda::Delete(parentNode);
-        Lumeda::Delete(childNode);
+        LUMEDA_FREE(parentNode);
+        LUMEDA_FREE(childNode);
     }
 
     TEST(TransformTest, GlobalPositionWithYRotationTest)
     {
-        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
-        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -184,14 +184,14 @@ namespace
         childNode->GetTransform().SetLocalPosition(glm::vec3(5.0f, 10.0f, 15.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(15.0f, 10.0f, -5.0f));
 
-        Lumeda::Delete(parentNode);
-        Lumeda::Delete(childNode);
+        LUMEDA_FREE(parentNode);
+        LUMEDA_FREE(childNode);
     }
 
     TEST(TransformTest, GlobalPositionWithZRotationTest)
     {
-        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
-        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -201,14 +201,14 @@ namespace
         childNode->GetTransform().SetLocalPosition(glm::vec3(5.0f, 10.0f, 15.0f));
         ASSERT_VEC3_EQ(childNode->GetTransform().GetPosition(), glm::vec3(-10.0f, 5.0f, 15.0f));
 
-        Lumeda::Delete(parentNode);
-        Lumeda::Delete(childNode);
+        LUMEDA_FREE(parentNode);
+        LUMEDA_FREE(childNode);
     }
 
     TEST(TransformTest, GlobalRotationTest)
     {
-        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
-        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -222,14 +222,14 @@ namespace
 
         ASSERT_QUAT_EQ(childNode->GetTransform().GetRotation(), res);
 
-        Lumeda::Delete(parentNode);
-        Lumeda::Delete(childNode);
+        LUMEDA_FREE(parentNode);
+        LUMEDA_FREE(childNode);
     }
 
     TEST(TransformTest, GlobalScaleTest)
     {
-        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
-        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node, Lumeda::MemTag::General);
+        Lumeda::Node* parentNode = LUMEDA_NEW(Lumeda::Node);
+        Lumeda::Node* childNode = LUMEDA_NEW(Lumeda::Node);
 
         parentNode->AddChild(childNode);
         parentNode->ProcessLifecycle();
@@ -239,7 +239,7 @@ namespace
 
         ASSERT_VEC3_EQ(childNode->GetTransform().GetScale(), glm::vec3(10.0f, 18.0f, 28.0f));
 
-        Lumeda::Delete(parentNode);
-        Lumeda::Delete(childNode);
+        LUMEDA_FREE(parentNode);
+        LUMEDA_FREE(childNode);
     }
 }

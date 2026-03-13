@@ -8,15 +8,15 @@ using namespace Lumeda;
 Window* Window::Create()
 {
 	LUMEDA_PROFILE;
-	WindowGLFW* window = LUMEDA_NEW(WindowGLFW, MemTag::General);
+	WindowGLFW* window = LUMEDA_NEW(WindowGLFW);
 	return window;
 }
 #else
-	#error "Current platform not supported!"
+#error "Current platform not supported!"
 #endif
 
 Window::Window() : m_NextCallbackToken(0)
-{ 
+{
 	LUMEDA_PROFILE;
 }
 

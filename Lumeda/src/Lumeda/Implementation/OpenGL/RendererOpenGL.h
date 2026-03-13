@@ -63,6 +63,7 @@ namespace Lumeda
 		void BeginFrame() override;
 		void Submit(Mesh* mesh, Material* material, sUniformsMap& uniforms) override;
 		void Submit(Model* model, sUniformsMap& uniforms) override;
+		void Submit(sParticleSystemDescriptor* particleSystem) override;
 		void Render(Camera* camera, RenderTarget* renderTarget) override;
 		void PrepareRenderScreen() override;
 		void RenderToScreen(RenderTarget* renderTarget, int x, int y, int width, int height) override;
@@ -82,6 +83,7 @@ namespace Lumeda
 		std::unordered_map<std::string, RenderTarget*> m_RenderTargets;
 
 		std::vector<sRenderCallMesh> m_RenderCallsMesh;
+		std::vector<sRenderCallMesh> m_RenderCallsMeshTransparent;
 		std::vector<sRenderCallModel> m_RenderCallsModel;
 
 		Mesh* m_ScreenMesh;

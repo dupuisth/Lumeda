@@ -38,7 +38,7 @@ void main() \
 }";
 
 RendererOpenGL::RendererOpenGL()
-	: m_RenderCallsMesh()
+	: m_RenderCallsMesh(), m_RenderCallsMeshTransparent(), m_RenderCallsModel()
 {
 	LUMEDA_PROFILE;
 	if (!gladLoadGL())
@@ -78,43 +78,43 @@ RendererOpenGL::~RendererOpenGL()
 	// Force delete all render targets
 	for (auto& renderTarget : m_RenderTargets)
 	{
-		Delete(renderTarget.second);
+		LUMEDA_FREE(renderTarget.second);
 	}
 
 	// Force delete all framebuffers
 	for (auto& framebuffer : m_Framebuffers)
 	{
-		Delete(framebuffer.second);
+		LUMEDA_FREE(framebuffer.second);
 	}
 
 	// Force delete all models
 	for (auto& model : m_Models)
 	{
-		Delete(model.second);
+		LUMEDA_FREE(model.second);
 	}
 
 	// Force delete all materials
 	for (auto& material : m_Materials)
 	{
-		Delete(material.second);
+		LUMEDA_FREE(material.second);
 	}
 
 	// Force delete all shaders
 	for (auto& shader : m_Shaders)
 	{
-		Delete(shader.second);
+		LUMEDA_FREE(shader.second);
 	}
 
 	// Force delete all textures
 	for (auto& texture : m_Textures2D)
 	{
-		Delete(texture.second);
+		LUMEDA_FREE(texture.second);
 	}
 
 	// Force delete all meshes
 	for (auto& mesh : m_Meshes)
 	{
-		Delete(mesh.second);
+		LUMEDA_FREE(mesh.second);
 	}
 
 	Engine::Get().GetWindow().RemoveResizeCallback(m_WindowResizeCallbackToken);
@@ -234,7 +234,7 @@ RenderTarget* RendererOpenGL::GetRenderTarget(const std::string& name)
 Shader* RendererOpenGL::CreateShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
 {
 	LUMEDA_PROFILE;
-	ShaderOpenGL* shader = LUMEDA_NEW(ShaderOpenGL, MemTag::Assets, name, vertexPath, fragmentPath);
+	ShaderOpenGL* shader = LUMEDA_NEW(ShaderOpenGL, name, vertexPath, fragmentPath);
 	m_Shaders.insert({ name, shader });
 	return shader;
 }
@@ -242,7 +242,7 @@ Shader* RendererOpenGL::CreateShader(const std::string& name, const std::string&
 Shader* RendererOpenGL::CreateShaderFromSource(const std::string& name, const char* vertexCode, const char* fragmentCode)
 {
 	LUMEDA_PROFILE;
-	ShaderOpenGL* shader = LUMEDA_NEW(ShaderOpenGL, MemTag::Assets, name, vertexCode, fragmentCode, 0);
+	ShaderOpenGL* shader = LUMEDA_NEW(ShaderOpenGL, name, vertexCode, fragmentCode, 0);
 	m_Shaders.insert({ name, shader });
 	return shader;
 }
@@ -250,7 +250,7 @@ Shader* RendererOpenGL::CreateShaderFromSource(const std::string& name, const ch
 Texture2D* RendererOpenGL::CreateTexture2D(const std::string& name, const std::string& path)
 {
 	LUMEDA_PROFILE;
-	Texture2DOpenGL* texture2D = LUMEDA_NEW(Texture2DOpenGL, MemTag::Assets, name, path);
+	Texture2DOpenGL* texture2D = LUMEDA_NEW(Texture2DOpenGL, name, path);
 	m_Textures2D.insert({ name, texture2D });
 	return texture2D;
 }
@@ -258,7 +258,7 @@ Texture2D* RendererOpenGL::CreateTexture2D(const std::string& name, const std::s
 Texture2D* RendererOpenGL::CreateTexture2D(const std::string& name, unsigned int width, unsigned int height, eTextureFormat format)
 {
 	LUMEDA_PROFILE;
-	Texture2DOpenGL* texture2D = LUMEDA_NEW(Texture2DOpenGL, MemTag::Assets, name, width, height, format);
+	Texture2DOpenGL* texture2D = LUMEDA_NEW(Texture2DOpenGL, name, width, height, format);
 	m_Textures2D.insert({ name, texture2D });
 	return texture2D;
 }
@@ -266,7 +266,7 @@ Texture2D* RendererOpenGL::CreateTexture2D(const std::string& name, unsigned int
 Mesh* RendererOpenGL::CreateMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<MeshAttrib>& attribs)
 {
 	LUMEDA_PROFILE;
-	MeshOpenGL* mesh = LUMEDA_NEW(MeshOpenGL, MemTag::Assets, name, vertices, indices, attribs);
+	MeshOpenGL* mesh = LUMEDA_NEW(MeshOpenGL, name, vertices, indices, attribs);
 	m_Meshes.insert({ name, mesh });
 	return mesh;
 }
@@ -274,7 +274,7 @@ Mesh* RendererOpenGL::CreateMesh(const std::string& name, const std::vector<floa
 Material* RendererOpenGL::CreateMaterial(const std::string& name)
 {
 	LUMEDA_PROFILE;
-	Material* material = LUMEDA_NEW(Material, MemTag::Assets, name);
+	Material* material = LUMEDA_NEW(Material, name);
 	m_Materials.insert({ name, material });
 	return material;
 }
@@ -282,7 +282,7 @@ Material* RendererOpenGL::CreateMaterial(const std::string& name)
 Model* RendererOpenGL::CreateModel(const std::string& name)
 {
 	LUMEDA_PROFILE;
-	Model* model = LUMEDA_NEW(Model, MemTag::Assets, name);
+	Model* model = LUMEDA_NEW(Model, name);
 	m_Models.insert({ name, model });
 	return model;
 }
@@ -298,7 +298,7 @@ Model* RendererOpenGL::CreateModel(const std::string& name, const std::string& f
 Framebuffer* RendererOpenGL::CreateFramebuffer(const std::string& name)
 {
 	LUMEDA_PROFILE;
-	Framebuffer* framebuffer = LUMEDA_NEW(FramebufferOpenGL, MemTag::Assets, name);
+	Framebuffer* framebuffer = LUMEDA_NEW(FramebufferOpenGL, name);
 	m_Framebuffers.insert({ name, framebuffer });
 	return framebuffer;
 }
@@ -306,7 +306,7 @@ Framebuffer* RendererOpenGL::CreateFramebuffer(const std::string& name)
 RenderTarget* RendererOpenGL::CreateRenderTarget(const std::string& name, int width, int height)
 {
 	LUMEDA_PROFILE;
-	RenderTargetOpenGL* renderTarget = LUMEDA_NEW(RenderTargetOpenGL, MemTag::Assets, name, glm::ivec2(width, height));
+	RenderTargetOpenGL* renderTarget = LUMEDA_NEW(RenderTargetOpenGL, name, glm::ivec2(width, height));
 	m_RenderTargets.insert({ name, renderTarget });
 	return renderTarget;
 }
@@ -323,7 +323,7 @@ if (result == 0) \
 	LUMEDA_CORE_WARN("[RendererOpenGL] Cannot remove the resource \"{0}\" in the map {1} (not found)", ptr->GetName(), #map); \
 	return; \
 } \
-Delete(ptr)
+LUMEDA_FREE(ptr)
 
 
 void RendererOpenGL::DeleteShader(Shader* shader)
@@ -383,7 +383,14 @@ void RendererOpenGL::Submit(Mesh* mesh, Material* material, sUniformsMap& unifor
 	renderCall.material = material;
 	renderCall.uniformMap = uniforms;
 
-	m_RenderCallsMesh.push_back(renderCall);
+	if (material->GetTransparent())
+	{
+		m_RenderCallsMeshTransparent.push_back(renderCall);
+	}
+	else
+	{
+		m_RenderCallsMesh.push_back(renderCall);
+	}
 }
 
 void RendererOpenGL::Submit(Model* model, sUniformsMap& uniforms)
@@ -396,33 +403,68 @@ void RendererOpenGL::Submit(Model* model, sUniformsMap& uniforms)
 	m_RenderCallsModel.push_back(renderCall);
 }
 
+void RendererOpenGL::Submit(sParticleSystemDescriptor* particleSystem)
+{
+	LUMEDA_PROFILE;
+	Transform dummyTransform;
+	sUniformsMap uniformMap;
+	sRenderCallMesh renderCall;
+
+	Mesh* mesh = GetMesh(particleSystem->ParticleMesh);
+	Material* material = GetMaterial(particleSystem->ParticleMaterial);
+
+	if (mesh == nullptr || material == nullptr)
+	{
+		LUMEDA_CORE_WARN("[RendererOpenGL::Submit(sParticleSystemDescriptor*)] Cannot render particle system, undefined Mesh and/or Material");
+		return;
+	}
+	
+	for (size_t i = 0; i < particleSystem->GetMaxParticles(); i++)
+	{
+		sParticle& particle = particleSystem->Particles[i];
+		if (particle.Lifetime <= 0.0f) continue;
+		
+		dummyTransform.SetLocalPosition(particle.Position);
+		dummyTransform.SetLocalRotation(glm::vec3(particle.Rotation));
+		dummyTransform.SetLocalScale(glm::vec3(particle.Size));
+
+		glm::mat4 world = particleSystem->OriginTransform->GetWorld() * dummyTransform.GetWorld();
+		uniformMap.Set("u_World", world);
+
+		renderCall.uniformMap = uniformMap;
+		Submit(mesh, material, uniformMap);
+	}
+}
+
 void RendererOpenGL::Render(Camera* camera, RenderTarget* renderTarget)
 {
 	LUMEDA_PROFILE;
-	glm::vec3 cameraPosition(0.0f);
-	glm::vec3 cameraForward(0.0f, 0.0f, 1.0f);
-	glm::mat4 cameraMatrix(1.0f);
-	float time = 0.0f; // TODO : Fix this when there is a Timer
+	
+	sShaderPrepareData shaderPrepareData;
+	
+	shaderPrepareData.Time = LUMEDA_TIME.GetElapsedTime();
 
 	if (camera != nullptr)
 	{
-		cameraPosition = camera->GetTransform().GetPosition();
-		cameraForward = camera->GetTransform().GetForward();
-		cameraMatrix = camera->GetProjectionView();
+		shaderPrepareData.CameraPosition = camera->GetTransform().GetPosition();
+		shaderPrepareData.CameraForward = camera->GetTransform().GetForward();
+		shaderPrepareData.CameraMatrix = camera->GetProjectionView();
+		shaderPrepareData.CameraProjection = camera->GetProjection();
+		shaderPrepareData.CameraView = camera->GetView();
 	}
 
 	for (const auto& [name, shader] : m_Shaders)
 	{
 		shader->Bind();
-		shader->Prepare(time, cameraPosition, cameraForward, cameraMatrix);
+		shader->Prepare(shaderPrepareData);
 	}
 
 	if (renderTarget != nullptr)
 	{
 		renderTarget->Bind();
 		glViewport(0, 0, renderTarget->GetSize().x, renderTarget->GetSize().y);
-
 	}
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -438,6 +480,17 @@ void RendererOpenGL::Render(Camera* camera, RenderTarget* renderTarget)
 		renderCall.mesh->Draw();
 	}
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthMask(GL_FALSE);
+	for (auto& renderCall : m_RenderCallsMeshTransparent)
+	{
+		renderCall.material->Use(renderCall.uniformMap);
+		renderCall.mesh->Draw();
+	}
+	glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
+
 	if (renderTarget != nullptr)
 	{
 		renderTarget->UnBind();
@@ -450,7 +503,6 @@ void RendererOpenGL::PrepareRenderScreen()
 	glDisable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-
 }
 
 void RendererOpenGL::RenderToScreen(RenderTarget* renderTarget, int x, int y, int width, int height)
@@ -473,6 +525,7 @@ void RendererOpenGL::EndFrame()
 {
 	LUMEDA_PROFILE;
 	m_RenderCallsMesh.clear();
+	m_RenderCallsMeshTransparent.clear();
 	m_RenderCallsModel.clear();
 }
 

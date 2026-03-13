@@ -6,9 +6,9 @@ using namespace Lumeda;
 #include <Lumeda/Implementation/OpenGL/RendererOpenGL.h>
 Renderer* Renderer::Create()
 {
-	RendererOpenGL* renderer = LUMEDA_NEW(RendererOpenGL, MemTag::Renderer);
+	RendererOpenGL* renderer = LUMEDA_NEW(RendererOpenGL);
 	return renderer;
 }
 #else
-	#error "Current platform not supported!"
+#error "Current platform not supported!"
 #endif

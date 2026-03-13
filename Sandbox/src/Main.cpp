@@ -14,10 +14,20 @@ private:
 	Lumeda::Node* selectedNode = nullptr;
 	Lumeda::Node* secondSeletedNode = nullptr;
 
+#define FPS_VECTOR_COUNT 60
+	int fpsIndex = 0;
+	float fpsVector[FPS_VECTOR_COUNT];
+
 public:
 	Sandbox()
 	{
 		LUMEDA_PROFILE;
+
+		for (int i = 0; i < FPS_VECTOR_COUNT; i++)
+		{
+			fpsVector[i] = 0.0f;
+		}
+		fpsIndex = 0;
 	}
 
 	~Sandbox()
@@ -30,10 +40,25 @@ public:
 		LUMEDA_PROFILE;
 		LUMEDA_TRACE("Initialized Sandbox");
 
-		Lumeda::Engine::Get().GetWindow().SetSize(glm::ivec2(980, 500));
+		Lumeda::Window& window = LUMEDA_WINDOW;
+		Lumeda::Renderer& renderer = LUMEDA_RENDERER;
 
-		Lumeda::Window& window = Lumeda::Engine::Get().GetWindow();
-		Lumeda::Renderer& renderer = Lumeda::Engine::Get().GetRenderer();
+		// window.SetMaximize();
+
+		renderTarget = renderer.CreateRenderTarget("RenderTarget", LUMEDA_WINDOW.GetWidth(), LUMEDA_WINDOW.GetHeight());
+#ifdef LUMEDA_USE_GLAD
+		Lumeda::RenderTargetOpenGL* castedRenderTarget = dynamic_cast<Lumeda::RenderTargetOpenGL*>(renderTarget);
+		if (castedRenderTarget != nullptr)
+		{
+			castedRenderTarget->GetColorTexture()->Bind();
+			castedRenderTarget->GetColorTexture()->SetFiltering(Lumeda::eTextureFiltering::Nearest);
+			castedRenderTarget->GetColorTexture()->UnBind();
+		}
+		else
+		{
+			LUMEDA_WARN("Couldn't cast RenderTarget to RenderTargetOpenGL... Shouldn't happen since the backend is defined as GLAD");
+		}
+#endif
 
 		Lumeda::Texture2D* defaultTexture = renderer.CreateTexture2D("redrock_Color", "assets/textures/redrock_Color.png");
 		Lumeda::Shader* defaultShader = renderer.CreateShader("default", "assets/shaders/default.vert", "assets/shaders/default.frag");
@@ -45,6 +70,7 @@ public:
 		Lumeda::Texture2D* barrelPondTexture = renderer.CreateTexture2D("barrelpond_Color", "assets/textures/barrel_pond.jpg");
 		Lumeda::Texture2D* benchTexture = renderer.CreateTexture2D("bench_Color", "assets/textures/bench.jpg");
 		Lumeda::Texture2D* dirtTexture = renderer.CreateTexture2D("dirt_Color", "assets/textures/dirt.jpg");
+		Lumeda::Texture2D* fireTexture = renderer.CreateTexture2D("fire_Color", "assets/textures/fire_1.png");
 
 		Lumeda::Material* boxMaterial = renderer.CreateMaterial("box");
 		boxMaterial->SetShader(defaultShader);
@@ -53,6 +79,24 @@ public:
 		Lumeda::Material* barrelPondMaterial = renderer.CreateMaterial("barrelpond");
 		barrelPondMaterial->SetShader(defaultShader);
 		barrelPondMaterial->GetUniformsMap().Set("u_Color", barrelPondTexture);
+
+		Lumeda::Material* fireMaterial = renderer.CreateMaterial("fire");
+		fireMaterial->SetShader(defaultShader);
+		fireMaterial->GetUniformsMap().Set("u_Color", fireTexture);
+		fireMaterial->SetTransparent(true);
+
+		Lumeda::Material* screenMaterial = renderer.CreateMaterial("screen");
+		screenMaterial->SetShader(defaultShader);
+#ifdef LUMEDA_USE_GLAD
+		if (castedRenderTarget != nullptr)
+		{
+			screenMaterial->GetUniformsMap().Set("u_Color", castedRenderTarget->GetColorTexture());
+		}
+		else
+		{
+			LUMEDA_WARN("Couldn't cast RenderTarget to RenderTargetOpenGL... Shouldn't happen since the backend is defined as GLAD");
+		}
+#endif
 
 		Lumeda::Model* boxModel = renderer.CreateModel("box", "assets/models/box.fbx");
 		for (size_t i = 0; i < boxModel->ListItems().size(); i++)
@@ -79,53 +123,63 @@ public:
 			model->SetItem(i, modelItem);
 		}
 
-		rootNode = LUMEDA_NEW(Lumeda::RootNode, Lumeda::MemTag::General);
-		Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, Lumeda::MemTag::General, glm::vec3(0.0f, 0.50f, 0.0f));
-		Lumeda::ModelNode* cubeModelNode = LUMEDA_NEW(Lumeda::ModelNode, Lumeda::MemTag::General);
-		Lumeda::LightNode* lightNode = LUMEDA_NEW(Lumeda::LightNode, Lumeda::MemTag::General);
+		rootNode = LUMEDA_NEW(Lumeda::RootNode);
+		Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 1.00f, 0.0f));
+		Lumeda::ModelNode* cubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
+		Lumeda::LightNode* lightNode = LUMEDA_NEW(Lumeda::LightNode);
 		lightNode->GetLight().Color = glm::vec3(1.0f);
 		lightNode->GetLight().Intensity = 1.0f;
-		lightNode->GetLight().LightCharacteristics = { 5.0f, 5.0f, 0.0f };
+		lightNode->GetLight().LightCharacteristics = { 0.5f, 0.1f, 0.0f };
 		lightNode->GetLight().LightType = Lumeda::eLightType::POINT;
 		cubeModelNode->GetTransform().SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.0f));
-		cubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.15f));
 		cubeNode->AddChild(cubeModelNode);
 		cubeModelNode->SetModel(*model);
 		cubeNode->AddChild(lightNode);
 		rootNode->AddChild(cubeNode);
 
-		Lumeda::ModelNode* centerCubeModelNode = LUMEDA_NEW(Lumeda::ModelNode, Lumeda::MemTag::General);
-		centerCubeModelNode->GetTransform().SetLocalScale(glm::vec3(0.1f));
+		Lumeda::ModelNode* centerCubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
 		centerCubeModelNode->SetModel(*barrelPondModel);
 		rootNode->AddChild(centerCubeModelNode);
 
 		// Playernode
-		Lumeda::SpinNode* pivotNode = LUMEDA_NEW(Lumeda::SpinNode, Lumeda::MemTag::General, glm::vec3(0.0f, 0.05f, 0.0f));
-		Lumeda::PlayerNode* playerNode = LUMEDA_NEW(Lumeda::PlayerNode, Lumeda::MemTag::General);
+		Lumeda::SpinNode* pivotNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 5.00f, 0.0f));
+		Lumeda::PlayerNode* playerNode = LUMEDA_NEW(Lumeda::PlayerNode);
 		playerNode->GetTransform().SetLocalPosition({ 0.0f, 0.5f, -0.8f });
 		playerNode->GetTransform().SetLocalRotationEulerAngles({ 30.0f, 0.0f, 0.0f });
 		// PlayerNode automatically add a CameraNode, but in order to access it, the child need to be really added, not pending.
 		playerNode->ProcessLifecycle();
 		Lumeda::CameraNode* cameraNode = dynamic_cast<Lumeda::CameraNode*>(playerNode->GetChildren()[0]);
 		cameraNode->GetCamera()->SetCurrent();
-
+		cameraNode->GetTransform().SetLocalPosition({ 0.0f, 0.0f, -15.0f });
 		pivotNode->AddChild(playerNode);
 		rootNode->AddChild(pivotNode);
 
-		renderTarget = renderer.CreateRenderTarget("RenderTarget", 600, 400);
-#ifdef LUMEDA_USE_GLAD
-		Lumeda::RenderTargetOpenGL* castedRenderTarget = dynamic_cast<Lumeda::RenderTargetOpenGL*>(renderTarget);
-		if (castedRenderTarget != nullptr)
-		{
-			castedRenderTarget->GetColorTexture()->Bind();
-			castedRenderTarget->GetColorTexture()->SetFiltering(Lumeda::eTextureFiltering::Nearest);
-			castedRenderTarget->GetColorTexture()->UnBind();
-		}
-		else
-		{
-			LUMEDA_WARN("Couldn't cast RenderTarget to RenderTargetOpenGL... Shouldn't happen since the backend is defined as GLAD");
-		}
-#endif
+		// Particle System
+		// Benchmark
+		//Lumeda::ParticleSystemNode* particleSystem = LUMEDA_NEW(Lumeda::ParticleSystemNode);
+		//particleSystem->GetDescriptor().ParticleMesh = "cube_0";
+		//particleSystem->GetDescriptor().ParticleMaterial = boxMaterial->GetName();
+		//particleSystem->GetDescriptor().InitialVelocityXRange = { -0.1f, 0.1f };
+		//particleSystem->GetDescriptor().InitialVelocityYRange = { -0.1f, 0.1f };
+		//particleSystem->GetDescriptor().InitialVelocityZRange = { -0.1f, 0.1f };
+		//particleSystem->GetDescriptor().InitialAngularVelocityRange = { -1.0f, 1.0f };
+		//particleSystem->GetDescriptor().ParticleDelay = 0.0001f;
+		//particleSystem->GetDescriptor().InitialLifetimeRange = { 0.1f, 0.3f };
+		//particleSystem->GetDescriptor().InitialSizeRange = { 0.01f, 0.2f };
+		//particleSystem->GetDescriptor().SetMaxParticles(2500);
+		// Ok test
+		Lumeda::ParticleSystemNode* particleSystem = LUMEDA_NEW(Lumeda::ParticleSystemNode);
+		particleSystem->GetDescriptor().ParticleMesh = "Renderer_Quad";
+		particleSystem->GetDescriptor().ParticleMaterial = fireMaterial->GetName();
+		particleSystem->GetDescriptor().InitialVelocityXRange = { -0.1f, 2.0f };
+		particleSystem->GetDescriptor().InitialVelocityYRange = { -0.1f, 2.5f };
+		particleSystem->GetDescriptor().InitialVelocityZRange = { -0.1f, 2.0f };
+		particleSystem->GetDescriptor().InitialAngularVelocityRange = { -1.0f, 1.0f };
+		particleSystem->GetDescriptor().ParticleDelay = 1.0f / 5.0f;
+		particleSystem->GetDescriptor().InitialLifetimeRange = { 0.5f, 4.75f };
+		particleSystem->GetDescriptor().InitialSizeRange = { 0.1f, 0.2f };
+		particleSystem->GetDescriptor().SetMaxParticles(2500);
+		rootNode->AddChild(particleSystem);
 	}
 
 	void Update() override
@@ -135,6 +189,15 @@ public:
 		rootNode->ProcessLifecycle();
 		rootNode->Update();
 		rootNode->ProcessLifecycle();
+
+		if (fpsIndex >= FPS_VECTOR_COUNT) fpsIndex = 0;
+		fpsVector[fpsIndex++] = 1 / Lumeda::Engine::Get().GetTime().GetDeltaTime();
+
+		float fps = 1 / Lumeda::Engine::Get().GetTime().GetDeltaTime();
+		if (fps > 80.0f)
+		{
+			LUMEDA_TRACE("{0}", fps);
+		}
 	}
 
 	void Render() override
@@ -173,8 +236,24 @@ public:
 				ImGui::LabelText("Profiling", "Disabled");
 #endif // LUMEDA_PROFILING_ENABLED
 
-				ImGui::LabelText("Time", "%f", Lumeda::Engine::Get().GetTime().GetTime());
+				// Search the min/max FPS
+				float minFps = FLT_MAX;
+				float maxFps = FLT_MIN;
+				float fpsAverage = 0.0f;
+				for (int i = 0; i < FPS_VECTOR_COUNT; i++)
+				{
+					if (fpsVector[i] < minFps) minFps = fpsVector[i];
+					if (fpsVector[i] > maxFps) maxFps = fpsVector[i];
+					fpsAverage += fpsVector[i];
+				}
+				fpsAverage /= FPS_VECTOR_COUNT;
+
+				ImGui::LabelText("Time", "%f", Lumeda::Engine::Get().GetTime().GetElapsedTime());
 				ImGui::LabelText("DeltaTime", "%f", Lumeda::Engine::Get().GetTime().GetDeltaTime());
+				ImGui::LabelText("FPS", "%.2f", 1 / Lumeda::Engine::Get().GetTime().GetDeltaTime());
+				ImGui::LabelText("Average FPS", "%.2f", fpsAverage);
+				ImGui::LabelText("Max FPS", "%.2f", maxFps);
+				ImGui::LabelText("Min FPS", "%.2f", minFps);
 				ImGui::LabelText("Framecount", "%lu", Lumeda::Engine::Get().GetTime().GetFrameCount());
 
 				ImGui::EndMenu();
@@ -467,7 +546,7 @@ public:
 	{
 		LUMEDA_PROFILE;
 
-		Lumeda::Delete(rootNode);
+		LUMEDA_FREE(rootNode);
 		LUMEDA_TRACE("Terminate Sandbox");
 	}
 };
@@ -476,6 +555,6 @@ int main()
 {
 	{
 		Lumeda::Engine engine;
-		engine.Run(LUMEDA_NEW(Sandbox, Lumeda::MemTag::General));
+		engine.Run(LUMEDA_NEW(Sandbox));
 	}
 }

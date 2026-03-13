@@ -45,3 +45,9 @@ namespace Lumeda
 		Time* m_Time;
 	};
 }
+
+#define LUMEDA_RENDERER (Lumeda::Engine::Get().GetRenderer())
+#define LUMEDA_TIME (Lumeda::Engine::Get().GetTime())
+#define LUMEDA_GIZMOS (Lumeda::Engine::Get().GetGizmos())
+#define LUMEDA_WINDOW (Lumeda::Engine::Get().GetWindow())
+#define LUMEDA_ENGINE (Lumeda::Engine::Get())

@@ -8,7 +8,7 @@ using namespace Lumeda;
 Time* Time::Create()
 {
     LUMEDA_PROFILE;
-    TimeGLFW* time = LUMEDA_NEW(TimeGLFW, MemTag::General);
+    TimeGLFW* time = LUMEDA_NEW(TimeGLFW);
     return time;
 }
 #else

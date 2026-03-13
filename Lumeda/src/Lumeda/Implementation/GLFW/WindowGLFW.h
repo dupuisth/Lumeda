@@ -21,6 +21,7 @@ namespace Lumeda
 		float GetAspectRatio() const override;
 
 		void SetSize(const glm::ivec2& size) const override;
+		void SetMaximize() override;
 
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;

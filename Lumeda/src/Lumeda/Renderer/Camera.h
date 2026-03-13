@@ -15,6 +15,8 @@ namespace Lumeda
 		virtual ~Camera();
 
 		const glm::mat4& GetProjectionView();
+		const glm::mat4& GetProjection();
+		const glm::mat4& GetView();
 
 		Transform& GetTransform() { return *m_Transform; }
 
@@ -36,6 +38,8 @@ namespace Lumeda
 	protected:
 		void OnWindowResized(Window& window, int width, int height);
 
+		void Rebuild();
+
 	private:
 		Transform* m_Transform;
 		bool m_HasTransformOwnership;
@@ -46,6 +50,8 @@ namespace Lumeda
 		float m_ZFar;
 
 		glm::mat4 m_ProjectionView;
+		glm::mat4 m_Projection;
+		glm::mat4 m_View;
 
 		bool m_IsDirty;
 

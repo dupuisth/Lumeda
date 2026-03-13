@@ -2,7 +2,7 @@
 
 using namespace Lumeda;
 
-Material::Material(const std::string& name) : m_Name(name), m_Shader(), m_UniformsMap()
+Material::Material(const std::string& name) : m_Name(name), m_isTransparent(false), m_Shader(), m_UniformsMap()
 {
 	LUMEDA_PROFILE;
 }
@@ -42,6 +42,17 @@ void Material::Use(sUniformsMap& uniformsMap)
 	uniformsMap.Send(m_Shader);
 }
 
+void Material::SetTransparent(bool transparent)
+{
+	LUMEDA_PROFILE;
+	m_isTransparent = transparent;
+}
+
+bool Material::GetTransparent()
+{
+	LUMEDA_PROFILE;
+	return m_isTransparent;
+}
 
 void Material::SetShader(Shader* shader)
 {
