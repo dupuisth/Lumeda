@@ -68,6 +68,18 @@ void sParticleSystemDescriptor::Update()
 void sParticleSystemDescriptor::SetMaxParticles(size_t maxParticles)
 {
     LUMEDA_PROFILE;
+
+    if (maxParticles == 0)
+    {
+        if (Particles != nullptr)
+        {
+            LUMEDA_FREE(Particles);
+            Particles = nullptr;
+        }
+        m_MaxParticles = 0;
+        return;
+    }
+
     if (maxParticles > 0)
     {
         if (Particles == nullptr)
