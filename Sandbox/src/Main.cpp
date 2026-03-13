@@ -43,7 +43,7 @@ public:
 		Lumeda::Window& window = LUMEDA_WINDOW;
 		Lumeda::Renderer& renderer = LUMEDA_RENDERER;
 
-		window.SetMaximize();
+		// window.SetMaximize();
 
 		renderTarget = renderer.CreateRenderTarget("RenderTarget", LUMEDA_WINDOW.GetWidth(), LUMEDA_WINDOW.GetHeight());
 #ifdef LUMEDA_USE_GLAD
@@ -83,6 +83,7 @@ public:
 		Lumeda::Material* fireMaterial = renderer.CreateMaterial("fire");
 		fireMaterial->SetShader(defaultShader);
 		fireMaterial->GetUniformsMap().Set("u_Color", fireTexture);
+		fireMaterial->SetTransparent(true);
 
 		Lumeda::Material* screenMaterial = renderer.CreateMaterial("screen");
 		screenMaterial->SetShader(defaultShader);
