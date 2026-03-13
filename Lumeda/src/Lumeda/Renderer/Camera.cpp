@@ -82,7 +82,6 @@ void Camera::Rebuild()
 
 	// Build View
 	glm::vec3 position = m_Transform->GetPosition();
-	position.x = position.x;
 	m_View = glm::lookAt(position, m_Transform->GetPosition() + m_Transform->GetForward(), m_Transform->GetUp());
 	
 	// Build Projection
