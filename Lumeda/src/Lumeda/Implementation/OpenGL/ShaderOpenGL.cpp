@@ -159,7 +159,7 @@ ShaderOpenGL::ShaderOpenGL(const std::string& name, const char* vertexSource, co
 ShaderOpenGL::~ShaderOpenGL()
 {
 	LUMEDA_PROFILE;
-	glDeleteShader(m_Handle);
+	glDeleteProgram(m_Handle);
 }
 
 void ShaderOpenGL::Bind()
