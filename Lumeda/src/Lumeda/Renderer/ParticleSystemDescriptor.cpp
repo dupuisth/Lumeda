@@ -59,7 +59,7 @@ void sParticleSystemDescriptor::Update()
         part.Rotation += part.AngularVelocity * deltaTime;
         //part.Size = part.InitialSize * (part.Lifetime / part.InitialLifetime);
         // Experimental
-        part.Size = part.InitialSize * (pow(part.Lifetime, 2) / pow(part.InitialLifetime, 2)) * std::min(1.0f, -1 + exp(-(part.Lifetime - part.InitialLifetime) * 10.0f));
+        part.Size = part.InitialSize * (pow(part.Lifetime, 2) / pow(part.InitialLifetime, 2)) * std::min(1.0f, -1 + (float)exp(-(part.Lifetime - part.InitialLifetime) * 10.0f));
         
         part.Lifetime -= deltaTime;
     }
