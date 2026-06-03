@@ -170,7 +170,7 @@ project "Sandbox"
         {
             '{COPYFILE} "%{wks.location}Lumeda/libs/windows/%{cfg.buildcfg}/%{iif(cfg.buildcfg == "Debug", "assimpd", "assimp")}.dll" "%{cfg.buildtarget.directory}"'
         }
-
+    
     filter "system:linux"
         cppdialect "C++20"
         staticruntime "Off"
@@ -185,6 +185,7 @@ project "Sandbox"
         -- Link order is important on Linux!
         links
         {
+            "%{iif(cfg.buildcfg == 'Debug', 'tracy', '')}",
             "assimp",
             "ImGui",
             "glad",
@@ -217,6 +218,11 @@ project "LumedaTest"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    defines
+    {
+        "LUMEDA_TESTING"
+    }
 
     files
     {
@@ -273,6 +279,7 @@ project "LumedaTest"
         -- Link order is important on Linux!
         links
         {
+            "%{iif(cfg.buildcfg == 'Debug', 'tracy', '')}", -- Ideally, should not import but I don't want to spend more time on this...
             "assimp",
             "ImGui",
             "glad",
