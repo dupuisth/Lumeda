@@ -63,6 +63,7 @@ PIDOutput PID::Run(const PIDInput& input, PIDMemory& memory)
     output.cd = Cd;
     output.ci = Ci;
     output.integralError = memory.integral;
+    output.error = error;
     return output;
 }
 
