@@ -9,13 +9,13 @@ struct PIDConfiguration
 {
   public:
     // Proportional action
-    float Kp;
+    float Kp = 0.0f;
 
     // Integral action
-    float Ki;
+    float Ki = 0.0f;
 
     // Derivative action
-    float Kd;
+    float Kd = 0.0f;
 };
 
 /**
@@ -25,10 +25,10 @@ struct PIDInput
 {
   public:
     // Order
-    float baseline;
+    float baseline = 0.0f;
 
     // Mesured
-    float measure;
+    float measure = 0.0f;
 };
 
 /**
@@ -38,16 +38,16 @@ struct PIDMemory
 {
   public:
     // Previous execution time
-    float previousTime;
+    float previousTime = 0.0f;
 
     // If this is not the first iteration
-    bool ready;
+    bool ready = false;
 
     // Previous error
-    float previousError;
+    float previousError = 0.0f;
 
     // Integral
-    float integral;
+    float integral = 0.0f;
 };
 
 /**
@@ -57,13 +57,13 @@ struct PIDOutput
 {
   public:
     // Output command
-    float command;
+    float command = 0.0f;
 
     /// Keep track of intermediate values
-    float error;
-    float ci;
-    float cp;
-    float cd;
-    float integralError;
+    float error = 0.0f;
+    float ci = 0.0f;
+    float cp = 0.0f;
+    float cd = 0.0f;
+    float integralError = 0.0f;
 };
 } // namespace Lumeda
