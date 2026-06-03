@@ -45,6 +45,11 @@ void FollowNode::OnUpdate()
 {
     LUMEDA_PROFILE;
 
+    if (m_Target == nullptr)
+    {
+        return;
+    }
+
     // Save position if the expected time passed
     float currentTime = LUMEDA_TIME.GetElapsedTime();
     if (currentTime - m_PositionLastSampleTime > POSITION_SAMPLE_TIME)
