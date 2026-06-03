@@ -1,6 +1,5 @@
-#include <Lumeda/Renderer/ParticleSystemDescriptor.h>
-
 #include <Lumeda/Core/Engine.h>
+#include <Lumeda/Renderer/ParticleSystemDescriptor.h>
 
 using namespace Lumeda;
 
@@ -48,11 +47,9 @@ void sParticleSystemDescriptor::Update()
         // Else, there is a free slot, use it
         sParticle& part = Particles[lastFreeSlot];
         part.InitialLifetime = LUMEDA_RANDFLOAT(InitialLifetimeRange.x, InitialLifetimeRange.y);
-        part.Velocity = glm::vec3(
-            LUMEDA_RANDFLOAT(InitialVelocityXRange.x, InitialVelocityXRange.y),
+        part.Velocity = glm::vec3(LUMEDA_RANDFLOAT(InitialVelocityXRange.x, InitialVelocityXRange.y),
             LUMEDA_RANDFLOAT(InitialVelocityYRange.x, InitialVelocityYRange.y),
-            LUMEDA_RANDFLOAT(InitialVelocityZRange.x, InitialVelocityZRange.y)
-        );
+            LUMEDA_RANDFLOAT(InitialVelocityZRange.x, InitialVelocityZRange.y));
         part.AngularVelocity = LUMEDA_RANDFLOAT(InitialAngularVelocityRange.x, InitialAngularVelocityRange.y);
         part.Lifetime = part.InitialLifetime;
         part.Position = glm::vec3(0.0f);
@@ -64,19 +61,20 @@ void sParticleSystemDescriptor::Update()
     }
     m_LastSpawnTime += (spawnCount - leftToSpawn) * ParticleDelay;
 
-
     // Update the others
     float deltaTime = LUMEDA_TIME.GetDeltaTime();
     for (int i = 0; i < m_MaxParticles; i++)
     {
         sParticle& part = Particles[i];
-        if (part.Lifetime <= 0.0f) continue;
+        if (part.Lifetime <= 0.0f)
+            continue;
         part.Position += part.Velocity * deltaTime;
         part.Rotation += part.AngularVelocity * deltaTime;
-        //part.Size = part.InitialSize * (part.Lifetime / part.InitialLifetime);
-        // Experimental
-        part.Size = part.InitialSize * (pow(part.Lifetime, 2) / pow(part.InitialLifetime, 2)) * std::min(1.0f, -1 + (float)exp(-(part.Lifetime - part.InitialLifetime) * 10.0f));
-        
+        // part.Size = part.InitialSize * (part.Lifetime / part.InitialLifetime);
+        //  Experimental
+        part.Size = part.InitialSize * (pow(part.Lifetime, 2) / pow(part.InitialLifetime, 2)) *
+                    std::min(1.0f, -1 + (float)exp(-(part.Lifetime - part.InitialLifetime) * 10.0f));
+
         part.Lifetime -= deltaTime;
     }
 }

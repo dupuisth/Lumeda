@@ -7,13 +7,13 @@ namespace Lumeda
 {
 class PlayerNode : public Node
 {
-public:
-	PlayerNode();
-	virtual ~PlayerNode();
+  public:
+    PlayerNode();
+    virtual ~PlayerNode();
 
-protected:
-	void OnUpdate() override;
-	void OnRender() override;
-	void OnRenderImGui() override;
+  protected:
+    void OnUpdate() override;
+    void OnRender() override;
+    void OnRenderImGui() override;
 };
-}
+} // namespace Lumeda

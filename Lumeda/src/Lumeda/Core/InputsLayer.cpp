@@ -7,9 +7,9 @@ using namespace Lumeda;
 using namespace Lumeda;
 InputsLayer* InputsLayer::Create()
 {
-	LUMEDA_PROFILE;
-	InputsLayerGLFW* window = LUMEDA_NEW(InputsLayerGLFW);
-	return window;
+    LUMEDA_PROFILE;
+    InputsLayerGLFW* window = LUMEDA_NEW(InputsLayerGLFW);
+    return window;
 }
 #else
 #error "Current platform not supported!"

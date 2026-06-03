@@ -1,14 +1,14 @@
-#include <Lumeda/Renderer/UniformsMap.h>
-
 #include <Lumeda/Renderer/Shader.h>
 #include <Lumeda/Renderer/Texture.h>
+#include <Lumeda/Renderer/UniformsMap.h>
 
 using namespace Lumeda;
 
-#define sUniformsMap_BrainlessSend(map) \
-for (const auto& [uniform, val] : map) { \
-shader->SetUniform(uniform, val); \
-}
+#define sUniformsMap_BrainlessSend(map)                                                                                                              \
+    for (const auto& [uniform, val] : map)                                                                                                           \
+    {                                                                                                                                                \
+        shader->SetUniform(uniform, val);                                                                                                            \
+    }
 
 void sUniformsMap::Send(Shader* shader)
 {
@@ -27,15 +27,13 @@ void sUniformsMap::Send(Shader* shader)
     }
 }
 
-#define sUniformsMap_SetImplementationMacro(type, map) void sUniformsMap::Set(const std::string& uniform, type val) \
-{\
-    LUMEDA_PROFILE; \
-    map[uniform] = val; \
-}
-sUniformsMap_SetImplementationMacro(const glm::mat4&, Mat4)
-sUniformsMap_SetImplementationMacro(const glm::vec4&, Vec4)
-sUniformsMap_SetImplementationMacro(const glm::vec3&, Vec3)
-sUniformsMap_SetImplementationMacro(const glm::vec2&, Vec2)
-sUniformsMap_SetImplementationMacro(float, Float)
-sUniformsMap_SetImplementationMacro(int, Int)
-sUniformsMap_SetImplementationMacro(Texture2D*, Texture)
+#define sUniformsMap_SetImplementationMacro(type, map)                                                                                               \
+    void sUniformsMap::Set(const std::string& uniform, type val)                                                                                     \
+    {                                                                                                                                                \
+        LUMEDA_PROFILE;                                                                                                                              \
+        map[uniform] = val;                                                                                                                          \
+    }
+sUniformsMap_SetImplementationMacro(const glm::mat4&, Mat4) sUniformsMap_SetImplementationMacro(const glm::vec4&, Vec4)
+    sUniformsMap_SetImplementationMacro(const glm::vec3&, Vec3) sUniformsMap_SetImplementationMacro(const glm::vec2&, Vec2)
+        sUniformsMap_SetImplementationMacro(float, Float) sUniformsMap_SetImplementationMacro(int, Int)
+            sUniformsMap_SetImplementationMacro(Texture2D*, Texture)

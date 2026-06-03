@@ -1,11 +1,9 @@
-#include <Lumeda/Implementation/GLFW/TimeGLFW.h>
-
 #include <GLFW/glfw3.h>
+#include <Lumeda/Implementation/GLFW/TimeGLFW.h>
 
 using namespace Lumeda;
 
-TimeGLFW::TimeGLFW()
-    : m_DeltaTime(0.0f), m_FrameCount(0), m_PreviousTime(0.0f)
+TimeGLFW::TimeGLFW() : m_DeltaTime(0.0f), m_FrameCount(0), m_PreviousTime(0.0f)
 {
     LUMEDA_PROFILE;
     m_Time = (float)glfwGetTime();

@@ -5,16 +5,16 @@
 
 namespace Lumeda
 {
-	class ImGuiLayer : public Layer
-	{
-	public:
-		ImGuiLayer();
-		virtual ~ImGuiLayer();
+class ImGuiLayer : public Layer
+{
+  public:
+    ImGuiLayer();
+    virtual ~ImGuiLayer();
 
-		void Initialize() override;
-		void Terminate() override;
+    void Initialize() override;
+    void Terminate() override;
 
-		void Begin();
-		void End();
-	};
-}
+    void Begin();
+    void End();
+};
+} // namespace Lumeda

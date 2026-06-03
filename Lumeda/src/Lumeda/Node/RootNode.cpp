@@ -1,16 +1,14 @@
-#include <Lumeda/Node/RootNode.h>
-#include <imgui.h>
-
-#include <Lumeda/Node/LightNode.h>
 #include <Lumeda/Core/Engine.h>
+#include <Lumeda/Node/LightNode.h>
+#include <Lumeda/Node/RootNode.h>
+#include <Lumeda/Renderer/Light.h>
 #include <Lumeda/Renderer/Renderer.h>
 #include <Lumeda/Renderer/Shader.h>
-#include <Lumeda/Renderer/Light.h>
+#include <imgui.h>
 
 using namespace Lumeda;
 
-RootNode::RootNode()
-    : m_LightNodes()
+RootNode::RootNode() : m_LightNodes()
 {
     LUMEDA_PROFILE;
     SetName("RootNode");
@@ -21,10 +19,11 @@ RootNode::~RootNode()
     LUMEDA_PROFILE;
 
     // Duplicate from Node::~Node(), check the below comment that was copied from the old version
-     // If the Scene gets teared down from RootNode (Delete(rootNode))
-     // Then this dynamic_cast will fail, since the cascade of deletion is done in Node::~Node(), the RootNode::~RootNode() is already done and the RootNode subobject is already destroyed
-     // For now, this cause no real issue, just a warning that some lights counldn't be unregistered but it's ok since the scene is completly destroyed
-     // But if later this become criticial, consider moving some of the cascade deletion to the RootNode::~RootNode() so that it still lives long enough to be accessed from child nodes
+    // If the Scene gets teared down from RootNode (Delete(rootNode))
+    // Then this dynamic_cast will fail, since the cascade of deletion is done in Node::~Node(), the RootNode::~RootNode() is already done and the
+    // RootNode subobject is already destroyed For now, this cause no real issue, just a warning that some lights counldn't be unregistered but it's
+    // ok since the scene is completly destroyed But if later this become criticial, consider moving some of the cascade deletion to the
+    // RootNode::~RootNode() so that it still lives long enough to be accessed from child nodes
 
     // This code allows the use of GetRootNode() until the last moment, since it is RootNode that calls Delete on the childs,
     // the RootNode subobject is not destroyed until all the childrens are.
@@ -68,7 +67,6 @@ void RootNode::AddLightNode(LightNode* lightNode)
     {
         LUMEDA_CORE_WARN("[RootNode] Trying to add a light that is already registered");
     }
-
 }
 
 void RootNode::RemoveLightNode(LightNode* lightNode)
@@ -103,7 +101,6 @@ void RootNode::OnRender()
     LUMEDA_PROFILE;
     // Prepare shaders
     Renderer& renderer = Engine::Get().GetRenderer();
-
 
     const std::unordered_map<std::string, Shader*>& shadersMap = renderer.ListShaders();
     for (auto const& [name, shader] : shadersMap)

@@ -1,7 +1,5 @@
 #include <Lumeda/Node/LightNode.h>
-
 #include <Lumeda/Node/RootNode.h>
-
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 
@@ -37,7 +35,7 @@ void LightNode::OnRenderImGui()
 
     ImGui::SeparatorText("Light");
 
-    const char* lightTypeItems[] = { "POINT", "SPOT", "DIREC" };
+    const char* lightTypeItems[] = {"POINT", "SPOT", "DIREC"};
     int currentItem = m_Light.LightType;
     if (ImGui::BeginCombo("Type", lightTypeItems[m_Light.LightType]))
     {

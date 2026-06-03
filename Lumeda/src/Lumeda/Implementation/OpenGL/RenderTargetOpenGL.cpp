@@ -1,25 +1,24 @@
-#include <Lumeda/Implementation/OpenGL/RenderTargetOpenGL.h>
-
 #include <Lumeda/Core/Engine.h>
-#include <Lumeda/Renderer/Renderer.h>
-#include <Lumeda/Renderer/Framebuffer.h>
-#include <Lumeda/Renderer/Texture.h>
-#include <Lumeda/Renderer/Shader.h>
-
-#include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
 #include <Lumeda/Implementation/OpenGL/FramebufferOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/RenderTargetOpenGL.h>
+#include <Lumeda/Implementation/OpenGL/TextureOpenGL.h>
+#include <Lumeda/Renderer/Framebuffer.h>
+#include <Lumeda/Renderer/Renderer.h>
+#include <Lumeda/Renderer/Shader.h>
+#include <Lumeda/Renderer/Texture.h>
 
 using namespace Lumeda;
 
-RenderTargetOpenGL::RenderTargetOpenGL(const std::string& name, const glm::ivec2& size)
-    : m_Size(size), m_Name(name)
+RenderTargetOpenGL::RenderTargetOpenGL(const std::string& name, const glm::ivec2& size) : m_Size(size), m_Name(name)
 {
     LUMEDA_PROFILE;
-    static std::atomic<uint64_t> renderTargetCounter{ 0 };
+    static std::atomic<uint64_t> renderTargetCounter{0};
     Renderer& renderer = Engine::Get().GetRenderer();
     m_Framebuffer = renderer.CreateFramebuffer("RenderTarget_Framebuffer_" + std::to_string(renderTargetCounter));
-    m_ColorTexture = renderer.CreateTexture2D("RenderTarget_ColorTexture_" + std::to_string(renderTargetCounter), size.x, size.y, eTextureFormat::RGB);
-    m_DepthStencilTexture = renderer.CreateTexture2D("RenderTarget_DepthStencilTexture_" + std::to_string(renderTargetCounter), size.x, size.y, eTextureFormat::DepthStencil);
+    m_ColorTexture =
+        renderer.CreateTexture2D("RenderTarget_ColorTexture_" + std::to_string(renderTargetCounter), size.x, size.y, eTextureFormat::RGB);
+    m_DepthStencilTexture = renderer.CreateTexture2D(
+        "RenderTarget_DepthStencilTexture_" + std::to_string(renderTargetCounter), size.x, size.y, eTextureFormat::DepthStencil);
     m_Framebuffer->Bind();
     m_Framebuffer->AttachTexture2D(eFramebufferAttachment::ColorAttachment, m_ColorTexture);
     m_Framebuffer->AttachTexture2D(eFramebufferAttachment::DepthStencilAttachment, m_DepthStencilTexture);

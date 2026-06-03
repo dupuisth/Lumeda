@@ -1,39 +1,37 @@
 #pragma once
 
 #include <Lumeda/Core/Base.h>
-#include <Lumeda/Renderer/Texture.h>
 #include <Lumeda/Renderer/Shader.h>
+#include <Lumeda/Renderer/Texture.h>
 #include <Lumeda/Renderer/UniformsMap.h>
-
 #include <glm/glm.hpp>
-
 #include <memory>
 #include <unordered_map>
 
 namespace Lumeda
 {
-	class Material
-	{
-	public:
-		Material(const std::string& name);
-		virtual ~Material();
+class Material
+{
+  public:
+    Material(const std::string& name);
+    virtual ~Material();
 
-		virtual void Use();
-		virtual void Use(sUniformsMap& uniformsMap);
+    virtual void Use();
+    virtual void Use(sUniformsMap& uniformsMap);
 
-		void SetTransparent(bool transparent);
-		bool GetTransparent();
+    void SetTransparent(bool transparent);
+    bool GetTransparent();
 
-		void SetShader(Shader* shader);
-		sUniformsMap& GetUniformsMap();
+    void SetShader(Shader* shader);
+    sUniformsMap& GetUniformsMap();
 
-		const std::string& GetName();
+    const std::string& GetName();
 
-	protected:
-		std::string m_Name;
-		bool m_isTransparent;
+  protected:
+    std::string m_Name;
+    bool m_isTransparent;
 
-		Shader* m_Shader;
-		sUniformsMap m_UniformsMap;
-	};
-}
+    Shader* m_Shader;
+    sUniformsMap m_UniformsMap;
+};
+} // namespace Lumeda

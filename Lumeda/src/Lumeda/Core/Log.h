@@ -1,10 +1,9 @@
 #pragma once
 
 #define FMT_UNICODE 0
-#include <spdlog/spdlog.h>
-#include <spdlog/fmt/ostr.h>
-
 #include <memory>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 namespace Lumeda
 {
@@ -13,27 +12,27 @@ namespace Lumeda
 /// </summary>
 class Log
 {
-public:
-	static void Init();
+  public:
+    static void Init();
 
-	// Can't use raw pointer with spdlog, the API uses shared_ptr
-	static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
-	static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+    // Can't use raw pointer with spdlog, the API uses shared_ptr
+    static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+    static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 
-private:
-	static std::shared_ptr<spdlog::logger> s_CoreLogger;
-	static std::shared_ptr<spdlog::logger> s_ClientLogger;
+  private:
+    static std::shared_ptr<spdlog::logger> s_CoreLogger;
+    static std::shared_ptr<spdlog::logger> s_ClientLogger;
 };
-}
+} // namespace Lumeda
 
-#define LUMEDA_CORE_TRACE(...)    ::Lumeda::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define LUMEDA_CORE_INFO(...)     ::Lumeda::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define LUMEDA_CORE_WARN(...)     ::Lumeda::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define LUMEDA_CORE_ERROR(...)    ::Lumeda::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define LUMEDA_CORE_TRACE(...) ::Lumeda::Log::GetCoreLogger()->trace(__VA_ARGS__)
+#define LUMEDA_CORE_INFO(...) ::Lumeda::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define LUMEDA_CORE_WARN(...) ::Lumeda::Log::GetCoreLogger()->warn(__VA_ARGS__)
+#define LUMEDA_CORE_ERROR(...) ::Lumeda::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define LUMEDA_CORE_CRITICAL(...) ::Lumeda::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
-#define LUMEDA_TRACE(...)         ::Lumeda::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define LUMEDA_INFO(...)          ::Lumeda::Log::GetClientLogger()->info(__VA_ARGS__)
-#define LUMEDA_WARN(...)          ::Lumeda::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define LUMEDA_ERROR(...)         ::Lumeda::Log::GetClientLogger()->error(__VA_ARGS__)
-#define LUMEDA_CRITICAL(...)      ::Lumeda::Log::GetClientLogger()->critical(__VA_ARGS__)
+#define LUMEDA_TRACE(...) ::Lumeda::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define LUMEDA_INFO(...) ::Lumeda::Log::GetClientLogger()->info(__VA_ARGS__)
+#define LUMEDA_WARN(...) ::Lumeda::Log::GetClientLogger()->warn(__VA_ARGS__)
+#define LUMEDA_ERROR(...) ::Lumeda::Log::GetClientLogger()->error(__VA_ARGS__)
+#define LUMEDA_CRITICAL(...) ::Lumeda::Log::GetClientLogger()->critical(__VA_ARGS__)

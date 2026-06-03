@@ -6,19 +6,19 @@
 
 namespace Lumeda
 {
-    class ParticleSystemNode : public Node
-    {
-    public:
-        ParticleSystemNode();
-        virtual ~ParticleSystemNode();
+class ParticleSystemNode : public Node
+{
+  public:
+    ParticleSystemNode();
+    virtual ~ParticleSystemNode();
 
-        void OnUpdate() override;
-        void OnRender() override;
-        void OnRenderImGui() override;
+    void OnUpdate() override;
+    void OnRender() override;
+    void OnRenderImGui() override;
 
-        sParticleSystemDescriptor& GetDescriptor();
+    sParticleSystemDescriptor& GetDescriptor();
 
-    private:
-        sParticleSystemDescriptor m_Descriptor;
-    };
-}
+  private:
+    sParticleSystemDescriptor m_Descriptor;
+};
+} // namespace Lumeda

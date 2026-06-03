@@ -7,18 +7,18 @@ namespace Lumeda
 {
 class ModelNode : public Node
 {
-public:
-	ModelNode();
-	virtual ~ModelNode();
+  public:
+    ModelNode();
+    virtual ~ModelNode();
 
-	void OnRender() override;
-	void OnRenderImGui() override;
+    void OnRender() override;
+    void OnRenderImGui() override;
 
-	void SetModel(Model& model);
-	void SetModel(const std::string& modelName);
-	void SetModel();
+    void SetModel(Model& model);
+    void SetModel(const std::string& modelName);
+    void SetModel();
 
-protected:
-	std::string m_ModelName;
+  protected:
+    std::string m_ModelName;
 };
-}
+} // namespace Lumeda

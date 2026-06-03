@@ -1,15 +1,16 @@
 #include <Lumeda/Utils/FileReader.h>
-
 #include <fstream>
 #include <sstream>
 
 using namespace Lumeda;
 
-std::string FileReader::ReadFile(const std::string& path) {
+std::string FileReader::ReadFile(const std::string& path)
+{
     LUMEDA_PROFILE;
     std::ifstream file(path);
 
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         LUMEDA_CORE_ERROR("Could not open file: {0}", path);
         throw std::runtime_error("Could not open file: " + path);
     }

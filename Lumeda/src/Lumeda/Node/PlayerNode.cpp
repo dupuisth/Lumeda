@@ -1,5 +1,5 @@
-#include <Lumeda/Node/PlayerNode.h>
 #include <Lumeda/Node/CameraNode.h>
+#include <Lumeda/Node/PlayerNode.h>
 
 using namespace Lumeda;
 

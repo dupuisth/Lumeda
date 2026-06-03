@@ -1,15 +1,14 @@
 #include <Lumeda/Core/Window.h>
 
-
 #ifdef LUMEDA_USE_GLFW
 // Create a GLFW Window
 #include <Lumeda/Implementation/GLFW/WindowGLFW.h>
 using namespace Lumeda;
 Window* Window::Create()
 {
-	LUMEDA_PROFILE;
-	WindowGLFW* window = LUMEDA_NEW(WindowGLFW);
-	return window;
+    LUMEDA_PROFILE;
+    WindowGLFW* window = LUMEDA_NEW(WindowGLFW);
+    return window;
 }
 #else
 #error "Current platform not supported!"
@@ -17,19 +16,19 @@ Window* Window::Create()
 
 Window::Window() : m_NextCallbackToken(0)
 {
-	LUMEDA_PROFILE;
+    LUMEDA_PROFILE;
 }
 
 WindowCallbackToken Window::AddResizeCallback(const WindowResizeCallback& callback)
 {
-	LUMEDA_PROFILE;
-	m_NextCallbackToken += 1;
-	m_ResizeCallbacks.insert({ m_NextCallbackToken, callback });
-	return m_NextCallbackToken;
+    LUMEDA_PROFILE;
+    m_NextCallbackToken += 1;
+    m_ResizeCallbacks.insert({m_NextCallbackToken, callback});
+    return m_NextCallbackToken;
 }
 
 void Window::RemoveResizeCallback(WindowCallbackToken token)
 {
-	LUMEDA_PROFILE;
-	m_ResizeCallbacks.erase(token);
+    LUMEDA_PROFILE;
+    m_ResizeCallbacks.erase(token);
 }

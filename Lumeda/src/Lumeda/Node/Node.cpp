@@ -1,14 +1,22 @@
 #include <Lumeda/Node/Node.h>
-
 #include <Lumeda/Node/RootNode.h>
-
-#include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
 
 using namespace Lumeda;
 
-Node::Node()
-    : m_Name("Node"), m_IsSelfEnabled(true), m_isEnabled(true), m_Parent(nullptr), m_PendingParent(nullptr), m_HasPendingParentChange(false), m_PendingEnabledState(true), m_HasPendingEnabledChange(false), m_Transform(this), m_HasStarted(false), m_isDestroyPending(false)
+Node::Node() :
+    m_Name("Node"),
+    m_IsSelfEnabled(true),
+    m_isEnabled(true),
+    m_Parent(nullptr),
+    m_PendingParent(nullptr),
+    m_HasPendingParentChange(false),
+    m_PendingEnabledState(true),
+    m_HasPendingEnabledChange(false),
+    m_Transform(this),
+    m_HasStarted(false),
+    m_isDestroyPending(false)
 {
     LUMEDA_PROFILE;
     LUMEDA_CORE_TRACE("[Node] Created {0}", m_Name);
@@ -102,7 +110,6 @@ void Node::ApplyPendingHierarchyChanges()
         }
     }
     m_PendingAdd.clear();
-
 
     for (size_t i = 0; i < m_Children.size(); i++)
     {
@@ -242,7 +249,6 @@ void Node::OnParentChanged(Node* oldParent, Node* newParent)
     LUMEDA_PROFILE;
 }
 
-
 void Node::SetParent(Node* newParent)
 {
     LUMEDA_PROFILE;
@@ -279,7 +285,6 @@ void Node::AddChild(Node* node, bool immediate)
     if (!node)
         return;
 
-
     // Prevent adding self as child
     if (node == this)
         return;
@@ -300,7 +305,6 @@ void Node::AddChild(Node* node, bool immediate)
         m_Children.push_back(node);
         node->m_Parent = this;
         LUMEDA_CORE_TRACE("[NODE] ({0}) Added \"{1}\" as a child (immediate)", this->GetName(), node->GetName());
-
     }
     else
     {
@@ -315,7 +319,6 @@ void Node::RemoveChild(Node* node)
 
     if (!node)
         return;
-
 
     // Check if already in pending remove list
     auto it = std::find(m_PendingRemove.begin(), m_PendingRemove.end(), node);
@@ -357,7 +360,8 @@ void Node::SetEnabled(bool enabled)
     // Check if already in this state or switching to this state
     if (m_HasPendingEnabledChange)
     {
-        if (m_PendingEnabledState == enabled) return;
+        if (m_PendingEnabledState == enabled)
+            return;
     }
     else if (m_IsSelfEnabled == enabled)
         return;
@@ -396,7 +400,6 @@ void Node::OnRenderImGui()
     glm::quat rotation = m_Transform.GetLocalRotation();
     if (ImGui::DragFloat4("Rotation", glm::value_ptr(rotation)))
     {
-
     }
 
     if (ImGui::DragFloat3("Scale", glm::value_ptr(m_Transform.GetLocalScaleRef()), 0.1f, -360.0f, 360.0f))

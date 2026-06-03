@@ -5,23 +5,23 @@
 
 namespace Lumeda
 {
-    class LightNode;
+class LightNode;
 
-    class RootNode : public Node
-    {
-    public:
-        RootNode();
-        virtual ~RootNode();
+class RootNode : public Node
+{
+  public:
+    RootNode();
+    virtual ~RootNode();
 
-        void AddLightNode(LightNode* lightNode);
-        void RemoveLightNode(LightNode* lightNode);
-        std::vector<LightNode*>& GetLightNodes();
+    void AddLightNode(LightNode* lightNode);
+    void RemoveLightNode(LightNode* lightNode);
+    std::vector<LightNode*>& GetLightNodes();
 
-    protected:
-        void OnRender() override;
-        void OnRenderImGui() override;
+  protected:
+    void OnRender() override;
+    void OnRenderImGui() override;
 
-    private:
-        std::vector<LightNode*> m_LightNodes;
-    };
-}
+  private:
+    std::vector<LightNode*> m_LightNodes;
+};
+} // namespace Lumeda

@@ -1,43 +1,41 @@
 #pragma once
 
 #include <Lumeda/Core/Base.h>
-
 #include <glm/glm.hpp>
-
 #include <vector>
 
 namespace Lumeda
 {
-	class Material;
-	class Mesh;
-	struct sUniformsMap;
+class Material;
+class Mesh;
+struct sUniformsMap;
 
-	struct ModelItem
-	{
-		Mesh* m_Mesh;
-		Material* m_Material;
-	};
+struct ModelItem
+{
+    Mesh* m_Mesh;
+    Material* m_Material;
+};
 
-	class Model
-	{
-	public:
-		Model(const std::string& name);
-		virtual ~Model();
+class Model
+{
+  public:
+    Model(const std::string& name);
+    virtual ~Model();
 
-		virtual void Draw();
-		virtual void Draw(const glm::mat4& world);
-		virtual void Draw(sUniformsMap& uniforms);
+    virtual void Draw();
+    virtual void Draw(const glm::mat4& world);
+    virtual void Draw(sUniformsMap& uniforms);
 
-		virtual const std::vector<ModelItem>& ListItems() const;
-		virtual void AttachItem(const ModelItem& modelItem);
-		virtual void SetItem(int index, const ModelItem& modelItem);
-		virtual void RemoveItem(int index);
+    virtual const std::vector<ModelItem>& ListItems() const;
+    virtual void AttachItem(const ModelItem& modelItem);
+    virtual void SetItem(int index, const ModelItem& modelItem);
+    virtual void RemoveItem(int index);
 
-		const std::string& GetName();
+    const std::string& GetName();
 
-	private:
-		std::string m_Name;
+  private:
+    std::string m_Name;
 
-		std::vector<ModelItem> m_ModelItems;
-	};
-}
+    std::vector<ModelItem> m_ModelItems;
+};
+} // namespace Lumeda

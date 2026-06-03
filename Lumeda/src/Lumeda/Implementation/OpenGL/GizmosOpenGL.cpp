@@ -1,8 +1,7 @@
-#include <Lumeda/Implementation/OpenGL/GizmosOpenGL.h>
-
 #include <Lumeda/Core/Engine.h>
-#include <Lumeda/Renderer/Renderer.h>
 #include <Lumeda/Core/Transform.h>
+#include <Lumeda/Implementation/OpenGL/GizmosOpenGL.h>
+#include <Lumeda/Renderer/Renderer.h>
 
 using namespace Lumeda;
 
@@ -27,7 +26,6 @@ void main()
     gl_Position = u_CameraProjection * viewPos;
 }
 )";
-
 
 const char* SHADER_FRAG = R"(#version 460 core
 out vec4 FragColor;
@@ -80,7 +78,7 @@ void main()
     float depth = -f_ViewPosition.z; // camera looks down -Z in view space
     float fade = 1.0 - smoothstep(u_FadeStart, u_FadeEnd, depth);
 
-    // Optional axis highlight (comment out if you don’t want it)
+    // Optional axis highlight (comment out if you donï¿½t want it)
     float axisW = u_LineWidthPx * 2.5;
     float zAxis = 1.0 - smoothstep(0.0, fwidth(xz.x) * axisW, abs(xz.x)); // x=0 line
     float xAxis = 1.0 - smoothstep(0.0, fwidth(xz.y) * axisW, abs(xz.y)); // z=0 line
@@ -98,59 +96,101 @@ void main()
 }
 )";
 
-
 const float CUBE_OFF = 1.0f;
 const float PLANE_OFF = CUBE_OFF;
 
 const std::vector<float> CUBE_VERTS = {
-    -CUBE_OFF, CUBE_OFF, CUBE_OFF,
-    CUBE_OFF, CUBE_OFF, CUBE_OFF,
-    CUBE_OFF, CUBE_OFF, -CUBE_OFF,
-    -CUBE_OFF, CUBE_OFF, -CUBE_OFF,
+    -CUBE_OFF,
+    CUBE_OFF,
+    CUBE_OFF,
+    CUBE_OFF,
+    CUBE_OFF,
+    CUBE_OFF,
+    CUBE_OFF,
+    CUBE_OFF,
+    -CUBE_OFF,
+    -CUBE_OFF,
+    CUBE_OFF,
+    -CUBE_OFF,
 
-    -CUBE_OFF, -CUBE_OFF, CUBE_OFF,
-    CUBE_OFF, -CUBE_OFF, CUBE_OFF,
-    CUBE_OFF, -CUBE_OFF, -CUBE_OFF,
-    -CUBE_OFF, -CUBE_OFF, -CUBE_OFF,
+    -CUBE_OFF,
+    -CUBE_OFF,
+    CUBE_OFF,
+    CUBE_OFF,
+    -CUBE_OFF,
+    CUBE_OFF,
+    CUBE_OFF,
+    -CUBE_OFF,
+    -CUBE_OFF,
+    -CUBE_OFF,
+    -CUBE_OFF,
+    -CUBE_OFF,
 };
 
 const std::vector<unsigned int> CUBE_INDICES = {
     // Top Side
-    2, 0, 1,
-    2, 3, 0,
+    2,
+    0,
+    1,
+    2,
+    3,
+    0,
 
     // Bottom side
-    4, 7, 6,
-    4, 6, 5,
+    4,
+    7,
+    6,
+    4,
+    6,
+    5,
 
     // Front Side
-    3, 6, 7,
-    3, 2, 6,
+    3,
+    6,
+    7,
+    3,
+    2,
+    6,
 
     // Right Side
-    2, 1, 5,
-    2, 5, 6,
+    2,
+    1,
+    5,
+    2,
+    5,
+    6,
 
     // Back Side
-    0, 5, 1,
-    0, 4, 5,
+    0,
+    5,
+    1,
+    0,
+    4,
+    5,
 
     // Left Side
-    4, 0, 3,
-    4, 3, 7
-};
-
+    4,
+    0,
+    3,
+    4,
+    3,
+    7};
 
 const std::vector<float> PLANE_VERTS = {
-    -PLANE_OFF, 0, PLANE_OFF,
-    PLANE_OFF, 0, PLANE_OFF,
-    PLANE_OFF, 0, -PLANE_OFF,
-    -PLANE_OFF, 0, -PLANE_OFF,
+    -PLANE_OFF,
+    0,
+    PLANE_OFF,
+    PLANE_OFF,
+    0,
+    PLANE_OFF,
+    PLANE_OFF,
+    0,
+    -PLANE_OFF,
+    -PLANE_OFF,
+    0,
+    -PLANE_OFF,
 };
-const std::vector<unsigned int> PLANE_INDICES = {
-    3, 0, 1,
-    3, 1, 2
-};
+const std::vector<unsigned int> PLANE_INDICES = {3, 0, 1, 3, 1, 2};
 
 GizmosOpenGL::GizmosOpenGL()
 {
@@ -176,8 +216,8 @@ void GizmosOpenGL::Initialize()
     m_GridMaterial->SetTransparent(true);
     m_GridMaterial->SetShader(m_GridShader);
 
-    m_Cube = renderer.CreateMesh("GizmosCube", CUBE_VERTS, CUBE_INDICES, { { 0, 3, Lumeda::MeshAttribType::FLOAT } });
-    m_Plane = renderer.CreateMesh("GizmosPlane", PLANE_VERTS, PLANE_INDICES, { { 0, 3, Lumeda::MeshAttribType::FLOAT } });
+    m_Cube = renderer.CreateMesh("GizmosCube", CUBE_VERTS, CUBE_INDICES, {{0, 3, Lumeda::MeshAttribType::FLOAT}});
+    m_Plane = renderer.CreateMesh("GizmosPlane", PLANE_VERTS, PLANE_INDICES, {{0, 3, Lumeda::MeshAttribType::FLOAT}});
 }
 
 void GizmosOpenGL::Terminate()
@@ -203,9 +243,9 @@ void GizmosOpenGL::DrawGrid()
 {
     LUMEDA_PROFILE;
     Transform dummy;
-    dummy.SetLocalPosition({ 0.0f, 0.0f, 0.0f });
-    dummy.SetLocalRotationEulerAngles({ 0.0f, 0.0f, 0.0f });
-    dummy.SetLocalScale({ 500.0f, 1.0f, 500.0f });
+    dummy.SetLocalPosition({0.0f, 0.0f, 0.0f});
+    dummy.SetLocalRotationEulerAngles({0.0f, 0.0f, 0.0f});
+    dummy.SetLocalScale({500.0f, 1.0f, 500.0f});
 
     sUniformsMap uniforms;
     uniforms.Set("u_Color", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));

@@ -1,37 +1,36 @@
 #pragma once
 
 #include <Lumeda/Core/Base.h>
-
 #include <glm/glm.hpp>
 #include <map>
 
 namespace Lumeda
 {
-    class Shader;
-    class Texture2D;
+class Shader;
+class Texture2D;
 
-    struct sUniformsMap
-    {
-    public:
+struct sUniformsMap
+{
+  public:
 #define sUniformsMap_SetHeaderMacro(type) void Set(const std::string& uniform, type val);
 
-        sUniformsMap_SetHeaderMacro(const glm::mat4&);
-        sUniformsMap_SetHeaderMacro(const glm::vec4&);
-        sUniformsMap_SetHeaderMacro(const glm::vec3&);
-        sUniformsMap_SetHeaderMacro(const glm::vec2&);
-        sUniformsMap_SetHeaderMacro(float);
-        sUniformsMap_SetHeaderMacro(int);
-        sUniformsMap_SetHeaderMacro(Texture2D*);
+    sUniformsMap_SetHeaderMacro(const glm::mat4&);
+    sUniformsMap_SetHeaderMacro(const glm::vec4&);
+    sUniformsMap_SetHeaderMacro(const glm::vec3&);
+    sUniformsMap_SetHeaderMacro(const glm::vec2&);
+    sUniformsMap_SetHeaderMacro(float);
+    sUniformsMap_SetHeaderMacro(int);
+    sUniformsMap_SetHeaderMacro(Texture2D*);
 
-        void Send(Shader* shader);
+    void Send(Shader* shader);
 
-    public:
-        std::map<std::string, glm::mat4> Mat4;
-        std::map<std::string, glm::vec4> Vec4;
-        std::map<std::string, glm::vec3> Vec3;
-        std::map<std::string, glm::vec2> Vec2;
-        std::map<std::string, float> Float;
-        std::map<std::string, int> Int;
-        std::map<std::string, Texture2D*> Texture;
-    };
-}
+  public:
+    std::map<std::string, glm::mat4> Mat4;
+    std::map<std::string, glm::vec4> Vec4;
+    std::map<std::string, glm::vec3> Vec3;
+    std::map<std::string, glm::vec2> Vec2;
+    std::map<std::string, float> Float;
+    std::map<std::string, int> Int;
+    std::map<std::string, Texture2D*> Texture;
+};
+} // namespace Lumeda

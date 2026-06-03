@@ -5,9 +5,9 @@
 
 namespace Lumeda
 {
-	class ModelLoader
-	{
-	public:
-		static void LoadModelFromFile(Model* model, const std::string& path);
-	};
-}
+class ModelLoader
+{
+  public:
+    static void LoadModelFromFile(Model* model, const std::string& path);
+};
+} // namespace Lumeda

@@ -2,27 +2,26 @@
 
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Node/Node.h>
-
 #include <Lumeda/Renderer/Light.h>
 
 namespace Lumeda
 {
-    class LightNode : public Node
-    {
-    public:
-        LightNode();
-        virtual ~LightNode();
+class LightNode : public Node
+{
+  public:
+    LightNode();
+    virtual ~LightNode();
 
-        sLight& GetLight();
+    sLight& GetLight();
 
-    protected:
-        void OnRender() override;
-        void OnRenderImGui() override;
+  protected:
+    void OnRender() override;
+    void OnRenderImGui() override;
 
-        void OnEnable() override;
-        void OnDisable() override;
+    void OnEnable() override;
+    void OnDisable() override;
 
-    private:
-        sLight m_Light;
-    };
-}
+  private:
+    sLight m_Light;
+};
+} // namespace Lumeda

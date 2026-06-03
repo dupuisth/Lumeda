@@ -6,20 +6,20 @@
 
 namespace Lumeda
 {
-	class CameraNode : public Node
-	{
-	public:
-		CameraNode();
-		virtual ~CameraNode();
+class CameraNode : public Node
+{
+  public:
+    CameraNode();
+    virtual ~CameraNode();
 
-		Camera* GetCamera();
+    Camera* GetCamera();
 
-	protected:
-		void OnUpdate() override;
-		void OnRenderImGui() override;
+  protected:
+    void OnUpdate() override;
+    void OnRenderImGui() override;
 
-	protected:
-		Camera* m_Camera;
-		bool m_IsMain;
-	};
-}
+  protected:
+    Camera* m_Camera;
+    bool m_IsMain;
+};
+} // namespace Lumeda

@@ -6,8 +6,8 @@ using namespace Lumeda;
 #include <Lumeda/Implementation/OpenGL/RendererOpenGL.h>
 Renderer* Renderer::Create()
 {
-	RendererOpenGL* renderer = LUMEDA_NEW(RendererOpenGL);
-	return renderer;
+    RendererOpenGL* renderer = LUMEDA_NEW(RendererOpenGL);
+    return renderer;
 }
 #else
 #error "Current platform not supported!"

@@ -16,7 +16,6 @@ CameraNode::~CameraNode()
     LUMEDA_FREE(m_Camera);
 }
 
-
 Camera* Lumeda::CameraNode::GetCamera()
 {
     LUMEDA_PROFILE;
