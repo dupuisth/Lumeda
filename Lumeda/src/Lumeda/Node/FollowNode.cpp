@@ -13,7 +13,8 @@ FollowNode::FollowNode() :
     m_PerturbationIntensity(0.0f),
     m_CurrentPositionMemory(0),
     m_PositionLastSampleTime(0.0f),
-    m_PositionsMemory()
+    m_PositionsMemory{},
+    m_Memories{}
 {
     LUMEDA_PROFILE;
 }
