@@ -1,9 +1,11 @@
 #pragma once
 
+// clang-format off
 #define FMT_UNICODE 0
-#include <memory>
-#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+// clang-format on
+#include <memory>
 
 namespace Lumeda
 {
