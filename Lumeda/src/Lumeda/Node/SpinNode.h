@@ -7,14 +7,15 @@ namespace Lumeda
 {
 class SpinNode : public Node
 {
-public:
-	SpinNode(glm::vec3 rotationDelta);
-	virtual ~SpinNode();
+  public:
+    SpinNode(glm::vec3 rotationDelta, float rotationMultiplier);
+    virtual ~SpinNode();
 
-	void OnUpdate() override;
-	void OnRenderImGui() override;
+    void OnUpdate() override;
+    void OnRenderImGui() override;
 
-public:
-	glm::vec3 RotationDelta;
+  public:
+    glm::vec3 m_RotationDelta;
+    float m_RotationMultiplier;
 };
-}
+} // namespace Lumeda
