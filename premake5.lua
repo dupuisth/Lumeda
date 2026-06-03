@@ -6,7 +6,8 @@ workspace "Lumeda"
     configurations
     {
         "Debug",
-        "Release"
+        "Release",
+        "Profiling"
     }
 
     flags
@@ -101,13 +102,8 @@ project "Lumeda"
         defines "LUMEDA_DEBUG"
         symbols "On"
         runtime "Debug"
-        includedirs
-        {
-            "%{IncludeDir.tracy}"
-        }    
         links
         {
-            "tracy",
             "assimpd"
         }
     
@@ -117,6 +113,24 @@ project "Lumeda"
         optimize "On"
         links
         {
+            "assimp"
+        }
+
+    filter "configurations:Profiling"
+        defines
+        {
+            "LUMEDA_PROFILING"
+        }
+        runtime "Release"
+        optimize "On"
+        symbols "On"
+        includedirs
+        {
+            "%{IncludeDir.tracy}"
+        }
+        links
+        {
+            "tracy",
             "assimp"
         }
 
@@ -185,7 +199,6 @@ project "Sandbox"
         -- Link order is important on Linux!
         links
         {
-            "%{iif(cfg.buildcfg == 'Debug', 'tracy', '')}",
             "assimp",
             "ImGui",
             "glad",
@@ -199,10 +212,6 @@ project "Sandbox"
     
     filter "configurations:Debug"
         runtime "Debug"
-        includedirs
-        {
-            "%{IncludeDir.tracy}"
-        }  
         defines "LUMEDA_DEBUG"
         symbols "On"
     
@@ -211,10 +220,26 @@ project "Sandbox"
         defines "LUMEDA_RELEASE"
         optimize "On"
 
+    filter "configurations:Profiling"
+        runtime "Release"
+        defines "LUMEDA_PROFILING"
+        optimize "On"
+        symbols "On"
+        includedirs
+        {
+            "%{IncludeDir.tracy}"
+        }
+        filter { "system:linux", "configurations:Profiling" }
+        links
+        {
+            "tracy"
+        }
+
 project "LumedaTest"
     location "LumedaTest"
     kind "ConsoleApp"
     language "C++"
+    removeconfigurations { "Profiling" }
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -279,7 +304,6 @@ project "LumedaTest"
         -- Link order is important on Linux!
         links
         {
-            "%{iif(cfg.buildcfg == 'Debug', 'tracy', '')}", -- Ideally, should not import but I don't want to spend more time on this...
             "assimp",
             "ImGui",
             "glad",
@@ -293,10 +317,6 @@ project "LumedaTest"
     
     filter "configurations:Debug"
         runtime "Debug"
-        includedirs
-        {
-            "%{IncludeDir.tracy}"
-        }  
         defines "LUMEDA_DEBUG"
         symbols "On"
     

@@ -39,7 +39,8 @@ class Sandbox : public Lumeda::Layer
         Lumeda::Window& window = LUMEDA_WINDOW;
         Lumeda::Renderer& renderer = LUMEDA_RENDERER;
 
-        // window.SetMaximize();
+        window.SetMaximize();
+        // window.SetVSync(false);
 
         renderTarget = renderer.CreateRenderTarget("RenderTarget", LUMEDA_WINDOW.GetWidth(), LUMEDA_WINDOW.GetHeight());
 #ifdef LUMEDA_USE_GLAD

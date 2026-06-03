@@ -7,7 +7,7 @@
 #define LUMEDA_RANDINT(a, b) ((a) + (int)((double)rand() / (RAND_MAX + 1.0) * ((b) - (a))))
 #define LUMEDA_RANDFLOAT(a, b) (((float)rand() / (float)(RAND_MAX)) * (b - a) + a)
 
-#if defined(LUMEDA_RELEASE) || defined(LUMEDA_FORCE_NO_PROFILE) || defined(LUMEDA_TESTING)
+#if !defined(LUMEDA_PROFILING)
 #define LUMEDA_PROFILE
 #define LUMEDA_PROFILE_FRAME
 #define LUMEDA_PROFILE_SECTION(x)
@@ -19,7 +19,6 @@
 
 #else
 
-// Enable tracy profiling
 #define TRACY_ENABLE
 #include <tracy/Tracy.hpp>
 #define LUMEDA_PROFILING_ENABLED

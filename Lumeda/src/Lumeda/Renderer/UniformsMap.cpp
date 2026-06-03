@@ -12,6 +12,7 @@ using namespace Lumeda;
 
 void sUniformsMap::Send(Shader* shader)
 {
+    LUMEDA_PROFILE;
     sUniformsMap_BrainlessSend(Mat4);
     sUniformsMap_BrainlessSend(Vec2);
     sUniformsMap_BrainlessSend(Vec3);

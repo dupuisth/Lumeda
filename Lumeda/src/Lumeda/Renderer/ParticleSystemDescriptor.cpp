@@ -5,6 +5,7 @@ using namespace Lumeda;
 
 sParticleSystemDescriptor::~sParticleSystemDescriptor()
 {
+    LUMEDA_PROFILE;
     if (Particles != nullptr)
     {
         LUMEDA_FREE(Particles);

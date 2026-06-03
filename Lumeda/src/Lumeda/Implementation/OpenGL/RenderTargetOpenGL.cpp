@@ -54,6 +54,7 @@ void RenderTargetOpenGL::Bind()
 
 void RenderTargetOpenGL::PrepareRender(Shader* shader)
 {
+    LUMEDA_PROFILE;
     shader->Bind();
     shader->SetUniform("u_ColorTexture", 0);
     m_ColorTexture->Bind(0);
