@@ -120,12 +120,12 @@ class Sandbox : public Lumeda::Layer
         }
 
         rootNode = LUMEDA_NEW(Lumeda::RootNode);
-        Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 1.00f, 0.0f));
+        Lumeda::SpinNode* cubeNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 1.00f, 0.0f), 1.0f);
         Lumeda::ModelNode* cubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
         Lumeda::LightNode* lightNode = LUMEDA_NEW(Lumeda::LightNode);
         lightNode->GetLight().Color = glm::vec3(1.0f);
         lightNode->GetLight().Intensity = 1.0f;
-        lightNode->GetLight().LightCharacteristics = {0.5f, 0.1f, 0.0f};
+        lightNode->GetLight().LightCharacteristics = {0.0f, 0.0f, 0.5f};
         lightNode->GetLight().LightType = Lumeda::eLightType::POINT;
         cubeModelNode->GetTransform().SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.0f));
         cubeNode->AddChild(cubeModelNode);
@@ -133,12 +133,15 @@ class Sandbox : public Lumeda::Layer
         cubeNode->AddChild(lightNode);
         rootNode->AddChild(cubeNode);
 
+        Lumeda::SpinNode* centerSpinNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 5.0f, 0.0f), 10.0f);
         Lumeda::ModelNode* centerCubeModelNode = LUMEDA_NEW(Lumeda::ModelNode);
+        centerCubeModelNode->GetTransform().SetLocalPosition(glm::vec3(4.0f, 0.0f, 0.0f));
         centerCubeModelNode->SetModel(*barrelPondModel);
-        rootNode->AddChild(centerCubeModelNode);
+        centerSpinNode->AddChild(centerCubeModelNode);
+        rootNode->AddChild(centerSpinNode);
 
         // Playernode
-        Lumeda::SpinNode* pivotNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 5.00f, 0.0f));
+        Lumeda::SpinNode* pivotNode = LUMEDA_NEW(Lumeda::SpinNode, glm::vec3(0.0f, 5.00f, 0.0f), 1.0f);
         Lumeda::PlayerNode* playerNode = LUMEDA_NEW(Lumeda::PlayerNode);
         playerNode->GetTransform().SetLocalPosition({0.0f, 0.5f, -0.8f});
         playerNode->GetTransform().SetLocalRotationEulerAngles({30.0f, 0.0f, 0.0f});
@@ -146,12 +149,15 @@ class Sandbox : public Lumeda::Layer
         playerNode->ProcessLifecycle();
         Lumeda::CameraNode* cameraNode = dynamic_cast<Lumeda::CameraNode*>(playerNode->GetChildren()[0]);
         cameraNode->GetCamera()->SetCurrent();
-        cameraNode->GetTransform().SetLocalPosition({0.0f, 0.0f, -15.0f});
+        cameraNode->GetTransform().SetLocalPosition({0.0f, 0.0f, -20.0f});
         pivotNode->AddChild(playerNode);
         rootNode->AddChild(pivotNode);
 
         // PID
         Lumeda::FollowNode* followNode = LUMEDA_NEW(Lumeda::FollowNode);
+        followNode->GetPid().GetConfiguration().Kd = 0.05f;
+        followNode->GetPid().GetConfiguration().Ki = 2.0f;
+        followNode->GetPid().GetConfiguration().Kp = 1.0f;
         followNode->SetTarget(centerCubeModelNode);
         rootNode->AddChild(followNode);
         Lumeda::ModelNode* followModelNode = LUMEDA_NEW(Lumeda::ModelNode);

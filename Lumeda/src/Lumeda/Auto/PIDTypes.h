@@ -58,5 +58,12 @@ struct PIDOutput
   public:
     // Output command
     float command;
+
+    /// Keep track of intermediate values
+    float error;
+    float ci;
+    float cp;
+    float cd;
+    float integralError;
 };
 } // namespace Lumeda

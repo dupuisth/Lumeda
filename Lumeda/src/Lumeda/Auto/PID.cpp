@@ -48,7 +48,7 @@ PIDOutput PID::Run(const PIDInput& input, PIDMemory& memory)
     float Cp = error * m_pidConfiguration.Kp;
 
     // Derivative correction
-    float Cd = (error - memory.previousError) / deltaTime * m_pidConfiguration.Kd;
+    float Cd = ((error - memory.previousError) / deltaTime) * m_pidConfiguration.Kd;
 
     // Integrative correction
     memory.integral += error * deltaTime;
@@ -57,10 +57,12 @@ PIDOutput PID::Run(const PIDInput& input, PIDMemory& memory)
     memory.previousError = error;
     memory.previousTime = currentTime;
 
-    LUMEDA_CORE_INFO("Cp={0}, Cd={1}, Ci={2}", Cp, Cd, Ci);
-
     PIDOutput output;
     output.command = Cp + Cd + Ci;
+    output.cp = Cp;
+    output.cd = Cd;
+    output.ci = Ci;
+    output.integralError = memory.integral;
     return output;
 }
 
