@@ -71,7 +71,6 @@ Engine::~Engine()
 
 void Engine::Run(Layer* application)
 {
-    LUMEDA_PROFILE;
     m_Application = application;
 
     LUMEDA_CORE_INFO("[Engine] Starting the game loop");

@@ -5,6 +5,7 @@ using namespace Lumeda;
 
 static GLenum MeshAttribTypeToGLenum(MeshAttribType type)
 {
+    LUMEDA_PROFILE;
     switch (type)
     {
     case Lumeda::MeshAttribType::INT:
@@ -20,6 +21,7 @@ static GLenum MeshAttribTypeToGLenum(MeshAttribType type)
 
 static size_t CalculateStride(const MeshAttrib& attrib)
 {
+    LUMEDA_PROFILE;
     switch (attrib.Type)
     {
     case Lumeda::MeshAttribType::INT:
@@ -35,6 +37,7 @@ static size_t CalculateStride(const MeshAttrib& attrib)
 
 static size_t CalculateStride(const std::vector<MeshAttrib>& attribs)
 {
+    LUMEDA_PROFILE;
     size_t stride = 0;
     for (size_t i = 0; i < attribs.size(); i++)
     {

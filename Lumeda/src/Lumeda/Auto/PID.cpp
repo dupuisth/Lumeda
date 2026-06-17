@@ -5,6 +5,7 @@ using namespace Lumeda;
 
 PID::PID() : m_memory()
 {
+    LUMEDA_PROFILE;
     m_pidConfiguration.Kp = 1.0f;
     m_pidConfiguration.Ki = 1.0f;
     m_pidConfiguration.Kd = 1.0f;
@@ -12,15 +13,18 @@ PID::PID() : m_memory()
 
 PID::PID(PIDConfiguration configuration) : m_pidConfiguration(configuration), m_memory()
 {
+    LUMEDA_PROFILE;
 }
 
 PIDOutput PID::Run(const PIDInput& input)
 {
+    LUMEDA_PROFILE;
     return Run(input, m_memory);
 }
 
 PIDOutput PID::Run(const PIDInput& input, PIDMemory& memory)
 {
+    LUMEDA_PROFILE;
     float currentTime = LUMEDA_TIME.GetElapsedTime();
     float deltaTime = currentTime - memory.previousTime;
 

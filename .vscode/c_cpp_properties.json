@@ -18,6 +18,7 @@
                 "${workspaceFolder}/Lumeda/vendor/glm",
                 "${workspaceFolder}/Lumeda/vendor/imgui/backends",
                 "${workspaceFolder}/LumedaTest/vendor/googletest/googletest/include",
+                "${workspaceFolder}/Lumeda/vendor/tracy/public"
             ],
             "intelliSenseMode": "linux-gcc-x64",
             "compilerPath": "/usr/bin/gcc",

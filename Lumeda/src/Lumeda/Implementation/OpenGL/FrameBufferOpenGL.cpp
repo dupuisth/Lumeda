@@ -36,6 +36,7 @@ void FramebufferOpenGL::UnBind()
 
 bool FramebufferOpenGL::IsComplete()
 {
+    LUMEDA_PROFILE;
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
     {
         return true;
@@ -45,6 +46,7 @@ bool FramebufferOpenGL::IsComplete()
 
 void FramebufferOpenGL::AttachTexture2D(eFramebufferAttachment slot, Texture2D* texture)
 {
+    LUMEDA_PROFILE;
     GLenum flag;
     switch (slot)
     {

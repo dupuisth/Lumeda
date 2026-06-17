@@ -7,8 +7,7 @@
 #define LUMEDA_RANDINT(a, b) ((a) + (int)((double)rand() / (RAND_MAX + 1.0) * ((b) - (a))))
 #define LUMEDA_RANDFLOAT(a, b) (((float)rand() / (float)(RAND_MAX)) * (b - a) + a)
 
-// Don't use tracy for Linux build (spent too much time on the Linux support so it's ok for now)
-#if defined(LUMEDA_RELEASE) || defined(LUMEDA_PLATFORM_LINUX) || defined(LUMEDA_FORCE_NO_PROFILE)
+#if !defined(LUMEDA_PROFILING)
 #define LUMEDA_PROFILE
 #define LUMEDA_PROFILE_FRAME
 #define LUMEDA_PROFILE_SECTION(x)
@@ -18,8 +17,8 @@
 #define LUMEDA_PROFILE_MEMORY_ALLOC(p, size)
 #define LUMEDA_PROFILE_MEMORY_FREE(p)
 
-#elif defined(LUMEDA_PLATFORM_WINDOWS)
-// Enable tracy profiling
+#else
+
 #define TRACY_ENABLE
 #include <tracy/Tracy.hpp>
 #define LUMEDA_PROFILING_ENABLED
@@ -32,8 +31,6 @@
 #define LUMEDA_PROFILE_VALUE(text, value) TracyPlot(text, value)
 #define LUMEDA_PROFILE_MEMORY_ALLOC(p, size) TracyAlloc(p, size);
 #define LUMEDA_PROFILE_MEMORY_FREE(p) TracyFree(p);
-#else
-#error "Undefined profiling macros!"
 #endif
 
 #if defined(LUMEDA_PLATFORM_LINUX) || defined(LUMEDA_PLATFORM_WINDOWS)

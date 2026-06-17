@@ -102,6 +102,7 @@ void FollowNode::OnUpdate()
 
 void FollowNode::OnRender()
 {
+    LUMEDA_PROFILE;
     Gizmos& gizmos = LUMEDA_GIZMOS;
     gizmos.SetColor(glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
     for (size_t i = 0; i < POSITION_MEMORY_SAMPLES; i++)

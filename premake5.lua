@@ -6,7 +6,8 @@ workspace "Lumeda"
     configurations
     {
         "Debug",
-        "Release"
+        "Release",
+        "Profiling"
     }
 
     flags
@@ -101,13 +102,8 @@ project "Lumeda"
         defines "LUMEDA_DEBUG"
         symbols "On"
         runtime "Debug"
-        includedirs
-        {
-            "%{IncludeDir.tracy}"
-        }    
         links
         {
-            "tracy",
             "assimpd"
         }
     
@@ -117,6 +113,24 @@ project "Lumeda"
         optimize "On"
         links
         {
+            "assimp"
+        }
+
+    filter "configurations:Profiling"
+        defines
+        {
+            "LUMEDA_PROFILING"
+        }
+        runtime "Release"
+        optimize "On"
+        symbols "On"
+        includedirs
+        {
+            "%{IncludeDir.tracy}"
+        }
+        links
+        {
+            "tracy",
             "assimp"
         }
 
@@ -170,7 +184,7 @@ project "Sandbox"
         {
             '{COPYFILE} "%{wks.location}Lumeda/libs/windows/%{cfg.buildcfg}/%{iif(cfg.buildcfg == "Debug", "assimpd", "assimp")}.dll" "%{cfg.buildtarget.directory}"'
         }
-
+    
     filter "system:linux"
         cppdialect "C++20"
         staticruntime "Off"
@@ -198,10 +212,6 @@ project "Sandbox"
     
     filter "configurations:Debug"
         runtime "Debug"
-        includedirs
-        {
-            "%{IncludeDir.tracy}"
-        }  
         defines "LUMEDA_DEBUG"
         symbols "On"
     
@@ -210,13 +220,34 @@ project "Sandbox"
         defines "LUMEDA_RELEASE"
         optimize "On"
 
+    filter "configurations:Profiling"
+        runtime "Release"
+        defines "LUMEDA_PROFILING"
+        optimize "On"
+        symbols "On"
+        includedirs
+        {
+            "%{IncludeDir.tracy}"
+        }
+        filter { "system:linux", "configurations:Profiling" }
+        links
+        {
+            "tracy"
+        }
+
 project "LumedaTest"
     location "LumedaTest"
     kind "ConsoleApp"
     language "C++"
+    removeconfigurations { "Profiling" }
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    defines
+    {
+        "LUMEDA_TESTING"
+    }
 
     files
     {
@@ -286,10 +317,6 @@ project "LumedaTest"
     
     filter "configurations:Debug"
         runtime "Debug"
-        includedirs
-        {
-            "%{IncludeDir.tracy}"
-        }  
         defines "LUMEDA_DEBUG"
         symbols "On"
     

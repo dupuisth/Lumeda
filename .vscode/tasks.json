@@ -5,6 +5,11 @@
 			"label": "Premake5: Build Debug",
 			"type": "shell",
 			"command": "${workspaceFolder}/sBuildDebug.sh",
+		},
+		{
+			"label": "Premake5: Build Profile",
+			"type": "shell",
+			"command": "${workspaceFolder}/sBuildProfile.sh",
 		}
 	]
 }

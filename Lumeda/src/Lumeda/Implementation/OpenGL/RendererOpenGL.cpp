@@ -425,7 +425,8 @@ void RendererOpenGL::Submit(sParticleSystemDescriptor* particleSystem)
         return;
     }
 
-    for (size_t i = 0; i < particleSystem->GetMaxParticles(); i++)
+    size_t maxParticles = particleSystem->GetMaxParticles();
+    for (size_t i = 0; i < maxParticles; i++)
     {
         sParticle& particle = particleSystem->Particles[i];
         if (particle.Lifetime <= 0.0f)
