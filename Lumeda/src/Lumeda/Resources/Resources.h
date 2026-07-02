@@ -8,10 +8,10 @@ namespace Lumeda
 class TextureManager;
 class Graphics;
 
-class Resources : public IUpdateable
+class Resources : public iUpdateable
 {
 public:
-  Resources() : IUpdateable("Resources") {}
+  Resources() : iUpdateable("Resources") {}
   ~Resources() = default;
 
   void Init(Graphics* graphics);

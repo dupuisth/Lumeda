@@ -4,7 +4,7 @@
 
 using namespace Lumeda;
 
-LowLevelGraphicsGL::LowLevelGraphicsGL() : m_InitRan(false), m_ClearColor(0.0f)
+LowLevelGraphicsGL::LowLevelGraphicsGL(EventQueue& eventQueue) : iLowLevelGraphics(), m_EventQueue(eventQueue), m_InitRan(false), m_ClearColor(0.0f)
 {
 }
 
@@ -53,6 +53,19 @@ bool LowLevelGraphicsGL::Init(int width, int height, const tString& windowTitle)
   m_InitRan = true;
   return true;
 }
+
+///////////////////////////////////////////
+// Lifetime
+///////////////////////////////////////////
+void LowLevelGraphicsGL::Update()
+{
+  glfwPollEvents();
+  if (glfwWindowShouldClose(m_Window))
+  {
+    m_EventQueue.PushEvent(std::make_unique<WindowShouldCloseEvent>());
+  }
+}
+//---------------------------------------//
 
 ///////////////////////////////////////////
 // Window management

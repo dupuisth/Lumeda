@@ -43,4 +43,6 @@ bool GpuShaderGL::CreateFromSource(const char* source)
     LUMEDA_CORE_ERROR("Shader compilation failed: {0}", infoLog);
     return false;
   }
+
+  return true;
 }

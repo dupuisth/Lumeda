@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <Lumeda/Core/Base.h>
+#include <Lumeda/Engine/EventQueue.h>
 #include <Lumeda/Graphics/LowLevelGraphics.h>
 
 namespace Lumeda
@@ -25,13 +26,20 @@ GLenum ShaderTypeToGLType(eShaderType type);
 class LowLevelGraphicsGL : public iLowLevelGraphics
 {
 public:
-  LowLevelGraphicsGL();
+  LowLevelGraphicsGL(EventQueue& eventQueue);
   ~LowLevelGraphicsGL() override;
 
   ///////////////////////////////////////////
   // Initialization
   ///////////////////////////////////////////
   bool Init(int width, int height, const tString& windowTitle) override;
+  //---------------------------------------//
+
+  ///////////////////////////////////////////
+  // Lifetime
+  ///////////////////////////////////////////
+  void Update() override;
+  //---------------------------------------//
 
   ///////////////////////////////////////////
   // Window management
@@ -68,6 +76,8 @@ public:
   //---------------------------------------//
 
 private:
+  EventQueue& m_EventQueue;
+
   bool m_InitRan;
 
   tColor m_ClearColor;

@@ -3,7 +3,10 @@
 #include <string>
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Engine/EngineTypes.h>
+#include <Lumeda/Engine/EventQueue.h>
+#include <Lumeda/Engine/EventReceiver.h>
 #include <Lumeda/Engine/LowLevelEngineSetup.h>
+#include <Lumeda/Engine/Updateable.h>
 #include <Lumeda/Graphics/Graphics.h>
 #include <Lumeda/Imgui/ImGuiLayer.h>
 
@@ -27,9 +30,15 @@ public:
   static Engine& Get();
 
 private:
+  void PollEvents();
+  void HandleEvent(iEvent& event);
+  void Broadcast(eUpdateableMessage message);
+
   void Cleanup();
 
 private:
+  bool m_ShouldClose;
+
   ///////////////////////////////////////////
   // Layers
   ///////////////////////////////////////////
@@ -37,6 +46,15 @@ private:
   //---------------------------------------//
 
   std::unique_ptr<iLowLevelEngineSetup> m_LowLevelEngineSetup;
+
+  std::unique_ptr<EventQueue> m_EventQueue;
+
+  ///////////////////////////////////////////
+  // Lists for simplier iterations
+  ///////////////////////////////////////////
+  std::vector<iEventReceiver*> m_EventReceivers;
+  std::vector<iUpdateable*> m_Updateables;
+  //---------------------------------------//
 };
 } // namespace Lumeda
 

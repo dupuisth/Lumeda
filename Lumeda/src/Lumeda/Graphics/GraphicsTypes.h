@@ -2,10 +2,29 @@
 
 #include <glm/glm.hpp>
 #include <Lumeda/Core/Base.h>
+#include <Lumeda/Engine/EngineTypes.h>
 
 namespace Lumeda
 {
 typedef glm::vec4 tColor;
+
+///////////////////////////////////////////
+// Events
+///////////////////////////////////////////
+enum eGraphicsEvent
+{
+  eGraphicsEvent_FirstEnum = eEventCategory_Graphics,
+
+  eGraphicsEvent_WindowShouldClose,
+
+  eGraphicsEvent_LastEnum,
+};
+
+class WindowShouldCloseEvent : public iEvent
+{
+  tEventType GetType() { return eGraphicsEvent_WindowShouldClose; }
+};
+//---------------------------------------//
 
 ///////////////////////////////////////////
 // FrameBuffer
