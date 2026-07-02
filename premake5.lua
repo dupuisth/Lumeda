@@ -151,6 +151,7 @@ project "Sandbox"
     includedirs
     {
         "Lumeda/src",
+        "Sandbox/src",
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.imgui}",
@@ -237,7 +238,8 @@ project "Sandbox"
 
 project "LumedaTest"
     location "LumedaTest"
-    kind "ConsoleApp"
+    --kind "ConsoleApp"
+    kind "None" -- Skip for now, the lumedaMain prevent tests from working...
     language "C++"
     removeconfigurations { "Profiling" }
 

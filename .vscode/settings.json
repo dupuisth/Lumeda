@@ -8,5 +8,6 @@
         "editor.suggest.insertMode": "replace",
         "editor.defaultFormatter": "xaver.clang-format",
         "editor.formatOnSave": true
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

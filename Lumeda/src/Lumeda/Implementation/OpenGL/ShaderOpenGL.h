@@ -1,38 +1,38 @@
-#pragma once
+// #pragma once
 
-#include <Lumeda/Renderer/Shader.h>
+// #include <Lumeda/Renderer/Shader.h>
 
-namespace Lumeda
-{
-class ShaderOpenGL : public Shader
-{
-  public:
-    ShaderOpenGL(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
-    ShaderOpenGL(const std::string& name, const char* vertexPath, const char* fragmentPath, bool discriminator);
+// namespace Lumeda
+// {
+// class ShaderOpenGL : public Shader
+// {
+//   public:
+//     ShaderOpenGL(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
+//     ShaderOpenGL(const std::string& name, const char* vertexPath, const char* fragmentPath, bool discriminator);
 
-    virtual ~ShaderOpenGL();
+//     virtual ~ShaderOpenGL();
 
-    void Bind() override;
-    void UnBind() override;
+//     void Bind() override;
+//     void UnBind() override;
 
-    void Prepare(const sShaderPrepareData& prepareData) override;
+//     void Prepare(const sShaderPrepareData& prepareData) override;
 
-    void SetUniform(const std::string& uniform, int value) override;
-    void SetUniform(const std::string& uniform, float value) override;
-    void SetUniform(const std::string& uniform, const glm::vec2& value) override;
-    void SetUniform(const std::string& uniform, const glm::vec3& value) override;
-    void SetUniform(const std::string& uniform, const glm::vec4& value) override;
-    void SetUniform(const std::string& uniform, const glm::mat2& value) override;
-    void SetUniform(const std::string& uniform, const glm::mat3& value) override;
-    void SetUniform(const std::string& uniform, const glm::mat4& value) override;
+//     void SetUniform(const std::string& uniform, int value) override;
+//     void SetUniform(const std::string& uniform, float value) override;
+//     void SetUniform(const std::string& uniform, const glm::vec2& value) override;
+//     void SetUniform(const std::string& uniform, const glm::vec3& value) override;
+//     void SetUniform(const std::string& uniform, const glm::vec4& value) override;
+//     void SetUniform(const std::string& uniform, const glm::mat2& value) override;
+//     void SetUniform(const std::string& uniform, const glm::mat3& value) override;
+//     void SetUniform(const std::string& uniform, const glm::mat4& value) override;
 
-    const std::string& GetName() const override { return m_Name; }
+//     const std::string& GetName() const override { return m_Name; }
 
-  private:
-    std::string m_VertexPath;
-    std::string m_FragmentPath;
-    unsigned int m_Handle;
+//   private:
+//     std::string m_VertexPath;
+//     std::string m_FragmentPath;
+//     unsigned int m_Handle;
 
-    std::string m_Name;
-};
-} // namespace Lumeda
+//     std::string m_Name;
+// };
+// } // namespace Lumeda
