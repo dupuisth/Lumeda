@@ -7,7 +7,7 @@ namespace Lumeda
 {
 class LowLevelGraphicsGL;
 class Graphics;
-class EventQueue;
+class EventManager;
 
 class LowLevelEngineSetupGL : public iLowLevelEngineSetup
 {
@@ -18,11 +18,11 @@ public:
   std::unique_ptr<Graphics> GetGraphics() override;
 
   // Call last !!!
-  std::unique_ptr<EventQueue> GetEventQueue() override;
+  std::unique_ptr<EventManager> GetEventManager() override;
 
 private:
   std::unique_ptr<LowLevelGraphicsGL> m_lowLevelGraphics;
 
-  std::unique_ptr<EventQueue> m_EventQueue;
+  std::unique_ptr<EventManager> m_EventManager;
 };
 } // namespace Lumeda

@@ -2,7 +2,7 @@
 
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Engine/EngineTypes.h>
-#include <Lumeda/Engine/EventQueue.h>
+#include <Lumeda/Engine/EventManager.h>
 #include <Lumeda/Engine/Updateable.h>
 
 namespace Lumeda
@@ -14,7 +14,7 @@ class iLowLevelGraphics;
 class Graphics : public iUpdateable
 {
 public:
-  Graphics(iLowLevelGraphics& lowLevelGraphics, EventQueue& eventQueue);
+  Graphics(iLowLevelGraphics& lowLevelGraphics, EventManager& eventManager);
 
   iLowLevelGraphics& GetLowLevelGraphics() { return m_LowLevelGraphics; }
 
@@ -22,6 +22,6 @@ public:
 
 private:
   iLowLevelGraphics& m_LowLevelGraphics;
-  EventQueue& m_EventQueue;
+  EventManager& m_EventManager;
 };
 } // namespace Lumeda

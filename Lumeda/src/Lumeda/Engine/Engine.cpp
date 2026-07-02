@@ -9,18 +9,31 @@ using namespace Lumeda;
 Engine* s_Instance = nullptr;
 
 Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
-    m_LowLevelEngineSetup(std::move(lowLevelEngineSetup)), m_EventReceivers(), m_Updateables(), m_ShouldClose(false)
+    iUpdateable("Engine"), m_LowLevelEngineSetup(std::move(lowLevelEngineSetup)), m_ShouldClose(false), m_EventManager(nullptr), m_Updater(nullptr)
 {
   LUMEDA_PROFILE;
 
   s_Instance = this;
+  m_Updater = std::make_unique<Updater>();
 
+  ///////////////////////////////////////////
+  // Create dependencies
+  ///////////////////////////////////////////
   m_Graphics = m_LowLevelEngineSetup->GetGraphics();
-  m_Updateables.push_back(m_Graphics.get());
   m_Graphics->GetLowLevelGraphics().Init(800, 600, "Lumeda Engine");
 
   // Last
-  m_EventQueue = m_LowLevelEngineSetup->GetEventQueue();
+  m_EventManager = m_LowLevelEngineSetup->GetEventManager();
+  //---------------------------------------//
+
+  ///////////////////////////////////////////
+  // Register default updateable
+  ///////////////////////////////////////////
+  m_Updater->AddUpdateable(this);
+  m_Updater->AddUpdateable(m_Graphics.get());
+  //---------------------------------------//
+
+  m_EventManager->AddReceiver(this);
 }
 
 Engine::~Engine()
@@ -34,64 +47,45 @@ void Engine::Run()
 {
   LUMEDA_CORE_INFO("[Engine] Starting the game loop");
 
-  Broadcast(eUpdateableMessage_OnStart);
+  m_Updater->BroadcastMessage(eUpdateableMessage_OnStart);
   while (!m_ShouldClose)
   {
     LUMEDA_PROFILE_FRAME;
 
-    Broadcast(eUpdateableMessage_PreUpdate);
-    Broadcast(eUpdateableMessage_Update);
-    Broadcast(eUpdateableMessage_PostUpdate);
+    ///////////////////////////////////////////
+    // Update
+    ///////////////////////////////////////////
+    m_Updater->BroadcastMessage(eUpdateableMessage_PreUpdate);
+    m_Updater->BroadcastMessage(eUpdateableMessage_Update);
+    m_Updater->BroadcastMessage(eUpdateableMessage_PostUpdate);
 
-    Broadcast(eUpdateableMessage_OnPreDraw);
+    ///////////////////////////////////////////
+    // Drawing
+    ///////////////////////////////////////////
+    m_Updater->BroadcastMessage(eUpdateableMessage_OnPreDraw);
     m_Graphics->GetLowLevelGraphics().ClearFrameBuffer(tClearFrameBufferFlag_Color);
-    Broadcast(eUpdateableMessage_OnDraw);
-    Broadcast(eUpdateableMessage_OnPostDraw);
+    m_Updater->BroadcastMessage(eUpdateableMessage_OnDraw);
+    m_Updater->BroadcastMessage(eUpdateableMessage_OnPostDraw);
     m_Graphics->GetLowLevelGraphics().SwapBuffers();
 
-    PollEvents();
+    ///////////////////////////////////////////
+    // Event handling
+    ///////////////////////////////////////////
+    m_EventManager->PollEvents();
   }
   LUMEDA_CORE_INFO("[Engine] Game loop ended");
 }
 
-void Engine::PollEvents()
+bool Engine::OnEvent(iEvent& event)
 {
-  while (!m_EventQueue->IsEmpty())
-  {
-    std::unique_ptr<iEvent> event = m_EventQueue->PopEvent();
-    HandleEvent(*event);
-  }
-}
-
-void Engine::HandleEvent(iEvent& event)
-{
-  LUMEDA_CORE_TRACE("Handling event: {0} {1}", event.GetType(), event.ToString());
-
   // Handle basics events
   if (event.GetType() == eGraphicsEvent_WindowShouldClose)
   {
     m_ShouldClose = true;
-    event.Handled = true;
-    return;
+    return true;
   }
 
-  // Else dispatch it
-  for (const auto& eventReceiver : m_EventReceivers)
-  {
-    if (eventReceiver->OnEvent(event))
-    {
-      event.Handled = true;
-      break;
-    }
-  }
-}
-
-void Engine::Broadcast(eUpdateableMessage message)
-{
-  for (const auto& updateable : m_Updateables)
-  {
-    updateable->HandleMessage(message);
-  }
+  return false;
 }
 
 void Engine::Cleanup()

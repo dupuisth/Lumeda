@@ -3,17 +3,18 @@
 #include <string>
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Engine/EngineTypes.h>
-#include <Lumeda/Engine/EventQueue.h>
+#include <Lumeda/Engine/EventManager.h>
 #include <Lumeda/Engine/EventReceiver.h>
 #include <Lumeda/Engine/LowLevelEngineSetup.h>
 #include <Lumeda/Engine/Updateable.h>
+#include <Lumeda/Engine/Updater.h>
 #include <Lumeda/Graphics/Graphics.h>
 #include <Lumeda/Imgui/ImGuiLayer.h>
 
 namespace Lumeda
 {
 
-class Engine
+class Engine : public iEventReceiver, public iUpdateable
 {
 public:
   Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup);
@@ -21,19 +22,28 @@ public:
 
   void Run();
 
+  ///////////////////////////////////////////
+  // Getters
+  ///////////////////////////////////////////
   Graphics& GetGraphics() { return *m_Graphics; }
+  Updater& GetUpdater() { return *m_Updater; }
+  EventManager& GetEventManager() { return *m_EventManager; }
+  //---------------------------------------//
+
+  ///////////////////////////////////////////
+  // Events
+  ///////////////////////////////////////////
+  bool OnEvent(iEvent& event) override;
+  //---------------------------------------//
 
   ///////////////////////////////////////////
   // Static
   ///////////////////////////////////////////
   static std::unique_ptr<Engine> CreateLumedaEngine(eLumedaBackend backend);
   static Engine& Get();
+  //---------------------------------------//
 
 private:
-  void PollEvents();
-  void HandleEvent(iEvent& event);
-  void Broadcast(eUpdateableMessage message);
-
   void Cleanup();
 
 private:
@@ -47,14 +57,8 @@ private:
 
   std::unique_ptr<iLowLevelEngineSetup> m_LowLevelEngineSetup;
 
-  std::unique_ptr<EventQueue> m_EventQueue;
-
-  ///////////////////////////////////////////
-  // Lists for simplier iterations
-  ///////////////////////////////////////////
-  std::vector<iEventReceiver*> m_EventReceivers;
-  std::vector<iUpdateable*> m_Updateables;
-  //---------------------------------------//
+  std::unique_ptr<EventManager> m_EventManager;
+  std::unique_ptr<Updater> m_Updater;
 };
 } // namespace Lumeda
 

@@ -4,8 +4,8 @@ using namespace Lumeda;
 
 #include <Lumeda/Graphics/LowLevelGraphics.h>
 
-Graphics::Graphics(iLowLevelGraphics& lowLevelGraphics, EventQueue& eventQueue) :
-    iUpdateable("Graphics"), m_LowLevelGraphics(lowLevelGraphics), m_EventQueue(eventQueue)
+Graphics::Graphics(iLowLevelGraphics& lowLevelGraphics, EventManager& eventManager) :
+    iUpdateable("Graphics"), m_LowLevelGraphics(lowLevelGraphics), m_EventManager(eventManager)
 {
 }
 

@@ -4,7 +4,8 @@
 
 using namespace Lumeda;
 
-LowLevelGraphicsGL::LowLevelGraphicsGL(EventQueue& eventQueue) : iLowLevelGraphics(), m_EventQueue(eventQueue), m_InitRan(false), m_ClearColor(0.0f)
+LowLevelGraphicsGL::LowLevelGraphicsGL(EventManager& eventManager) :
+    iLowLevelGraphics(), m_EventManager(eventManager), m_InitRan(false), m_ClearColor(0.0f)
 {
 }
 

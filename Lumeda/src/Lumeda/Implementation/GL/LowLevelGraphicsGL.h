@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <Lumeda/Core/Base.h>
-#include <Lumeda/Engine/EventQueue.h>
+#include <Lumeda/Engine/EventManager.h>
 #include <Lumeda/Graphics/LowLevelGraphics.h>
 
 namespace Lumeda
@@ -27,7 +27,7 @@ GLbitfield ClearFlagsToGLFlag(tClearFrameBufferFlag flag);
 class LowLevelGraphicsGL : public iLowLevelGraphics
 {
 public:
-  LowLevelGraphicsGL(EventQueue& eventQueue);
+  LowLevelGraphicsGL(EventManager& eventManager);
   ~LowLevelGraphicsGL() override;
 
   ///////////////////////////////////////////
@@ -77,11 +77,11 @@ public:
 
 private:
   // Events
-  void OnWindowShouldClose() { m_EventQueue.PushEvent(std::make_unique<WindowShouldCloseEvent>()); }
-  void OnWindowResize(int width, int height) { m_EventQueue.PushEvent(std::make_unique<WindowResizeEvent>(width, height)); }
-  void OnWindowFrameBufferSize(int width, int height) { m_EventQueue.PushEvent(std::make_unique<WindowFrameBufferSizeEvent>(width, height)); }
-  void OnWindowFocus(bool focus) { m_EventQueue.PushEvent(std::make_unique<WindowFocusEvent>(focus)); }
-  void OnWindowPosition(int x, int y) { m_EventQueue.PushEvent(std::make_unique<WindowPositionEvent>(x, y)); }
+  void OnWindowShouldClose() { m_EventManager.PushEvent(std::make_unique<WindowShouldCloseEvent>()); }
+  void OnWindowResize(int width, int height) { m_EventManager.PushEvent(std::make_unique<WindowResizeEvent>(width, height)); }
+  void OnWindowFrameBufferSize(int width, int height) { m_EventManager.PushEvent(std::make_unique<WindowFrameBufferSizeEvent>(width, height)); }
+  void OnWindowFocus(bool focus) { m_EventManager.PushEvent(std::make_unique<WindowFocusEvent>(focus)); }
+  void OnWindowPosition(int x, int y) { m_EventManager.PushEvent(std::make_unique<WindowPositionEvent>(x, y)); }
 
   // Static events (for GLFW callabacks)
   static void OnWindowShouldCloseCallback(GLFWwindow* window);
@@ -93,7 +93,7 @@ private:
   //---------------------------------------//
 
 private:
-  EventQueue& m_EventQueue;
+  EventManager& m_EventManager;
 
   bool m_InitRan;
 

@@ -4,10 +4,11 @@
 #include <Lumeda/Core/Log.h>
 #include <Lumeda/Engine/Engine.h>
 #include <Lumeda/Engine/EngineTypes.h>
-#include <Lumeda/Engine/EventQueue.h>
+#include <Lumeda/Engine/EventManager.h>
 #include <Lumeda/Engine/EventReceiver.h>
 #include <Lumeda/Engine/LowLevelEngineSetup.h>
 #include <Lumeda/Engine/Updateable.h>
+#include <Lumeda/Engine/Updater.h>
 #include <Lumeda/Graphics/FrameBuffer.h>
 #include <Lumeda/Graphics/GpuProgram.h>
 #include <Lumeda/Graphics/GpuShader.h>
