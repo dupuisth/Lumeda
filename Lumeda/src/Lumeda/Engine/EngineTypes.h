@@ -69,6 +69,8 @@ public:
 
   virtual tEventType GetType() = 0;
 
+  virtual tString ToString() { return ""; };
+
   bool Handled;
 };
 //---------------------------------------//

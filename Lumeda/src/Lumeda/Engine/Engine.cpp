@@ -65,7 +65,7 @@ void Engine::PollEvents()
 
 void Engine::HandleEvent(iEvent& event)
 {
-  LUMEDA_CORE_TRACE("Handling event: {0}", event.GetType());
+  LUMEDA_CORE_TRACE("Handling event: {0} {1}", event.GetType(), event.ToString());
 
   // Handle basics events
   if (event.GetType() == eGraphicsEvent_WindowShouldClose)

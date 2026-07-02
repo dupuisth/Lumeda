@@ -30,6 +30,8 @@ public:
   WindowShouldCloseEvent() {}
 
   tEventType GetType() { return eGraphicsEvent_WindowShouldClose; }
+
+  tString ToString() { return "WindowShouldClose"; }
 };
 
 class WindowResizeEvent : public iEvent
@@ -38,6 +40,8 @@ public:
   WindowResizeEvent(int width, int height) : Width(width), Height(height) {}
 
   tEventType GetType() { return eGraphicsEvent_WindowResize; }
+
+  tString ToString() { return "WindowResizeEvent(width: " + std::to_string(Width) + ", height: " + std::to_string(Height) + ")"; }
 
   int Width, Height;
 };
@@ -49,6 +53,8 @@ public:
 
   tEventType GetType() { return eGraphicsEvent_WindowFrameBufferSize; }
 
+  tString ToString() { return "WindowFrameBufferSizeEvent(width: " + std::to_string(Width) + ", height: " + std::to_string(Height) + ")"; }
+
   int Width, Height;
 };
 
@@ -59,6 +65,8 @@ public:
 
   tEventType GetType() { return eGraphicsEvent_WindowFocus; }
 
+  tString ToString() { return "WindowFocusEvent(" + std::to_string(Focus) + ")"; }
+
   bool Focus;
 };
 
@@ -68,6 +76,8 @@ public:
   WindowPositionEvent(int x, int y) : X(x), Y(y) {}
 
   tEventType GetType() { return eGraphicsEvent_WindowPosition; }
+
+  tString ToString() { return "WindowPositionEvent(x: " + std::to_string(X) + ", y: " + std::to_string(Y) + ")"; }
 
   int X, Y;
 };
