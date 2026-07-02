@@ -20,6 +20,7 @@ GLenum WrappingToGLWrapping(eTextureWrapping wrapping);
 GLenum FilteringToGLFiltering(eTextureFiltering filtering);
 GLenum VertexAttribTypeToGLType(eVertexAttribType type);
 GLenum ShaderTypeToGLType(eShaderType type);
+GLbitfield ClearFlagsToGLFlag(tClearFrameBufferFlag flag);
 
 //---------------------------------------//
 

@@ -25,6 +25,7 @@ void Sandbox::SandboxBase::Exit()
 
 void SandboxBase::Run()
 {
+  m_engine->GetGraphics().GetLowLevelGraphics().SetClearColor({0.001f, 0.07f, 0.14f, 1.0f});
   m_engine->Run();
 }
 

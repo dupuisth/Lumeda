@@ -143,19 +143,21 @@ std::unique_ptr<iFrameBuffer> LowLevelGraphicsGL::CreateFrameBuffer(const tStrin
 
 void LowLevelGraphicsGL::ClearFrameBuffer(tClearFrameBufferFlag flags)
 {
+  glClear(ClearFlagsToGLFlag(flags));
 }
 
 void LowLevelGraphicsGL::SwapBuffers()
 {
+  glfwSwapBuffers(m_Window);
 }
 
 void LowLevelGraphicsGL::SetClearColor(const tColor& color)
 {
+  glClearColor(color.x, color.y, color.z, color.w);
 }
 
 const tColor& LowLevelGraphicsGL::GetClearColor()
 {
-  // TODO: insert return statement here
   return m_ClearColor;
 }
 
@@ -271,4 +273,23 @@ GLenum Lumeda::ShaderTypeToGLType(eShaderType type)
   }
   LUMEDA_ASSERT(false);
   return 0;
+}
+
+GLbitfield Lumeda::ClearFlagsToGLFlag(tClearFrameBufferFlag flag)
+{
+  GLbitfield result = 0;
+
+  if (flag & tClearFrameBufferFlag_Color)
+  {
+    result |= GL_COLOR_BUFFER_BIT;
+  }
+  if (flag & tClearFrameBufferFlag_Depth)
+  {
+    result |= GL_DEPTH_BUFFER_BIT;
+  }
+  if (flag & tClearFrameBufferFlag_Stencil)
+  {
+    result |= GL_STENCIL_BUFFER_BIT;
+  }
+  return result;
 }

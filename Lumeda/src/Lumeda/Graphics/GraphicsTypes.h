@@ -78,9 +78,9 @@ public:
 ///////////////////////////////////////////
 typedef tFlag tClearFrameBufferFlag;
 
-#define tClearFrameBufferFlag_Color (0x1)
-#define tClearFrameBufferFlag_Depth (0x2)
-#define tClearFrameBufferFlag_Stencil (0x4)
+#define tClearFrameBufferFlag_Color (1)
+#define tClearFrameBufferFlag_Depth (2)
+#define tClearFrameBufferFlag_Stencil (4)
 
 enum eFrameBufferAttachment
 {
