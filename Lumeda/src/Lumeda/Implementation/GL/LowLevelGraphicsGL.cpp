@@ -39,6 +39,14 @@ bool LowLevelGraphicsGL::Init(int width, int height, const tString& windowTitle)
 
   glfwMakeContextCurrent(m_Window);
 
+  // Callbacks
+  glfwSetWindowUserPointer(m_Window, this);
+  glfwSetWindowCloseCallback(m_Window, OnWindowShouldCloseCallback);
+  glfwSetWindowSizeCallback(m_Window, OnWindowResizeCallback);
+  glfwSetFramebufferSizeCallback(m_Window, OnWindowFrameBufferSizeCallback);
+  glfwSetWindowFocusCallback(m_Window, OnWindowFocusCallback);
+  glfwSetWindowPosCallback(m_Window, OnWindowPositionCallback);
+
   ///////////////////////////////////////////
   // Initialize OpenGL
   ///////////////////////////////////////////
@@ -55,15 +63,45 @@ bool LowLevelGraphicsGL::Init(int width, int height, const tString& windowTitle)
 }
 
 ///////////////////////////////////////////
+// GL Events
+///////////////////////////////////////////
+void LowLevelGraphicsGL::OnWindowShouldCloseCallback(GLFWwindow* window)
+{
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  lowLevelGraphicsGL->OnWindowShouldClose();
+}
+
+void LowLevelGraphicsGL::OnWindowResizeCallback(GLFWwindow* window, int width, int height)
+{
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  lowLevelGraphicsGL->OnWindowResize(width, height);
+}
+
+void LowLevelGraphicsGL::OnWindowFrameBufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  lowLevelGraphicsGL->OnWindowFrameBufferSize(width, height);
+}
+
+void LowLevelGraphicsGL::OnWindowFocusCallback(GLFWwindow* window, int focused)
+{
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  lowLevelGraphicsGL->OnWindowFocus(focused != GL_FALSE);
+}
+
+void LowLevelGraphicsGL::OnWindowPositionCallback(GLFWwindow* window, int x, int y)
+{
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  lowLevelGraphicsGL->OnWindowPosition(x, y);
+}
+//---------------------------------------//
+
+///////////////////////////////////////////
 // Lifetime
 ///////////////////////////////////////////
 void LowLevelGraphicsGL::Update()
 {
   glfwPollEvents();
-  if (glfwWindowShouldClose(m_Window))
-  {
-    m_EventQueue.PushEvent(std::make_unique<WindowShouldCloseEvent>());
-  }
 }
 //---------------------------------------//
 

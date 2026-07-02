@@ -16,13 +16,60 @@ enum eGraphicsEvent
   eGraphicsEvent_FirstEnum = eEventCategory_Graphics,
 
   eGraphicsEvent_WindowShouldClose,
+  eGraphicsEvent_WindowResize,
+  eGraphicsEvent_WindowFrameBufferSize,
+  eGraphicsEvent_WindowFocus,
+  eGraphicsEvent_WindowPosition,
 
   eGraphicsEvent_LastEnum,
 };
 
 class WindowShouldCloseEvent : public iEvent
 {
+public:
+  WindowShouldCloseEvent() {}
+
   tEventType GetType() { return eGraphicsEvent_WindowShouldClose; }
+};
+
+class WindowResizeEvent : public iEvent
+{
+public:
+  WindowResizeEvent(int width, int height) : Width(width), Height(height) {}
+
+  tEventType GetType() { return eGraphicsEvent_WindowResize; }
+
+  int Width, Height;
+};
+
+class WindowFrameBufferSizeEvent : public iEvent
+{
+public:
+  WindowFrameBufferSizeEvent(int width, int height) : Width(width), Height(height) {}
+
+  tEventType GetType() { return eGraphicsEvent_WindowFrameBufferSize; }
+
+  int Width, Height;
+};
+
+class WindowFocusEvent : public iEvent
+{
+public:
+  WindowFocusEvent(bool focus) : Focus(focus) {}
+
+  tEventType GetType() { return eGraphicsEvent_WindowFocus; }
+
+  bool Focus;
+};
+
+class WindowPositionEvent : public iEvent
+{
+public:
+  WindowPositionEvent(int x, int y) : X(x), Y(y) {}
+
+  tEventType GetType() { return eGraphicsEvent_WindowPosition; }
+
+  int X, Y;
 };
 //---------------------------------------//
 

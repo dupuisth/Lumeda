@@ -73,6 +73,22 @@ public:
   // GL
   ///////////////////////////////////////////
   GLFWwindow* GetOpenGLWindow() { return m_Window; }
+
+private:
+  // Events
+  void OnWindowShouldClose() { m_EventQueue.PushEvent(std::make_unique<WindowShouldCloseEvent>()); }
+  void OnWindowResize(int width, int height) { m_EventQueue.PushEvent(std::make_unique<WindowResizeEvent>(width, height)); }
+  void OnWindowFrameBufferSize(int width, int height) { m_EventQueue.PushEvent(std::make_unique<WindowFrameBufferSizeEvent>(width, height)); }
+  void OnWindowFocus(bool focus) { m_EventQueue.PushEvent(std::make_unique<WindowFocusEvent>(focus)); }
+  void OnWindowPosition(int x, int y) { m_EventQueue.PushEvent(std::make_unique<WindowPositionEvent>(x, y)); }
+
+  // Static events (for GLFW callabacks)
+  static void OnWindowShouldCloseCallback(GLFWwindow* window);
+  static void OnWindowResizeCallback(GLFWwindow* window, int width, int height);
+  static void OnWindowFrameBufferSizeCallback(GLFWwindow* window, int width, int height);
+  static void OnWindowFocusCallback(GLFWwindow* window, int focus);
+  static void OnWindowPositionCallback(GLFWwindow* window, int x, int y);
+
   //---------------------------------------//
 
 private:
