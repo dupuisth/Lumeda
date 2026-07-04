@@ -9,6 +9,8 @@
 namespace Lumeda
 {
 
+class LowLevelSystemGL;
+
 ///////////////////////////////////////////
 // Global functions
 ///////////////////////////////////////////
@@ -27,7 +29,7 @@ GLbitfield ClearFlagsToGLFlag(tClearFrameBufferFlag flag);
 class LowLevelGraphicsGL : public iLowLevelGraphics
 {
 public:
-  LowLevelGraphicsGL(EventManager& eventManager);
+  LowLevelGraphicsGL(EventManager& eventManager, LowLevelSystemGL& lowLevelSystem);
   ~LowLevelGraphicsGL() override;
 
   ///////////////////////////////////////////
@@ -71,6 +73,16 @@ public:
   void SetActiveTextureSlot(unsigned int slot) override;
 
   ///////////////////////////////////////////
+  // GpuShader
+  ///////////////////////////////////////////
+  std::unique_ptr<iGpuShader> CreateShader(const tString& name, const twString& path, eShaderType type) override;
+
+  ///////////////////////////////////////////
+  // GpuProgram
+  ///////////////////////////////////////////
+  std::unique_ptr<iGpuProgram> CreateProgram(const tString& name) override;
+
+  ///////////////////////////////////////////
   // GL
   ///////////////////////////////////////////
   GLFWwindow* GetOpenGLWindow() { return m_Window; }
@@ -94,6 +106,7 @@ private:
 
 private:
   EventManager& m_EventManager;
+  LowLevelSystemGL& m_LowLevelSystem;
 
   bool m_InitRan;
 

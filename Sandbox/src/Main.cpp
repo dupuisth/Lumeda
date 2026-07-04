@@ -5,31 +5,31 @@ using namespace Sandbox;
 
 std::unique_ptr<SandboxBase> sandboxBase = nullptr;
 
-SandboxBase& GetSandboxBase()
+SandboxBase& Sandbox::GetSandboxBase()
 {
-    return *sandboxBase;
+  return *sandboxBase;
 }
 
 int lumedaMain()
 {
-    int status = EXIT_SUCCESS;
+  int status = EXIT_SUCCESS;
+  {
+    sandboxBase = std::make_unique<SandboxBase>();
+
+    if (sandboxBase->Init())
     {
-        sandboxBase = std::make_unique<SandboxBase>();
-
-        if (sandboxBase->Init())
-        {
-            sandboxBase->Run();
-            sandboxBase->Exit();
-        }
-        else
-        {
-            // Something went wrong
-            status = EXIT_FAILURE;
-        }
-
-        // Force delete before the end of the execution, or spdlog will make the program crash
-        sandboxBase.reset();
+      sandboxBase->Run();
+      sandboxBase->Exit();
+    }
+    else
+    {
+      // Something went wrong
+      status = EXIT_FAILURE;
     }
 
-    return status;
+    // Force delete before the end of the execution, or spdlog will make the program crash
+    sandboxBase.reset();
+  }
+
+  return status;
 }

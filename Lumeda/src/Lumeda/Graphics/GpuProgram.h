@@ -14,7 +14,7 @@ public:
   iGpuProgram(const tString& name) : iResourceBase(name, L""), m_VertexShader(nullptr), m_FragmentShader(nullptr), m_GeometryShader(nullptr) {}
   virtual ~iGpuProgram() = default;
 
-  virtual void AttachShader(iGpuShader* shader);
+  virtual void AttachShader(iGpuShader* shader) = 0;
   virtual void Link() = 0;
   virtual void Bind() = 0;
   virtual void UnBind() = 0;

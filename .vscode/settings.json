@@ -1,6 +1,7 @@
 {
     "editor.renderWhitespace": "all",
     "C_Cpp.formatting": "vcFormat",
+    "editor.tabSize": 2,
     "[cpp]": {
         "editor.wordBasedSuggestions": "off",
         "editor.semanticHighlighting.enabled": true,

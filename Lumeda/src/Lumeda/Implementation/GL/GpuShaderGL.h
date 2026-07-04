@@ -16,6 +16,10 @@ public:
   }
   ~GpuShaderGL();
 
+  bool Reload() { return false; }
+  void Unload() {};
+  void Destroy() {};
+
   bool CreateFromFile(const twString& path) override;
   bool CreateFromSource(const char* source) override;
 

@@ -14,7 +14,10 @@ SandboxBase::~SandboxBase()
 bool SandboxBase::Init()
 {
   Log::Init();
-  m_engine = Engine::CreateLumedaEngine(eLumedaBackend_OpenGL);
+  m_Engine = Engine::CreateLumedaEngine(eLumedaBackend_OpenGL);
+
+  m_SandboxLayer = std::make_unique<SandboxLayer>();
+  m_Engine->GetUpdater().AddUpdateable(m_SandboxLayer.get());
 
   return true;
 }
@@ -25,8 +28,7 @@ void Sandbox::SandboxBase::Exit()
 
 void SandboxBase::Run()
 {
-  m_engine->GetGraphics().GetLowLevelGraphics().SetClearColor({0.001f, 0.07f, 0.14f, 1.0f});
-  m_engine->Run();
+  m_Engine->Run();
 }
 
 void SandboxBase::Reset()

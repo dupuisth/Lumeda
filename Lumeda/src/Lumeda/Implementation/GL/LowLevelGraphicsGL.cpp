@@ -1,11 +1,14 @@
 #include <Lumeda/Implementation/GL/FrameBufferGL.h>
+#include <Lumeda/Implementation/GL/GpuProgramGL.h>
+#include <Lumeda/Implementation/GL/GpuShaderGL.h>
 #include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
+#include <Lumeda/Implementation/GL/LowLevelSystemGL.h>
 #include <Lumeda/Implementation/GL/TextureGL.h>
 
 using namespace Lumeda;
 
-LowLevelGraphicsGL::LowLevelGraphicsGL(EventManager& eventManager) :
-    iLowLevelGraphics(), m_EventManager(eventManager), m_InitRan(false), m_ClearColor(0.0f)
+LowLevelGraphicsGL::LowLevelGraphicsGL(EventManager& eventManager, LowLevelSystemGL& lowLevelSystemGL) :
+    iLowLevelGraphics(), m_EventManager(eventManager), m_LowLevelSystem(lowLevelSystemGL), m_InitRan(false), m_ClearColor(0.0f)
 {
 }
 
@@ -126,6 +129,7 @@ void LowLevelGraphicsGL::SetSize(const glm::ivec2& size)
 
 void Lumeda::LowLevelGraphicsGL::SetVSync(bool enabled)
 {
+  glfwSwapInterval(enabled ? 1 : 0);
 }
 
 bool Lumeda::LowLevelGraphicsGL::IsVSync() const
@@ -178,6 +182,24 @@ void LowLevelGraphicsGL::SetTexture(unsigned int slot, iTexture& texture)
 
 void LowLevelGraphicsGL::SetActiveTextureSlot(unsigned int slot)
 {
+}
+
+///////////////////////////////////////////
+// GpuShader
+///////////////////////////////////////////
+std::unique_ptr<iGpuShader> LowLevelGraphicsGL::CreateShader(const tString& name, const twString& path, eShaderType type)
+{
+  std::unique_ptr<iGpuShader> shader = std::make_unique<GpuShaderGL>(name, path, type, m_LowLevelSystem);
+  return std::move(shader);
+}
+
+///////////////////////////////////////////
+// GpuProgram
+///////////////////////////////////////////
+std::unique_ptr<iGpuProgram> LowLevelGraphicsGL::CreateProgram(const tString& name)
+{
+  std::unique_ptr<iGpuProgram> program = std::make_unique<GpuProgramGL>(name);
+  return std::move(program);
 }
 
 //---------------------------------------//

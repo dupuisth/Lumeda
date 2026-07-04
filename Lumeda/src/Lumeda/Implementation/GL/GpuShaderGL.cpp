@@ -20,6 +20,7 @@ bool GpuShaderGL::CreateFromFile(const twString& path)
   {
     return false;
   }
+  SetPath(path);
 
   const char* source = stringContent.c_str();
   return CreateFromSource(source);

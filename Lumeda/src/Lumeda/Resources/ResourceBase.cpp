@@ -5,6 +5,8 @@ using namespace Lumeda;
 iResourceBase::iResourceBase(const tString& name, const twString& path) : m_Name(name), m_Path(path)
 {
   m_UserCount = 0;
+
+  LUMEDA_CORE_TRACE("[iResourceBase] Created new resources: {0}", name);
 }
 
 iResourceBase::~iResourceBase()

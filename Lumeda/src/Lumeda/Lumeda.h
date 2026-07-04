@@ -17,3 +17,9 @@
 #include <Lumeda/Graphics/LowLevelGraphics.h>
 #include <Lumeda/Graphics/Texture.h>
 #include <Lumeda/Graphics/VertexBuffer.h>
+#include <Lumeda/Resources/GpuProgramManager.h>
+#include <Lumeda/Resources/GpuShaderManager.h>
+#include <Lumeda/Resources/ResourceBase.h>
+#include <Lumeda/Resources/ResourceManager.h>
+#include <Lumeda/Resources/Resources.h>
+#include <Lumeda/Resources/TextureManager.h>

@@ -6,6 +6,7 @@
 namespace Lumeda
 {
 class LowLevelGraphicsGL;
+class LowLevelSystemGL;
 class Graphics;
 class EventManager;
 
@@ -21,7 +22,8 @@ public:
   std::unique_ptr<EventManager> GetEventManager() override;
 
 private:
-  std::unique_ptr<LowLevelGraphicsGL> m_lowLevelGraphics;
+  std::unique_ptr<LowLevelGraphicsGL> m_LowLevelGraphics;
+  std::unique_ptr<LowLevelSystemGL> m_LowLevelSystem;
 
   std::unique_ptr<EventManager> m_EventManager;
 };

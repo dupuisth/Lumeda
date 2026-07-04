@@ -19,8 +19,11 @@ Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
   ///////////////////////////////////////////
   // Create dependencies
   ///////////////////////////////////////////
+  m_Resources = std::make_unique<Resources>();
+
   m_Graphics = m_LowLevelEngineSetup->GetGraphics();
   m_Graphics->GetLowLevelGraphics().Init(800, 600, "Lumeda Engine");
+  m_Resources->Init(*m_Graphics);
 
   // Last
   m_EventManager = m_LowLevelEngineSetup->GetEventManager();
@@ -30,6 +33,7 @@ Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
   // Register default updateable
   ///////////////////////////////////////////
   m_Updater->AddUpdateable(this);
+  m_Updater->AddUpdateable(m_Resources.get());
   m_Updater->AddUpdateable(m_Graphics.get());
   //---------------------------------------//
 

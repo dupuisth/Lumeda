@@ -9,6 +9,9 @@ namespace Lumeda
 {
 class iTexture;
 class iFrameBuffer;
+class iGpuProgram;
+class iGpuShader;
+
 class iLowLevelGraphics : public iUpdateable
 {
 public:
@@ -47,5 +50,15 @@ public:
   virtual std::unique_ptr<iTexture> CreateTexture(const tString& name, eTextureType type, eTextureUsage usage) = 0;
   virtual void SetTexture(unsigned int slot, iTexture& texture) = 0;
   virtual void SetActiveTextureSlot(unsigned int slot) = 0;
+
+  ///////////////////////////////////////////
+  // GpuShader
+  ///////////////////////////////////////////
+  virtual std::unique_ptr<iGpuShader> CreateShader(const tString& name, const twString& path, eShaderType type) = 0;
+
+  ///////////////////////////////////////////
+  // GpuProgram
+  ///////////////////////////////////////////
+  virtual std::unique_ptr<iGpuProgram> CreateProgram(const tString& name) = 0;
 };
 } // namespace Lumeda
