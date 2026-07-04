@@ -12,6 +12,9 @@ public:
 
   void OnStart() override;
   void OnDraw() override;
+
+private:
+  std::unique_ptr<Lumeda::iVertexBuffer> m_VertexBuffer;
 };
 
 } // namespace Sandbox

@@ -10,5 +10,5 @@
         "editor.defaultFormatter": "xaver.clang-format",
         "editor.formatOnSave": true
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "enabled"
 }

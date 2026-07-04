@@ -5,8 +5,6 @@
 using namespace Lumeda;
 using namespace Sandbox;
 
-iVertexBuffer* plane;
-
 void SandboxLayer::OnStart()
 {
   SandboxBase& base = GetSandboxBase();
@@ -24,9 +22,9 @@ void SandboxLayer::OnStart()
   gpuProgram->AttachShader(fragmentShader);
   gpuProgram->Link();
 
-  plane = new VertexBufferGL(base.GetEngine().GetGraphics().GetLowLevelGraphics());
+  m_VertexBuffer = base.GetEngine().GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
   // clang-format off
-  plane->SetData(
+  m_VertexBuffer->SetData(
     {
       -0.5f, -0.5f, 0.0f,
       0.0f, 0.5f, 0.0f,
@@ -45,9 +43,11 @@ void SandboxLayer::OnStart()
 void SandboxLayer::OnDraw()
 {
   SandboxBase& base = GetSandboxBase();
-  iGpuProgram* gpuProgram = base.GetEngine().GetResources().GetGpuProgramManager().GetResourceByName("My super GPU program!!");
+  iGpuProgram* gpuProgram = base.GetEngine().GetResources().GetGpuProgramManager().GetResourceByName("default_program");
 
   gpuProgram->Bind();
-  plane->Draw();
+  m_VertexBuffer->Draw();
   gpuProgram->UnBind();
+
+  gpuProgram->Reload();
 }

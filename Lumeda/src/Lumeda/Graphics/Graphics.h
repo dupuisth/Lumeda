@@ -11,7 +11,7 @@ namespace Lumeda
 class iTexture;
 class iLowLevelGraphics;
 
-class Graphics : public iUpdateable
+class Graphics : public iUpdateable, public iEventReceiver
 {
 public:
   Graphics(iLowLevelGraphics& lowLevelGraphics, EventManager& eventManager);
@@ -19,6 +19,7 @@ public:
   iLowLevelGraphics& GetLowLevelGraphics() { return m_LowLevelGraphics; }
 
   void HandleMessage(eUpdateableMessage message) override;
+  bool OnEvent(iEvent& event) override;
 
 private:
   iLowLevelGraphics& m_LowLevelGraphics;

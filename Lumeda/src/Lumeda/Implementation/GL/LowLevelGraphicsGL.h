@@ -42,6 +42,8 @@ public:
   // Lifetime
   ///////////////////////////////////////////
   void Update() override;
+
+  bool OnEvent(iEvent& event) override;
   //---------------------------------------//
 
   ///////////////////////////////////////////
@@ -71,6 +73,11 @@ public:
   std::unique_ptr<iTexture> CreateTexture(const tString& name, eTextureType type, eTextureUsage usage) override;
   void SetTexture(unsigned int slot, iTexture& texture) override;
   void SetActiveTextureSlot(unsigned int slot) override;
+
+  ///////////////////////////////////////////
+  // VertexBuffer
+  ///////////////////////////////////////////
+  std::unique_ptr<iVertexBuffer> CreateVertexBuffer() override;
 
   ///////////////////////////////////////////
   // GpuShader

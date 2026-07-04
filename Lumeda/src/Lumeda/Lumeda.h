@@ -1,7 +1,14 @@
 #pragma once
 
+///////////////////////////////////////////
+// Core
+///////////////////////////////////////////
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Core/Log.h>
+
+///////////////////////////////////////////
+// Engine
+///////////////////////////////////////////
 #include <Lumeda/Engine/Engine.h>
 #include <Lumeda/Engine/EngineTypes.h>
 #include <Lumeda/Engine/EventManager.h>
@@ -9,6 +16,10 @@
 #include <Lumeda/Engine/LowLevelEngineSetup.h>
 #include <Lumeda/Engine/Updateable.h>
 #include <Lumeda/Engine/Updater.h>
+
+///////////////////////////////////////////
+// Graphics
+///////////////////////////////////////////
 #include <Lumeda/Graphics/FrameBuffer.h>
 #include <Lumeda/Graphics/GpuProgram.h>
 #include <Lumeda/Graphics/GpuShader.h>
@@ -17,6 +28,10 @@
 #include <Lumeda/Graphics/LowLevelGraphics.h>
 #include <Lumeda/Graphics/Texture.h>
 #include <Lumeda/Graphics/VertexBuffer.h>
+
+///////////////////////////////////////////
+// Resources
+///////////////////////////////////////////
 #include <Lumeda/Resources/GpuProgramManager.h>
 #include <Lumeda/Resources/GpuShaderManager.h>
 #include <Lumeda/Resources/ResourceBase.h>

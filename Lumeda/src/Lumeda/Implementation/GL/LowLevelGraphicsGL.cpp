@@ -4,6 +4,7 @@
 #include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
 #include <Lumeda/Implementation/GL/LowLevelSystemGL.h>
 #include <Lumeda/Implementation/GL/TextureGL.h>
+#include <Lumeda/Implementation/GL/VertexBufferGL.h>
 
 using namespace Lumeda;
 
@@ -107,6 +108,18 @@ void LowLevelGraphicsGL::Update()
 {
   glfwPollEvents();
 }
+
+bool LowLevelGraphicsGL::OnEvent(iEvent& event)
+{
+  if (event.GetType() == eGraphicsEvent_WindowFrameBufferSize)
+  {
+    // This will change later on.
+    WindowFrameBufferSizeEvent& casted = static_cast<WindowFrameBufferSizeEvent&>(event);
+    glViewport(0, 0, casted.Width, casted.Height);
+  }
+
+  return false;
+}
 //---------------------------------------//
 
 ///////////////////////////////////////////
@@ -182,6 +195,15 @@ void LowLevelGraphicsGL::SetTexture(unsigned int slot, iTexture& texture)
 
 void LowLevelGraphicsGL::SetActiveTextureSlot(unsigned int slot)
 {
+}
+
+///////////////////////////////////////////
+// VertexBuffer
+///////////////////////////////////////////
+std::unique_ptr<iVertexBuffer> LowLevelGraphicsGL::CreateVertexBuffer()
+{
+  std::unique_ptr<iVertexBuffer> vertexBuffer = std::make_unique<VertexBufferGL>(*this);
+  return std::move(vertexBuffer);
 }
 
 ///////////////////////////////////////////

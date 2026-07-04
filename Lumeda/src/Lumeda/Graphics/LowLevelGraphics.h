@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <Lumeda/Core/Base.h>
+#include <Lumeda/Engine/EngineTypes.h>
 #include <Lumeda/Engine/Updateable.h>
 #include <Lumeda/Graphics/GraphicsTypes.h>
 
@@ -11,8 +12,9 @@ class iTexture;
 class iFrameBuffer;
 class iGpuProgram;
 class iGpuShader;
+class iVertexBuffer;
 
-class iLowLevelGraphics : public iUpdateable
+class iLowLevelGraphics : public iUpdateable, public iEventReceiver
 {
 public:
   iLowLevelGraphics() : iUpdateable("LowLevelGraphics") {}
@@ -22,6 +24,11 @@ public:
   // Initialization
   ///////////////////////////////////////////
   virtual bool Init(int width, int height, const tString& windowTitle) = 0;
+
+  ///////////////////////////////////////////
+  // Events
+  ///////////////////////////////////////////
+  virtual bool OnEvent(iEvent& event) { return false; }
 
   ///////////////////////////////////////////
   // Window management
@@ -50,6 +57,11 @@ public:
   virtual std::unique_ptr<iTexture> CreateTexture(const tString& name, eTextureType type, eTextureUsage usage) = 0;
   virtual void SetTexture(unsigned int slot, iTexture& texture) = 0;
   virtual void SetActiveTextureSlot(unsigned int slot) = 0;
+
+  ///////////////////////////////////////////
+  // VertexBuffer
+  ///////////////////////////////////////////
+  virtual std::unique_ptr<iVertexBuffer> CreateVertexBuffer() = 0;
 
   ///////////////////////////////////////////
   // GpuShader

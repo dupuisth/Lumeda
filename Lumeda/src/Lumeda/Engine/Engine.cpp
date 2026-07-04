@@ -38,6 +38,7 @@ Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
   //---------------------------------------//
 
   m_EventManager->AddReceiver(this);
+  m_EventManager->AddReceiver(m_Graphics.get());
 }
 
 Engine::~Engine()

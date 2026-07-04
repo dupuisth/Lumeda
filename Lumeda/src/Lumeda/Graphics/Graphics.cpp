@@ -16,3 +16,9 @@ void Graphics::HandleMessage(eUpdateableMessage message)
   // Propagate
   m_LowLevelGraphics.HandleMessage(message);
 }
+
+bool Lumeda::Graphics::OnEvent(iEvent& event)
+{
+  // Propagate
+  return m_LowLevelGraphics.OnEvent(event);
+}
