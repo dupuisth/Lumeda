@@ -14,7 +14,12 @@ class iTexture : public iResourceBase
 {
 public:
   iTexture(const tString& name, eTextureType type, eTextureUsage usage, iLowLevelGraphics& lowLevelGraphics) :
-      m_Type(type), m_Usage(usage), m_LowLevelGraphics(lowLevelGraphics), iResourceBase(name, L"")
+      m_Type(type),
+      m_Usage(usage),
+      m_LowLevelGraphics(lowLevelGraphics),
+      iResourceBase(name, L""),
+      m_Filtering(eTextureFiltering_Linear),
+      m_Wrapping(eTextureWrapping_Clamp)
   {
   }
   virtual ~iTexture() = default;

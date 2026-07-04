@@ -94,10 +94,11 @@ typedef tFlag tClearFrameBufferFlag;
 
 enum eFrameBufferAttachment
 {
-  eFrameBufferAttachment_Color,
+  eFrameBufferAttachment_Color = 0,
   eFrameBufferAttachment_Depth,
   eFrameBufferAttachment_Stencil,
-  eFrameBufferAttachment_DepthStencil
+  eFrameBufferAttachment_DepthStencil,
+  eFrameBufferAttachment_LastValue
 };
 //---------------------------------------//
 
@@ -107,7 +108,12 @@ enum eFrameBufferAttachment
 enum ePixelFormat
 {
   ePixelFormat_RGB,
-  ePixelFormat_RGBA
+  ePixelFormat_RGBA,
+  ePixelFormat_Depth16,
+  ePixelFormat_Depth24,
+  ePixelFormat_Depth32,
+  ePixelFormat_Depth24Stencil8,
+  ePixelFormat_LastEnum,
 };
 
 enum eTextureFiltering
@@ -138,7 +144,7 @@ enum eTextureType
 enum eTextureUsage
 {
   eTextureUsage_Normal,
-  eTextureUsage_RenderTarget,
+  eTextureUsage_RenderBuffer,
   eTextureUsage_LastEnum
 };
 //---------------------------------------//

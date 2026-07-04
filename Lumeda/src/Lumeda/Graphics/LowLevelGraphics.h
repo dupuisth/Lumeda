@@ -13,6 +13,7 @@ class iFrameBuffer;
 class iGpuProgram;
 class iGpuShader;
 class iVertexBuffer;
+class iRenderBuffer;
 
 class iLowLevelGraphics : public iUpdateable, public iEventReceiver
 {
@@ -50,6 +51,11 @@ public:
 
   virtual void SetClearColor(const tColor& color) = 0;
   virtual const tColor& GetClearColor() = 0;
+
+  ///////////////////////////////////////////
+  // RenderBuffer
+  ///////////////////////////////////////////
+  virtual std::unique_ptr<iRenderBuffer> CreateRenderBuffer(const tString& name) = 0;
 
   ///////////////////////////////////////////
   // Texture

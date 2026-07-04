@@ -23,6 +23,7 @@ GLenum FilteringToGLFiltering(eTextureFiltering filtering);
 GLenum VertexAttribTypeToGLType(eVertexAttribType type);
 GLenum ShaderTypeToGLType(eShaderType type);
 GLbitfield ClearFlagsToGLFlag(tClearFrameBufferFlag flag);
+GLenum FrameBufferAttachmentToGL(eFrameBufferAttachment attachment);
 
 //---------------------------------------//
 
@@ -66,6 +67,11 @@ public:
 
   void SetClearColor(const tColor& color) override;
   const tColor& GetClearColor() override;
+
+  ///////////////////////////////////////////
+  // RenderBuffer
+  ///////////////////////////////////////////
+  std::unique_ptr<iRenderBuffer> CreateRenderBuffer(const tString& name) override;
 
   ///////////////////////////////////////////
   // Texture

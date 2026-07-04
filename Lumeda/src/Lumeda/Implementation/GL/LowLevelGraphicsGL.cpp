@@ -3,6 +3,7 @@
 #include <Lumeda/Implementation/GL/GpuShaderGL.h>
 #include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
 #include <Lumeda/Implementation/GL/LowLevelSystemGL.h>
+#include <Lumeda/Implementation/GL/RenderBufferGL.h>
 #include <Lumeda/Implementation/GL/TextureGL.h>
 #include <Lumeda/Implementation/GL/VertexBufferGL.h>
 
@@ -156,7 +157,8 @@ bool Lumeda::LowLevelGraphicsGL::IsVSync() const
 
 std::unique_ptr<iFrameBuffer> LowLevelGraphicsGL::CreateFrameBuffer(const tString& name)
 {
-  return nullptr;
+  std::unique_ptr<FrameBufferGL> framebuffer = std::make_unique<FrameBufferGL>(name, *this);
+  return std::move(framebuffer);
 }
 
 void LowLevelGraphicsGL::ClearFrameBuffer(tClearFrameBufferFlag flags)
@@ -180,6 +182,15 @@ const tColor& LowLevelGraphicsGL::GetClearColor()
 }
 
 ///////////////////////////////////////////
+// RenderBuffer
+///////////////////////////////////////////
+std::unique_ptr<iRenderBuffer> LowLevelGraphicsGL::CreateRenderBuffer(const tString& name)
+{
+  std::unique_ptr<RenderBufferGL> renderBuffer = std::make_unique<RenderBufferGL>(name);
+  return std::move(renderBuffer);
+}
+
+///////////////////////////////////////////
 // Texture
 ///////////////////////////////////////////
 
@@ -191,10 +202,14 @@ std::unique_ptr<iTexture> LowLevelGraphicsGL::CreateTexture(const tString& name,
 
 void LowLevelGraphicsGL::SetTexture(unsigned int slot, iTexture& texture)
 {
+  glActiveTexture(GL_TEXTURE0 + slot);
+  GLenum GLType = TextureTypeToGLTarget(texture.GetType());
+  glBindTexture(GLType, (static_cast<TextureGL&>(texture)).GetHandleGL());
 }
 
 void LowLevelGraphicsGL::SetActiveTextureSlot(unsigned int slot)
 {
+  glActiveTexture(GL_TEXTURE0 + slot);
 }
 
 ///////////////////////////////////////////
@@ -249,8 +264,15 @@ GLenum Lumeda::PixelFormatToGLFormat(ePixelFormat format)
     return GL_RGB;
   case ePixelFormat_RGBA:
     return GL_RGBA;
+  case ePixelFormat_Depth16:
+    return GL_DEPTH_COMPONENT;
+  case ePixelFormat_Depth24:
+    return GL_DEPTH_COMPONENT;
+  case ePixelFormat_Depth32:
+    return GL_DEPTH_COMPONENT;
+  case ePixelFormat_Depth24Stencil8:
+    return GL_DEPTH_STENCIL;
   }
-
   LUMEDA_ASSERT(false);
   return 0;
 }
@@ -263,6 +285,14 @@ GLenum Lumeda::PixelFormatToGLInternalFormat(ePixelFormat format)
     return GL_RGB;
   case ePixelFormat_RGBA:
     return GL_RGBA;
+  case ePixelFormat_Depth16:
+    return GL_DEPTH_COMPONENT16;
+  case ePixelFormat_Depth24:
+    return GL_DEPTH_COMPONENT24;
+  case ePixelFormat_Depth32:
+    return GL_DEPTH_COMPONENT32;
+  case ePixelFormat_Depth24Stencil8:
+    return GL_DEPTH24_STENCIL8;
   }
   LUMEDA_ASSERT(false);
   return 0;
@@ -337,4 +367,19 @@ GLbitfield Lumeda::ClearFlagsToGLFlag(tClearFrameBufferFlag flag)
     result |= GL_STENCIL_BUFFER_BIT;
   }
   return result;
+}
+
+GLenum Lumeda::FrameBufferAttachmentToGL(eFrameBufferAttachment attachment)
+{
+  switch (attachment)
+  {
+  case eFrameBufferAttachment::eFrameBufferAttachment_Color:
+    return GL_COLOR_ATTACHMENT0;
+    break;
+  case eFrameBufferAttachment::eFrameBufferAttachment_DepthStencil:
+    return GL_DEPTH_STENCIL_ATTACHMENT;
+    break;
+  }
+  LUMEDA_ASSERT(false);
+  return 0;
 }

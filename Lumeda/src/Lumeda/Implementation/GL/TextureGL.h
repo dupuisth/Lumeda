@@ -11,25 +11,25 @@ class LowLevelGraphicsGL;
 
 class TextureGL : public iTexture
 {
-  public:
-    TextureGL(const tString& name, eTextureType type, eTextureUsage usage, iLowLevelGraphics& lowLevelGraphics);
-    ~TextureGL();
+public:
+  TextureGL(const tString& name, eTextureType type, eTextureUsage usage, iLowLevelGraphics& lowLevelGraphics);
+  ~TextureGL();
 
-    void CreateFromRawData(const glm::ivec3& size, ePixelFormat pixelFormat, unsigned char* data) override;
+  void CreateFromRawData(const glm::ivec3& size, ePixelFormat pixelFormat, unsigned char* data) override;
 
-    void SetWrapping(eTextureWrapping wrapping) override;
-    void SetFiltering(eTextureFiltering filtering) override;
+  void SetWrapping(eTextureWrapping wrapping) override;
+  void SetFiltering(eTextureFiltering filtering) override;
 
-    bool HasData() { return m_HandleGL != 0; }
-    unsigned int GetHandleGL() { return m_HandleGL; }
+  bool HasData() { return m_HandleGL != 0; }
+  unsigned int GetHandleGL() { return m_HandleGL; }
 
-  private:
-    void CopyTextureDataToGL(unsigned char* data);
-    void ApplyProperties();
+private:
+  void CopyTextureDataToGL(unsigned char* data);
+  void ApplyProperties();
 
-  private:
-    unsigned int m_HandleGL;
+private:
+  unsigned int m_HandleGL;
 
-    LowLevelGraphicsGL& m_LowLevelGraphicsGL;
+  LowLevelGraphicsGL& m_LowLevelGraphicsGL;
 };
 } // namespace Lumeda

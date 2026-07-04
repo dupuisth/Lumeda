@@ -5,20 +5,30 @@
 
 namespace Lumeda
 {
+class TextureGL;
+class RenderBufferGL;
+
 class FrameBufferGL : public iFrameBuffer
 {
-  public:
-    FrameBufferGL(const tString& name, iLowLevelGraphics& lowLevelGraphics);
-    virtual ~FrameBufferGL();
+public:
+  FrameBufferGL(const tString& name, iLowLevelGraphics& lowLevelGraphics);
+  virtual ~FrameBufferGL();
 
-    void AttachTexture2D(eFrameBufferAttachment slot, iTexture& texture) override;
+  void Bind() override;
+  void UnBind() override;
 
-    ///////////////////////////////////////////
-    // GL
-    ///////////////////////////////////////////
-    inline unsigned int GetHandle() { return m_Fbo; }
+  void AttachTexture2D(eFrameBufferAttachment slot, iTexture& texture) override;
+  void AttachRenderBuffer(eFrameBufferAttachment slot, iRenderBuffer& renderBuffer) override;
 
-  private:
-    unsigned int m_Fbo;
+  ///////////////////////////////////////////
+  // GL
+  ///////////////////////////////////////////
+  inline unsigned int GetHandle() { return m_Fbo; }
+
+private:
+  unsigned int m_Fbo;
+
+  TextureGL* m_Attachments[eFrameBufferAttachment_LastValue];
+  RenderBufferGL* m_AttachmentsRenderBuffer[eFrameBufferAttachment_LastValue];
 };
 } // namespace Lumeda

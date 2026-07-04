@@ -9,38 +9,53 @@ namespace Lumeda
 class Camera
 {
 public:
-  Camera(Transform* transform = nullptr);
-  virtual ~Camera();
+  Camera() {}
+  virtual ~Camera() = default;
 
   const glm::mat4& GetProjectionView();
   const glm::mat4& GetProjection();
   const glm::mat4& GetView();
-
-  Transform& GetTransform() { return *m_Transform; }
 
   float GetAspectRatio() { return m_AspectRatio; }
   float GetFOV() { return m_FOV; }
   float GetZNear() { return m_ZNear; }
   float GetZFar() { return m_ZFar; }
 
-  void SetAspectRatio(float aspectRatio);
-  void SetFOV(float fov);
-  void SetZNear(float zNear);
-  void SetZFar(float zFar);
-  void SetDirty(bool dirty = true) { m_IsDirty = dirty; }
-
-  static Camera* GetCurrent();
-  static void SetCurrent(Camera* camera);
-  void SetCurrent();
+  void SetTransform(const glm::vec3& position, const glm::vec3& forward, const glm::vec3& up)
+  {
+    m_Position = position;
+    m_Forward = forward;
+    m_Up = up;
+    m_IsDirty = true;
+  }
+  void SetAspectRatio(float aspectRatio)
+  {
+    m_AspectRatio = aspectRatio;
+    m_IsDirty = true;
+  }
+  void SetFOV(float fov)
+  {
+    m_FOV = fov;
+    m_IsDirty = true;
+  }
+  void SetZNear(float zNear)
+  {
+    m_ZNear = zNear;
+    m_IsDirty = true;
+  }
+  void SetZFar(float zFar)
+  {
+    m_ZFar = zFar;
+    m_IsDirty = true;
+  }
 
 protected:
-  // void OnWindowResized(Window& window, int width, int height);
-
   void Rebuild();
 
 private:
-  Transform* m_Transform;
-  bool m_HasTransformOwnership;
+  glm::vec3 m_Position;
+  glm::vec3 m_Forward;
+  glm::vec3 m_Up;
 
   float m_AspectRatio;
   float m_FOV;

@@ -4,7 +4,7 @@
 
 namespace Sandbox
 {
-class SandboxLayer : public Lumeda::iUpdateable
+class SandboxLayer : public Lumeda::iUpdateable, public Lumeda::iEventReceiver
 {
 public:
   SandboxLayer() : Lumeda::iUpdateable("SandboxLayer") {}
@@ -13,8 +13,15 @@ public:
   void OnStart() override;
   void OnDraw() override;
 
+  bool OnEvent(Lumeda::iEvent& event);
+
 private:
   std::unique_ptr<Lumeda::iVertexBuffer> m_VertexBuffer;
+  std::unique_ptr<Lumeda::iVertexBuffer> m_QuadBuffer;
+
+  std::unique_ptr<Lumeda::iFrameBuffer> m_FrameBuffer;
+  std::unique_ptr<Lumeda::iTexture> m_FrameBufferColor;
+  std::unique_ptr<Lumeda::iRenderBuffer> m_FrameBufferDepthStencil;
 };
 
 } // namespace Sandbox
