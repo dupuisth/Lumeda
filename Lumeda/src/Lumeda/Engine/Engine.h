@@ -51,16 +51,16 @@ private:
 private:
   bool m_ShouldClose;
 
+  std::unique_ptr<EventManager> m_EventManager;
+  std::unique_ptr<Updater> m_Updater;
+
+  std::unique_ptr<iLowLevelEngineSetup> m_LowLevelEngineSetup;
+
   ///////////////////////////////////////////
   // Layers
   ///////////////////////////////////////////
   std::unique_ptr<Graphics> m_Graphics;
   std::unique_ptr<Resources> m_Resources;
   //---------------------------------------//
-
-  std::unique_ptr<iLowLevelEngineSetup> m_LowLevelEngineSetup;
-
-  std::unique_ptr<EventManager> m_EventManager;
-  std::unique_ptr<Updater> m_Updater;
 };
 } // namespace Lumeda
