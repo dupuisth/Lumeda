@@ -68,10 +68,8 @@ void Engine::Run()
     // Drawing
     ///////////////////////////////////////////
     m_Updater->BroadcastMessage(eUpdateableMessage_OnPreDraw);
-    m_Graphics->GetLowLevelGraphics().ClearFrameBuffer(tClearFrameBufferFlag_Color);
     m_Updater->BroadcastMessage(eUpdateableMessage_OnDraw);
     m_Updater->BroadcastMessage(eUpdateableMessage_OnPostDraw);
-    m_Graphics->GetLowLevelGraphics().SwapBuffers();
 
     ///////////////////////////////////////////
     // Event handling

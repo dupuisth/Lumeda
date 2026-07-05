@@ -104,6 +104,7 @@ void SandboxLayer::OnDraw()
   screenProgram->SetUniform("u_ScreenColor", 0);
   m_QuadBuffer->Draw();
   screenProgram->UnBind();
+  engine.GetGraphics().GetLowLevelGraphics().SwapBuffers();
 }
 
 bool SandboxLayer::OnEvent(iEvent& event)

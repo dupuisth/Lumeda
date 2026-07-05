@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Engine/EngineTypes.h>
+#include <Lumeda/Engine/EventReceiver.h>
 #include <Lumeda/Engine/Updateable.h>
 #include <Lumeda/Graphics/GraphicsTypes.h>
 

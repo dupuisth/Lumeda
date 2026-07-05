@@ -5,8 +5,12 @@
 namespace Lumeda
 {
 
+class Entity;
+class Node;
+class LeafNode;
+
 class World
 {
-  
+private:
 };
 } // namespace Lumeda

@@ -16,6 +16,11 @@ TextureGL::~TextureGL()
   }
 }
 
+void TextureGL::Bind(unsigned int slot)
+{
+  m_LowLevelGraphics.SetTexture(slot, *this);
+}
+
 void TextureGL::CreateFromRawData(const glm::ivec3& size, ePixelFormat pixelFormat, unsigned char* data)
 {
   if (!HasData())

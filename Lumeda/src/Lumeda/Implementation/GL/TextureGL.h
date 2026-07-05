@@ -15,6 +15,8 @@ public:
   TextureGL(const tString& name, eTextureType type, eTextureUsage usage, iLowLevelGraphics& lowLevelGraphics);
   ~TextureGL();
 
+  void Bind(unsigned int slot);
+
   void CreateFromRawData(const glm::ivec3& size, ePixelFormat pixelFormat, unsigned char* data) override;
 
   void SetWrapping(eTextureWrapping wrapping) override;

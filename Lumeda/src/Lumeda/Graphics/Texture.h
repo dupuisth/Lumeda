@@ -27,6 +27,7 @@ public:
   bool Reload() { return false; }
   void Unload() {}
   void Destroy() {}
+  virtual void Bind(unsigned int slot) = 0;
 
   virtual void CreateFromRawData(const glm::ivec3& size, ePixelFormat pixelFormat, unsigned char* data) = 0;
 
