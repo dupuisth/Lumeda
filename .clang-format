@@ -1,6 +1,6 @@
 BasedOnStyle: LLVM
-IndentWidth: 4
-TabWidth: 4
+IndentWidth: 2
+TabWidth: 2
 UseTab: Never
 ColumnLimit: 150
 
@@ -15,7 +15,18 @@ PointerAlignment: Left
 ReferenceAlignment: Left
 
 SortIncludes: true
-IncludeBlocks: Regroup
+IncludeBlocks: Merge
+IncludeCategories:
+  - Regex: '^<glad/'
+    Priority: 2
+  - Regex: '^<GLFW/'
+    Priority: 3
+  - Regex: '^<Lumeda/'
+    Priority: 4
+  - Regex: '^<Sandbox/'
+    Priority: 5
+  - Regex: '.*'
+    Priority: 1
 
 # --- Paramètres ---
 BinPackParameters: false
@@ -27,3 +38,6 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: false
 ConstructorInitializerIndentWidth: 4
+
+# --- Template ---
+AlwaysBreakTemplateDeclarations: Yes

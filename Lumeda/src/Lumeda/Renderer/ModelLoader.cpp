@@ -1,87 +1,89 @@
-#include <Lumeda/Core/Engine.h>
-#include <Lumeda/Renderer/Mesh.h>
-#include <Lumeda/Renderer/ModelLoader.h>
-#include <Lumeda/Renderer/Renderer.h>
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-#include <queue>
+// #include <assimp/Importer.hpp>
+// #include <assimp/postprocess.h>
+// #include <assimp/scene.h>
+// #include <queue>
+// #include <Lumeda/Engine/Engine.h>
+// #include <Lumeda/Renderer/Mesh.h>
+// #include <Lumeda/Renderer/ModelLoader.h>
+// #include <Lumeda/Renderer/Renderer.h>
 
-using namespace Lumeda;
+// using namespace Lumeda;
 
-Mesh* ProcessMesh(const std::string& name, aiMesh* aiMesh)
-{
-    LUMEDA_PROFILE;
-    std::vector<float> vertices;
-    std::vector<unsigned int> indices;
+// Mesh* ProcessMesh(const std::string& name, aiMesh* aiMesh)
+// {
+//     LUMEDA_PROFILE;
+//     std::vector<float> vertices;
+//     std::vector<unsigned int> indices;
 
-    for (unsigned int i = 0; i < aiMesh->mNumVertices; i++)
-    {
-        vertices.push_back(aiMesh->mVertices[i].x);
-        vertices.push_back(aiMesh->mVertices[i].y);
-        vertices.push_back(aiMesh->mVertices[i].z);
-        vertices.push_back(aiMesh->mTextureCoords[0][i].x);
-        vertices.push_back(aiMesh->mTextureCoords[0][i].y);
-        vertices.push_back(aiMesh->mNormals[i].x);
-        vertices.push_back(aiMesh->mNormals[i].y);
-        vertices.push_back(aiMesh->mNormals[i].z);
-    }
+//     for (unsigned int i = 0; i < aiMesh->mNumVertices; i++)
+//     {
+//         vertices.push_back(aiMesh->mVertices[i].x);
+//         vertices.push_back(aiMesh->mVertices[i].y);
+//         vertices.push_back(aiMesh->mVertices[i].z);
+//         vertices.push_back(aiMesh->mTextureCoords[0][i].x);
+//         vertices.push_back(aiMesh->mTextureCoords[0][i].y);
+//         vertices.push_back(aiMesh->mNormals[i].x);
+//         vertices.push_back(aiMesh->mNormals[i].y);
+//         vertices.push_back(aiMesh->mNormals[i].z);
+//     }
 
-    for (unsigned int i = 0; i < aiMesh->mNumFaces; i++)
-    {
-        aiFace face = aiMesh->mFaces[i];
-        for (unsigned int j = 0; j < face.mNumIndices; j++)
-        {
-            indices.push_back(face.mIndices[j]);
-        }
-    }
+//     for (unsigned int i = 0; i < aiMesh->mNumFaces; i++)
+//     {
+//         aiFace face = aiMesh->mFaces[i];
+//         for (unsigned int j = 0; j < face.mNumIndices; j++)
+//         {
+//             indices.push_back(face.mIndices[j]);
+//         }
+//     }
 
-    Mesh* mesh = Engine::Get().GetRenderer().CreateMesh(name,
-        vertices,
-        indices,
-        {
-            {0, 3, MeshAttribType::FLOAT},
-            {1, 2, MeshAttribType::FLOAT},
-            {2, 3, MeshAttribType::FLOAT},
-        });
-    return mesh;
-}
+//     // Mesh* mesh = Engine::Get().GetRenderer().CreateMesh(name,
+//     //     vertices,
+//     //     indices,
+//     //     {
+//     //         {0, 3, MeshAttribType::FLOAT},
+//     //         {1, 2, MeshAttribType::FLOAT},
+//     //         {2, 3, MeshAttribType::FLOAT},
+//     //     });
+//     // return mesh;
+//     return nullptr;
+// }
 
-void ModelLoader::LoadModelFromFile(Model* model, const std::string& path)
-{
-    LUMEDA_PROFILE;
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+// void ModelLoader::LoadModelFromFile(Model* model, const std::string& path)
+// {
+//     LUMEDA_PROFILE;
+//     Assimp::Importer importer;
+//     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
-    if (scene == nullptr || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-    {
-        LUMEDA_CORE_ERROR("[ModelLoader]: Assimp error {0}", importer.GetErrorString());
-        return;
-    }
+//     if (scene == nullptr || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+//     {
+//         LUMEDA_CORE_ERROR("[ModelLoader]: Assimp error {0}", importer.GetErrorString());
+//         return;
+//     }
 
-    Material* material = Engine::Get().GetRenderer().CreateMaterial(model->GetName() + "_material");
+//     // Material* material = Engine::Get().GetRenderer().CreateMaterial(model->GetName() + "_material");
+//     Material* material = nullptr;
 
-    int numModelsItem = 0;
-    std::queue<aiNode*> nodes;
-    nodes.push(scene->mRootNode);
-    while (!nodes.empty())
-    {
-        aiNode* node = nodes.front();
+//     int numModelsItem = 0;
+//     std::queue<aiNode*> nodes;
+//     nodes.push(scene->mRootNode);
+//     while (!nodes.empty())
+//     {
+//         aiNode* node = nodes.front();
 
-        for (unsigned int i = 0; i < node->mNumMeshes; i++)
-        {
-            aiMesh* aiMesh = scene->mMeshes[node->mMeshes[i]];
+//         for (unsigned int i = 0; i < node->mNumMeshes; i++)
+//         {
+//             aiMesh* aiMesh = scene->mMeshes[node->mMeshes[i]];
 
-            std::string name = model->GetName() + "_" + std::to_string(numModelsItem++);
-            Mesh* mesh = ProcessMesh(name, aiMesh);
-            model->AttachItem({mesh, material});
-        }
+//             std::string name = model->GetName() + "_" + std::to_string(numModelsItem++);
+//             Mesh* mesh = ProcessMesh(name, aiMesh);
+//             model->AttachItem({mesh, material});
+//         }
 
-        for (unsigned int i = 0; i < node->mNumChildren; i++)
-        {
-            nodes.push(node->mChildren[i]);
-        }
+//         for (unsigned int i = 0; i < node->mNumChildren; i++)
+//         {
+//             nodes.push(node->mChildren[i]);
+//         }
 
-        nodes.pop();
-    }
-}
+//         nodes.pop();
+//     }
+// }

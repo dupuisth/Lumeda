@@ -8,6 +8,7 @@
             ],
             "includePath": [
                 "${workspaceFolder}/Lumeda/src",
+                "${workspaceFolder}/Sandbox/src",
                 "${workspaceFolder}/Lumeda/vendor/spdlog/include",
                 "${workspaceFolder}/Lumeda/vendor/glad/include",
                 "${workspaceFolder}/Lumeda/vendor/glfw/include",
@@ -21,7 +22,7 @@
                 "${workspaceFolder}/Lumeda/vendor/tracy/public"
             ],
             "intelliSenseMode": "linux-gcc-x64",
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "/usr/bin/g++",
             "cStandard": "c17",
             "cppStandard": "gnu++20"
         }
