@@ -9,7 +9,6 @@
 #include <Lumeda/Engine/Updateable.h>
 #include <Lumeda/Engine/Updater.h>
 #include <Lumeda/Graphics/Graphics.h>
-#include <Lumeda/Imgui/ImGuiLayer.h>
 #include <Lumeda/Resources/Resources.h>
 
 namespace Lumeda
