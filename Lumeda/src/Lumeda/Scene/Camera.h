@@ -28,21 +28,25 @@ public:
     m_Up = up;
     m_IsDirty = true;
   }
+
   void SetAspectRatio(float aspectRatio)
   {
     m_AspectRatio = aspectRatio;
     m_IsDirty = true;
   }
+
   void SetFOV(float fov)
   {
     m_FOV = fov;
     m_IsDirty = true;
   }
+
   void SetZNear(float zNear)
   {
     m_ZNear = zNear;
     m_IsDirty = true;
   }
+
   void SetZFar(float zFar)
   {
     m_ZFar = zFar;
