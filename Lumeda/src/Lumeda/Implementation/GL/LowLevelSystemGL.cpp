@@ -8,7 +8,10 @@ using namespace Lumeda;
 extern int lumedaMain();
 
 #ifdef WIN32
-#error "Not ready for this!"
+int main(int argc, char* argv[])
+{
+  return lumedaMain();
+}
 #else
 int main(int argc, char* argv[])
 {
