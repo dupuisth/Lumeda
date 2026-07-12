@@ -6,8 +6,8 @@ UniformMap iRenderable::GetAdditionalUniforms()
 {
   UniformMap map = UniformMap();
 
-  map.SetUniform("u_World", GetWorldMatrix());
-  map.SetUniform("u_Position", m_Position);
+  map.SetUniform(tShaderCommonUniform_ObjectWorld, GetWorldMatrix());
+  map.SetUniform(tShaderCommonUniform_ObjectPosition, m_Position);
 
   return map;
 }

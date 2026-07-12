@@ -161,6 +161,18 @@ enum eShaderType
   eShaderType_LastEnum
 };
 
+#define tShaderCommonUniform_CameraMatrix ("u_Camera")
+#define tShaderCommonUniform_CameraProject ("u_CameraProj")
+#define tShaderCommonUniform_CameraView ("u_CameraView")
+
+#define tShaderCommonUniform_ObjectWorld ("u_World")
+#define tShaderCommonUniform_ObjectLocalPosition ("u_LocalPosition")
+#define tShaderCommonUniform_ObjectLocalRotation ("u_LocalRotation")
+#define tShaderCommonUniform_ObjectLocalScale ("u_LocalScale")
+#define tShaderCommonUniform_ObjectPosition ("u_Position")
+#define tShaderCommonUniform_ObjectRotation ("u_Rotation")
+#define tShaderCommonUniform_ObjectScale ("u_Scale")
+
 //---------------------------------------//
 
 ///////////////////////////////////////////

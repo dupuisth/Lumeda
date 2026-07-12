@@ -99,7 +99,7 @@ public:
   // GL
   ///////////////////////////////////////////
   GLFWwindow* GetOpenGLWindow() { return m_Window; }
-  tString GetOpenGLShaderVersionHeader() { return "#version 460"; }
+  tString GetOpenGLShaderVersionHeader() { return "#version 460 core"; }
 
 private:
   // Events
