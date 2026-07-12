@@ -29,7 +29,7 @@ public:
   /// @brief Destroy a child node (Remove a child from the child list and destroy it)
   void DestroyChild(LeafNode* node);
 
-  const std::vector<std::unique_ptr<LeafNode>>& GetNode() { return m_Childs; }
+  const std::vector<std::unique_ptr<LeafNode>>& GetChilds() { return m_Childs; }
 
 protected:
   std::vector<std::unique_ptr<LeafNode>> m_Childs;

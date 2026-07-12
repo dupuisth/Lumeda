@@ -3,8 +3,8 @@
 ///////////////////////////////////////////
 // Layout
 ///////////////////////////////////////////
-layout (location = 0) in vec2 a_Pos;
-layout (location = 1) in vec2 a_Uv;
+layout (location = 0) in vec2 v_Pos;
+layout (location = 1) in vec2 v_Uv;
 
 ///////////////////////////////////////////
 // OUT
@@ -17,6 +17,6 @@ out vec2 f_Uv;
 ///////////////////////////////////////////
 void main()
 {
-  f_Uv = a_Uv;
-  gl_Position = vec4(a_Pos.x, a_Pos.y, 0.0, 1.0);
+  f_Uv = v_Uv;
+  gl_Position = vec4(v_Pos.x, v_Pos.y, 0.0, 1.0);
 }

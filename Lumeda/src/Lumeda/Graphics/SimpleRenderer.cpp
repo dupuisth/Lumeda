@@ -1,6 +1,10 @@
+#include <queue>
 #include <set>
 #include <Lumeda/Graphics/SimpleRenderer.h>
 #include <Lumeda/Graphics/VertexBuffer.h>
+#include <Lumeda/Scene/Node.h>
+#include <Lumeda/Scene/Renderable.h>
+#include <Lumeda/Scene/World.h>
 
 using namespace Lumeda;
 
@@ -14,6 +18,31 @@ void SimpleRenderer::Submit(iVertexBuffer* vertexBuffer, Material* material, Uni
 
 void SimpleRenderer::Submit(World& world)
 {
+  std::queue<LeafNode*> iterationQueue;
+  iterationQueue.push(&world.GetRootNode());
+
+  while (!iterationQueue.empty())
+  {
+    LeafNode* leafNode = iterationQueue.front();
+    iterationQueue.pop();
+
+    // Try to cast as renderable and submit if succeed
+    iRenderable* renderable = dynamic_cast<iRenderable*>(leafNode);
+    if (renderable != nullptr)
+    {
+      Submit(renderable->GetVertexBuffer(), renderable->GetMaterial(), renderable->GetAdditionalUniforms());
+    }
+
+    // If has childs, append them
+    Node* node = dynamic_cast<Node*>(leafNode);
+    if (node != nullptr)
+    {
+      for (auto& child : node->GetChilds())
+      {
+        iterationQueue.push(child.get());
+      }
+    }
+  }
 }
 
 ///////////////////////////////////////////

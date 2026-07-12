@@ -30,6 +30,8 @@ private:
 
   std::unique_ptr<Lumeda::SimpleRenderer> m_WorldRenderer;
   std::unique_ptr<Lumeda::SimpleRenderer> m_ScreenRenderer;
+
+  std::unique_ptr<Lumeda::World> m_World;
 };
 
 } // namespace Sandbox
