@@ -2,7 +2,6 @@
 
 #include <glm/glm.hpp>
 #include <Lumeda/Core/Base.h>
-#include <Lumeda/Core/Transform.h>
 
 namespace Lumeda
 {

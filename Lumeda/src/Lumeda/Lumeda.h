@@ -39,3 +39,8 @@
 #include <Lumeda/Resources/ResourceManager.h>
 #include <Lumeda/Resources/Resources.h>
 #include <Lumeda/Resources/TextureManager.h>
+
+///////////////////////////////////////////
+// ImGui
+///////////////////////////////////////////
+#include <Lumeda/ImGui/ImGuiLayer.h>

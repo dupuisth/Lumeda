@@ -9,6 +9,7 @@
 #include <Lumeda/Engine/Updateable.h>
 #include <Lumeda/Engine/Updater.h>
 #include <Lumeda/Graphics/Graphics.h>
+#include <Lumeda/ImGui/ImGuiLayer.h>
 #include <Lumeda/Resources/Resources.h>
 
 namespace Lumeda
@@ -29,6 +30,7 @@ public:
   Resources& GetResources() { return *m_Resources; }
   Updater& GetUpdater() { return *m_Updater; }
   EventManager& GetEventManager() { return *m_EventManager; }
+  iImGuiLayer& GetImGui() { return *m_ImGui; }
   //---------------------------------------//
 
   ///////////////////////////////////////////
@@ -56,10 +58,11 @@ private:
   std::unique_ptr<iLowLevelEngineSetup> m_LowLevelEngineSetup;
 
   ///////////////////////////////////////////
-  // Layers
+  // Layers (respect the order)
   ///////////////////////////////////////////
   std::unique_ptr<Graphics> m_Graphics;
   std::unique_ptr<Resources> m_Resources;
+  std::unique_ptr<iImGuiLayer> m_ImGui;
   //---------------------------------------//
 };
 } // namespace Lumeda

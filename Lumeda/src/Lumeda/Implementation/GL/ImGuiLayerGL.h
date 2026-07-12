@@ -1,0 +1,31 @@
+#pragma once
+
+#include <Lumeda/Core/Base.h>
+#include <Lumeda/Engine/EventManager.h>
+#include <Lumeda/Graphics/LowLevelGraphics.h>
+#include <Lumeda/ImGui/ImGuiLayer.h>
+#include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
+
+namespace Lumeda
+{
+class ImGuiLayerGL : public iImGuiLayer
+{
+public:
+  ImGuiLayerGL(EventManager& eventManager, LowLevelGraphicsGL& lowLevelGraphics) :
+      iImGuiLayer(), m_EventManager(eventManager), m_LowLevelGraphics(lowLevelGraphics), m_IsInitialized(false)
+  {
+  }
+  ~ImGuiLayerGL();
+
+  void OnStart() override;
+
+  void OnPreDraw() override;
+  void OnPostDraw() override;
+
+private:
+  EventManager& m_EventManager;
+  LowLevelGraphicsGL& m_LowLevelGraphics;
+
+  bool m_IsInitialized;
+};
+} // namespace Lumeda

@@ -1,3 +1,4 @@
+#include <imgui.h>
 #include <glad/glad.h>
 #include <Sandbox/SandboxBase.h>
 #include <Sandbox/SandboxLayer.h>
@@ -96,15 +97,6 @@ void SandboxLayer::OnDraw()
   m_VertexBuffer->Draw();
   defaultProgram->UnBind();
   m_FrameBuffer->UnBind();
-
-  engine.GetGraphics().GetLowLevelGraphics().ClearFrameBuffer(tClearFrameBufferFlag_Color);
-
-  engine.GetGraphics().GetLowLevelGraphics().SetTexture(0, *m_FrameBufferColor);
-  screenProgram->Bind();
-  screenProgram->SetUniform("u_ScreenColor", 0);
-  m_QuadBuffer->Draw();
-  screenProgram->UnBind();
-  engine.GetGraphics().GetLowLevelGraphics().SwapBuffers();
 }
 
 bool SandboxLayer::OnEvent(iEvent& event)
