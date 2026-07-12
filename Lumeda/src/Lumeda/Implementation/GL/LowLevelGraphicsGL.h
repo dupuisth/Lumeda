@@ -99,6 +99,7 @@ public:
   // GL
   ///////////////////////////////////////////
   GLFWwindow* GetOpenGLWindow() { return m_Window; }
+  tString GetOpenGLShaderVersionHeader() { return "#version 460"; }
 
 private:
   // Events

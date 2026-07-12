@@ -1,9 +1,22 @@
 #include <glad/glad.h>
+#include <Lumeda/Graphics/LowLevelGraphics.h>
 #include <Lumeda/Implementation/GL/GpuShaderGL.h>
 #include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
 #include <Lumeda/System/LowLevelSystem.h>
 
 using namespace Lumeda;
+
+GpuShaderGL::GpuShaderGL(const tString& name,
+    const twString& path,
+    eShaderType type,
+    iLowLevelSystem& lowLevelSystem,
+    iLowLevelGraphics& lowLevelGraphics) :
+    iGpuShader(name, path, type),
+    m_Handle(BUFFER_NULL_VALUE),
+    m_LowLevelSystem(lowLevelSystem),
+    m_LowLevelGraphics(static_cast<LowLevelGraphicsGL&>(lowLevelGraphics))
+{
+}
 
 GpuShaderGL::~GpuShaderGL()
 {
@@ -22,16 +35,25 @@ bool GpuShaderGL::CreateFromFile(const twString& path)
   }
   SetPath(path);
 
-  const char* source = stringContent.c_str();
-  return CreateFromSource(source);
+  return CreateFromSource(stringContent);
 }
 
-bool GpuShaderGL::CreateFromSource(const char* source)
+bool GpuShaderGL::CreateFromSource(tString& source)
 {
   GLenum GLShaderType = ShaderTypeToGLType(m_Type);
 
+  // Remove the header if present
+  if (source.starts_with('#'))
+  {
+    size_t endPosition = source.find_first_of('\n', 0);
+    source.erase(0, endPosition);
+  }
+  source = m_LowLevelGraphics.GetOpenGLShaderVersionHeader() + "\n" + source;
+
+  const char* sourceC = source.c_str();
+
   m_Handle = glCreateShader(GLShaderType);
-  glShaderSource(m_Handle, 1, &source, nullptr);
+  glShaderSource(m_Handle, 1, &sourceC, nullptr);
   glCompileShader(m_Handle);
 
   // Check compilation

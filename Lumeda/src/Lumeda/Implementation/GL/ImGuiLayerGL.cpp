@@ -23,7 +23,7 @@ void ImGuiLayerGL::OnStart()
   ImGui::StyleColorsLight();
 
   ImGui_ImplGlfw_InitForOpenGL(m_LowLevelGraphics.GetOpenGLWindow(), true);
-  ImGui_ImplOpenGL3_Init("#version 460");
+  ImGui_ImplOpenGL3_Init(m_LowLevelGraphics.GetOpenGLShaderVersionHeader().c_str());
 
   m_IsInitialized = true;
 }

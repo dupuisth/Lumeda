@@ -6,14 +6,13 @@
 namespace Lumeda
 {
 class iLowLevelSystem;
+class iLowLevelGraphics;
+class LowLevelGraphicsGL;
 
 class GpuShaderGL : public iGpuShader
 {
 public:
-  GpuShaderGL(const tString& name, const twString& path, eShaderType type, iLowLevelSystem& lowLevelSystem) :
-      iGpuShader(name, path, type), m_Handle(BUFFER_NULL_VALUE), m_LowLevelSystem(lowLevelSystem)
-  {
-  }
+  GpuShaderGL(const tString& name, const twString& path, eShaderType type, iLowLevelSystem& lowLevelSystem, iLowLevelGraphics& lowLevelGraphics);
   ~GpuShaderGL();
 
   bool Reload() { return false; }
@@ -21,7 +20,7 @@ public:
   void Destroy() {};
 
   bool CreateFromFile(const twString& path) override;
-  bool CreateFromSource(const char* source) override;
+  bool CreateFromSource(tString& source) override;
 
   ///////////////////////////////////////////
   // GL
@@ -33,6 +32,8 @@ private:
   static const size_t INFO_LOG_SIZE = 512;
 
   iLowLevelSystem& m_LowLevelSystem;
+  LowLevelGraphicsGL& m_LowLevelGraphics;
+
   unsigned int m_Handle;
 };
 

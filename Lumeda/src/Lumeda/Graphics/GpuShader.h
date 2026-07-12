@@ -15,7 +15,7 @@ public:
   eShaderType GetType() { return m_Type; }
 
   virtual bool CreateFromFile(const twString& path) = 0;
-  virtual bool CreateFromSource(const char* source) = 0;
+  virtual bool CreateFromSource(tString& source) = 0;
 
 protected:
   eShaderType m_Type;

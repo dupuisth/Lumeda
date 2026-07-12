@@ -226,7 +226,7 @@ std::unique_ptr<iVertexBuffer> LowLevelGraphicsGL::CreateVertexBuffer()
 ///////////////////////////////////////////
 std::unique_ptr<iGpuShader> LowLevelGraphicsGL::CreateShader(const tString& name, const twString& path, eShaderType type)
 {
-  std::unique_ptr<iGpuShader> shader = std::make_unique<GpuShaderGL>(name, path, type, m_LowLevelSystem);
+  std::unique_ptr<iGpuShader> shader = std::make_unique<GpuShaderGL>(name, path, type, m_LowLevelSystem, *this);
   return std::move(shader);
 }
 
