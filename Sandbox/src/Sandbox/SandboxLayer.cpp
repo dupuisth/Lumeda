@@ -6,7 +6,7 @@
 using namespace Lumeda;
 using namespace Sandbox;
 
-void QuickCreateProgram(const tString& programName, const twString& vPath, const twString& fPath)
+iGpuProgram* QuickCreateProgram(const tString& programName, const twString& vPath, const twString& fPath)
 {
   SandboxBase& base = GetSandboxBase();
   Engine& engine = base.GetEngine();
@@ -21,6 +21,8 @@ void QuickCreateProgram(const tString& programName, const twString& vPath, const
   gpuProgram->AttachShader(vertexShader);
   gpuProgram->AttachShader(fragmentShader);
   gpuProgram->Link();
+
+  return gpuProgram;
 }
 
 void SandboxLayer::OnStart()
@@ -31,8 +33,11 @@ void SandboxLayer::OnStart()
 
   engine.GetGraphics().GetLowLevelGraphics().SetVSync(true);
 
-  QuickCreateProgram("default", L"assets/shaders/default.vert", L"assets/shaders/default.frag");
-  QuickCreateProgram("core_screen", L"assets/shaders/core_screen.vert", L"assets/shaders/core_screen.frag");
+  m_WorldRenderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
+  m_ScreenRenderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
+
+  iGpuProgram* defaultProgram = QuickCreateProgram("default", L"assets/shaders/default.vert", L"assets/shaders/default.frag");
+  iGpuProgram* screenProgram = QuickCreateProgram("core_screen", L"assets/shaders/core_screen.vert", L"assets/shaders/core_screen.frag");
 
   m_VertexBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
   // clang-format off
@@ -79,24 +84,33 @@ void SandboxLayer::OnStart()
   m_FrameBufferDepthStencil->SetStorage(glm::ivec2(400, 400), ePixelFormat_Depth24Stencil8);
   m_FrameBuffer->AttachTexture2D(eFrameBufferAttachment_Color, *m_FrameBufferColor);
   m_FrameBuffer->AttachRenderBuffer(eFrameBufferAttachment_DepthStencil, *m_FrameBufferDepthStencil);
+
+  m_ScreenMaterial = std::make_unique<Material>();
+  m_ScreenMaterial->SetProgram(screenProgram);
+  m_ScreenMaterial->GetUniformMap().SetUniform("u_ScreenTexture", m_FrameBufferColor.get());
+  m_BasicMaterial = std::make_unique<Material>();
+  m_BasicMaterial->SetProgram(defaultProgram);
+
+  m_WorldRenderer->SetFrameBuffer(m_FrameBuffer.get());
 }
 
 void SandboxLayer::OnDraw()
 {
   SandboxBase& base = GetSandboxBase();
   Engine& engine = base.GetEngine();
-  iGpuProgram* defaultProgram = base.GetEngine().GetResources().GetGpuProgramManager().GetResourceByName("default");
-  iGpuProgram* screenProgram = base.GetEngine().GetResources().GetGpuProgramManager().GetResourceByName("core_screen");
 
-  engine.GetGraphics().GetLowLevelGraphics().SetClearColor({0.0f, 0.0f, 0.0f, 0.0f});
+  m_WorldRenderer->Submit(m_VertexBuffer.get(), m_BasicMaterial.get(), UniformMap());
+  m_WorldRenderer->Flush(UniformMap(), true);
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  m_FrameBuffer->Bind();
-  engine.GetGraphics().GetLowLevelGraphics().ClearFrameBuffer(tClearFrameBufferFlag_Color | tClearFrameBufferFlag_Depth);
-  defaultProgram->Bind();
-  m_VertexBuffer->Draw();
-  defaultProgram->UnBind();
-  m_FrameBuffer->UnBind();
+  m_ScreenRenderer->Submit(m_QuadBuffer.get(), m_ScreenMaterial.get(), UniformMap());
+  m_ScreenRenderer->Flush(UniformMap(), true);
+}
+
+void SandboxLayer::OnPostDraw()
+{
+  SandboxBase& base = GetSandboxBase();
+  Engine& engine = base.GetEngine();
+  engine.GetGraphics().GetLowLevelGraphics().SwapBuffers();
 }
 
 bool SandboxLayer::OnEvent(iEvent& event)

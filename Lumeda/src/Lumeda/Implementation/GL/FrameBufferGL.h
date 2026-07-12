@@ -20,6 +20,9 @@ public:
   void AttachTexture2D(eFrameBufferAttachment slot, iTexture& texture) override;
   void AttachRenderBuffer(eFrameBufferAttachment slot, iRenderBuffer& renderBuffer) override;
 
+  iTexture* GetTexture2DAttachment(eFrameBufferAttachment slot) override;
+  iRenderBuffer* GetRenderBufferAttachment(eFrameBufferAttachment slot) override;
+
   ///////////////////////////////////////////
   // GL
   ///////////////////////////////////////////

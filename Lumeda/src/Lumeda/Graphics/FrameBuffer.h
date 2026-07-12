@@ -23,6 +23,9 @@ public:
   virtual void AttachTexture2D(eFrameBufferAttachment slot, iTexture& texture) = 0;
   virtual void AttachRenderBuffer(eFrameBufferAttachment slot, iRenderBuffer& renderBuffer) = 0;
 
+  virtual iTexture* GetTexture2DAttachment(eFrameBufferAttachment slot) = 0;
+  virtual iRenderBuffer* GetRenderBufferAttachment(eFrameBufferAttachment slot) = 0;
+
 protected:
   iLowLevelGraphics& m_LowlevelGraphics;
   tString m_Name;

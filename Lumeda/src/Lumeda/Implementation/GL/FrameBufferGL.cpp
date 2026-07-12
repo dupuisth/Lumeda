@@ -28,6 +28,7 @@ void FrameBufferGL::UnBind()
 
 void FrameBufferGL::AttachTexture2D(eFrameBufferAttachment slot, iTexture& texture)
 {
+  LUMEDA_ASSERT(slot >= 0 && slot < eFrameBufferAttachment_LastValue, "slot out of range");
   GLenum GLSlot = FrameBufferAttachmentToGL(slot);
 
   TextureGL& casted_texture = static_cast<TextureGL&>(texture);
@@ -41,6 +42,7 @@ void FrameBufferGL::AttachTexture2D(eFrameBufferAttachment slot, iTexture& textu
 
 void FrameBufferGL::AttachRenderBuffer(eFrameBufferAttachment slot, iRenderBuffer& renderBuffer)
 {
+  LUMEDA_ASSERT(slot >= 0 && slot < eFrameBufferAttachment_LastValue, "slot out of range");
   GLenum GLSlot = FrameBufferAttachmentToGL(slot);
 
   RenderBufferGL& castedRenderBuffer = static_cast<RenderBufferGL&>(renderBuffer);
@@ -50,4 +52,16 @@ void FrameBufferGL::AttachRenderBuffer(eFrameBufferAttachment slot, iRenderBuffe
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   m_AttachmentsRenderBuffer[slot] = &castedRenderBuffer;
+}
+
+iTexture* FrameBufferGL::GetTexture2DAttachment(eFrameBufferAttachment slot)
+{
+  LUMEDA_ASSERT(slot >= 0 && slot < eFrameBufferAttachment_LastValue, "slot out of range");
+  return m_Attachments[slot];
+}
+
+iRenderBuffer* FrameBufferGL::GetRenderBufferAttachment(eFrameBufferAttachment slot)
+{
+  LUMEDA_ASSERT(slot >= 0 && slot < eFrameBufferAttachment_LastValue, "slot out of range");
+  return m_AttachmentsRenderBuffer[slot];
 }

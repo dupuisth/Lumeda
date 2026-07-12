@@ -27,6 +27,8 @@
 #include <Lumeda/Graphics/GraphicsTypes.h>
 #include <Lumeda/Graphics/LowLevelGraphics.h>
 #include <Lumeda/Graphics/RenderBuffer.h>
+#include <Lumeda/Graphics/Renderer.h>
+#include <Lumeda/Graphics/SimpleRenderer.h>
 #include <Lumeda/Graphics/Texture.h>
 #include <Lumeda/Graphics/VertexBuffer.h>
 

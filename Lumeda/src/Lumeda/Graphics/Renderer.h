@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Lumeda/Core/Base.h>
+#include <Lumeda/Engine/Updateable.h>
 #include <Lumeda/Graphics/FrameBuffer.h>
 #include <Lumeda/Graphics/GpuProgram.h>
 #include <Lumeda/Graphics/GraphicsTypes.h>
@@ -20,16 +21,41 @@ public:
   UniformMap additionalUniforms;
 };
 
-class Renderer
+class World;
+
+class iRenderer : public iUpdateable
 {
-
 public:
-  Renderer();
-  ~Renderer();
+  iRenderer(const tString& name) : iUpdateable(name), m_TargetFramebuffer(nullptr) {}
+  virtual ~iRenderer() = default;
 
-  void Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms);
+  ///////////////////////////////////////////
+  // Submits / Commands
+  ///////////////////////////////////////////
+  virtual void Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms) = 0;
+  virtual void Submit(World& world) = 0;
 
-private:
+  virtual void ClearCommands() { m_RenderCommands.clear(); }
+
+  ///////////////////////////////////////////
+  // Render
+  ///////////////////////////////////////////
+  virtual void Flush(UniformMap globalUniforms, bool clearCommands) = 0;
+
+  ///////////////////////////////////////////
+  // Config
+  ///////////////////////////////////////////
+  void SetFrameBuffer(iFrameBuffer* framebuffer) { m_TargetFramebuffer = framebuffer; }
+  iFrameBuffer* GetFrameBuffer() { return m_TargetFramebuffer; }
+
+  ///////////////////////////////////////////
+  // Debugging
+  ///////////////////////////////////////////
+  const std::vector<RenderCommand>& GetRenderCommands() { return m_RenderCommands; }
+
+protected:
   std::vector<RenderCommand> m_RenderCommands;
+
+  iFrameBuffer* m_TargetFramebuffer;
 };
 } // namespace Lumeda

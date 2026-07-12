@@ -24,7 +24,6 @@ void UniformMap::Clear()
 
 void UniformMap::Apply(iGpuProgram& gpuProgram)
 {
-  gpuProgram.Bind();
   LUMEDA_UNIFORM_MAP_APPLY(m_UniformFloat, gpuProgram)
   LUMEDA_UNIFORM_MAP_APPLY(m_UniformVec2, gpuProgram)
   LUMEDA_UNIFORM_MAP_APPLY(m_UniformVec3, gpuProgram)
@@ -39,6 +38,4 @@ void UniformMap::Apply(iGpuProgram& gpuProgram)
     item.second->Bind(currentTextureSlot);
     gpuProgram.SetUniform(item.first, (int)currentTextureSlot);
   }
-
-  gpuProgram.UnBind();
 }

@@ -13,6 +13,8 @@ public:
   void OnStart() override;
   void OnDraw() override;
 
+  void OnPostDraw() override;
+
   bool OnEvent(Lumeda::iEvent& event);
 
 private:
@@ -22,6 +24,12 @@ private:
   std::unique_ptr<Lumeda::iFrameBuffer> m_FrameBuffer;
   std::unique_ptr<Lumeda::iTexture> m_FrameBufferColor;
   std::unique_ptr<Lumeda::iRenderBuffer> m_FrameBufferDepthStencil;
+
+  std::unique_ptr<Lumeda::Material> m_BasicMaterial;
+  std::unique_ptr<Lumeda::Material> m_ScreenMaterial;
+
+  std::unique_ptr<Lumeda::SimpleRenderer> m_WorldRenderer;
+  std::unique_ptr<Lumeda::SimpleRenderer> m_ScreenRenderer;
 };
 
 } // namespace Sandbox
