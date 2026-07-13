@@ -10,6 +10,7 @@ layout (location = 0) in vec3 v_Pos;
 ///////////////////////////////////////////
 uniform mat4 u_World;
 uniform vec3 u_Position;
+uniform mat4 u_Camera;
 
 ///////////////////////////////////////////
 // OUT
@@ -22,5 +23,5 @@ uniform vec3 u_Position;
 ///////////////////////////////////////////
 void main()
 {
-    gl_Position = u_World * vec4(v_Pos, 1.0);
+    gl_Position = u_Camera * u_World * vec4(v_Pos, 1.0);
 }

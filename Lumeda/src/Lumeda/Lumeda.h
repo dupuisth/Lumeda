@@ -45,6 +45,8 @@
 ///////////////////////////////////////////
 // Scene
 ///////////////////////////////////////////
+#include <Lumeda/Scene/Camera.h>
+#include <Lumeda/Scene/CameraEntity.h>
 #include <Lumeda/Scene/Entity.h>
 #include <Lumeda/Scene/LeafNode.h>
 #include <Lumeda/Scene/MeshEntity.h>

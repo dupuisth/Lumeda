@@ -6,8 +6,6 @@
 using namespace Lumeda;
 using namespace Sandbox;
 
-float r = 0.0f;
-
 iGpuProgram* QuickCreateProgram(const tString& programName, const twString& vPath, const twString& fPath)
 {
   SandboxBase& base = GetSandboxBase();
@@ -96,10 +94,29 @@ void SandboxLayer::OnStart()
   m_WorldRenderer->SetFrameBuffer(m_FrameBuffer.get());
 
   m_World = std::make_unique<World>();
+
+  // First triangle
   std::unique_ptr<MeshEntity> meshEntity = std::make_unique<MeshEntity>("Triangle");
   meshEntity->SetVertexBuffer(m_VertexBuffer.get());
   meshEntity->SetMaterial(m_BasicMaterial.get());
   m_World->GetRootNode().AddChild(std::move(meshEntity));
+
+  // Second triangle
+  std::unique_ptr<MeshEntity> meshEntity2 = std::make_unique<MeshEntity>("Triangle2");
+  meshEntity2->SetPosition(glm::vec3(0.0f, 0.2f, 0.3f));
+  meshEntity2->SetVertexBuffer(m_VertexBuffer.get());
+  meshEntity2->SetMaterial(m_BasicMaterial.get());
+  m_World->GetRootNode().AddChild(std::move(meshEntity2));
+
+  std::unique_ptr<CameraEntity> cameraEntity = std::make_unique<CameraEntity>("Camera");
+  cameraEntity->GetCamera().SetZNear(0.01f);
+  cameraEntity->GetCamera().SetZFar(100.0f);
+  cameraEntity->GetCamera().SetFOV(80.0f);
+  cameraEntity->GetCamera().SetAspectRatio(
+      (float)engine.GetGraphics().GetLowLevelGraphics().GetWidth() / (float)engine.GetGraphics().GetLowLevelGraphics().GetHeight());
+
+  cameraEntity->SetPosition(glm::vec3(0.0f, 0.0f, -2.0f));
+  m_CameraEntity = static_cast<CameraEntity*>(m_World->GetRootNode().AddChild(std::move(cameraEntity)));
 }
 
 void SandboxLayer::OnDraw()
@@ -107,8 +124,10 @@ void SandboxLayer::OnDraw()
   SandboxBase& base = GetSandboxBase();
   Engine& engine = base.GetEngine();
 
+  UniformMap worldUniforms;
+  worldUniforms.SetUniform(tShaderCommonUniform_CameraMatrix, m_CameraEntity->GetCamera().GetProjectionView());
   m_WorldRenderer->Submit(*m_World);
-  m_WorldRenderer->Flush(UniformMap(), true);
+  m_WorldRenderer->Flush(worldUniforms, true);
 
   m_ScreenRenderer->Submit(m_QuadBuffer.get(), m_ScreenMaterial.get(), UniformMap());
   m_ScreenRenderer->Flush(UniformMap(), true);

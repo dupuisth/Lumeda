@@ -36,7 +36,7 @@ Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
   m_Updater->AddUpdateable(this);
   m_Updater->AddUpdateable(m_Resources.get());
   m_Updater->AddUpdateable(m_Graphics.get());
-  m_Updater->AddUpdateable(m_ImGui.get());
+  m_Updater->AddUpdateableOverlay(m_ImGui.get());
   //---------------------------------------//
 
   m_EventManager->AddReceiver(this);

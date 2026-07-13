@@ -93,4 +93,9 @@ void SimpleRenderer::Flush(UniformMap globalUniforms, bool clearCommands)
   {
     m_TargetFramebuffer->UnBind();
   }
+
+  if (clearCommands)
+  {
+    ClearCommands();
+  }
 }

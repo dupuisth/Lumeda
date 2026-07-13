@@ -129,12 +129,16 @@ bool LowLevelGraphicsGL::OnEvent(iEvent& event)
 
 int LowLevelGraphicsGL::GetWidth() const
 {
-  return 0;
+  int w, h;
+  glfwGetWindowSize(m_Window, &w, &h);
+  return w;
 }
 
 int LowLevelGraphicsGL::GetHeight() const
 {
-  return 0;
+  int w, h;
+  glfwGetWindowSize(m_Window, &w, &h);
+  return h;
 }
 
 void LowLevelGraphicsGL::SetSize(const glm::ivec2& size)

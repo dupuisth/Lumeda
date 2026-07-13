@@ -19,6 +19,9 @@ public:
   float GetFOV() { return m_FOV; }
   float GetZNear() { return m_ZNear; }
   float GetZFar() { return m_ZFar; }
+  const glm::vec3& GetPosition() { return m_Position; }
+  const glm::vec3& GetForward() { return m_Forward; }
+  const glm::vec3& GetUp() { return m_Up; }
 
   void SetTransform(const glm::vec3& position, const glm::vec3& forward, const glm::vec3& up)
   {

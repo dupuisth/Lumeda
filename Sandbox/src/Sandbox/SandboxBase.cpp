@@ -17,7 +17,7 @@ bool SandboxBase::Init()
   m_Engine = Engine::CreateLumedaEngine(eLumedaBackend_OpenGL);
 
   m_SandboxLayer = std::make_unique<SandboxLayer>();
-  m_Engine->GetUpdater().AddUpdateable(m_SandboxLayer.get());
+  m_Engine->GetUpdater().AddUpdateableOverlay(m_SandboxLayer.get());
 
   return true;
 }
