@@ -5,7 +5,14 @@
 namespace Lumeda
 {
 typedef std::string tString;
+
+#ifdef LUMEDA_USE_WIDE_STRING
 typedef std::wstring twString;
+#define _W(t) L##t
+#else
+typedef std::string twString;
+#define _W(t) t
+#endif
 
 // Default flag type
 typedef unsigned int tFlag;

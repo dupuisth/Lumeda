@@ -10,7 +10,7 @@ namespace Lumeda
 class iRenderBuffer : public iResourceBase
 {
 public:
-  iRenderBuffer(const tString& name) : iResourceBase(name, L"") {}
+  iRenderBuffer(const tString& name) : iResourceBase(name, _W("")) {}
   virtual ~iRenderBuffer() = default;
 
   virtual void Bind() = 0;

@@ -11,10 +11,10 @@ iGpuProgram* QuickCreateProgram(const tString& programName, const twString& vPat
   SandboxBase& base = GetSandboxBase();
   Engine& engine = base.GetEngine();
 
-  iGpuShader* vertexShader = engine.GetResources().GetGpuShaderManager().CreateShader(programName + "_vert", L"", eShaderType_Vertex);
+  iGpuShader* vertexShader = engine.GetResources().GetGpuShaderManager().CreateShader(programName + "_vert", _W(""), eShaderType_Vertex);
   vertexShader->CreateFromFile(vPath);
 
-  iGpuShader* fragmentShader = engine.GetResources().GetGpuShaderManager().CreateShader(programName + "_frag", L"", eShaderType_Fragment);
+  iGpuShader* fragmentShader = engine.GetResources().GetGpuShaderManager().CreateShader(programName + "_frag", _W(""), eShaderType_Fragment);
   fragmentShader->CreateFromFile(fPath);
 
   iGpuProgram* gpuProgram = engine.GetResources().GetGpuProgramManager().CreateProgram(programName);
@@ -36,8 +36,8 @@ void SandboxLayer::OnStart()
   m_WorldRenderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
   m_ScreenRenderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
 
-  iGpuProgram* defaultProgram = QuickCreateProgram("default", L"assets/shaders/default.vert", L"assets/shaders/default.frag");
-  iGpuProgram* screenProgram = QuickCreateProgram("core_screen", L"assets/shaders/core_screen.vert", L"assets/shaders/core_screen.frag");
+  iGpuProgram* defaultProgram = QuickCreateProgram("default", _W("assets/shaders/default.vert"), _W("assets/shaders/default.frag"));
+  iGpuProgram* screenProgram = QuickCreateProgram("core_screen", _W("assets/shaders/core_screen.vert"), _W("assets/shaders/core_screen.frag"));
 
   m_VertexBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
   // clang-format off
@@ -85,10 +85,10 @@ void SandboxLayer::OnStart()
   m_FrameBuffer->AttachTexture2D(eFrameBufferAttachment_Color, *m_FrameBufferColor);
   m_FrameBuffer->AttachRenderBuffer(eFrameBufferAttachment_DepthStencil, *m_FrameBufferDepthStencil);
 
-  m_ScreenMaterial = std::make_unique<Material>();
+  m_ScreenMaterial = std::make_unique<Material>("", _W(""));
   m_ScreenMaterial->SetProgram(screenProgram);
   m_ScreenMaterial->GetUniformMap().SetUniform("u_ScreenTexture", m_FrameBufferColor.get());
-  m_BasicMaterial = std::make_unique<Material>();
+  m_BasicMaterial = std::make_unique<Material>("", _W(""));
   m_BasicMaterial->SetProgram(defaultProgram);
 
   m_WorldRenderer->SetFrameBuffer(m_FrameBuffer.get());

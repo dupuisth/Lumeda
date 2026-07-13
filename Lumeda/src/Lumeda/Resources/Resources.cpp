@@ -3,6 +3,8 @@
 #include <Lumeda/Graphics/Texture.h>
 #include <Lumeda/Resources/GpuProgramManager.h>
 #include <Lumeda/Resources/GpuShaderManager.h>
+#include <Lumeda/Resources/MaterialManager.h>
+#include <Lumeda/Resources/ModelManager.h>
 #include <Lumeda/Resources/Resources.h>
 #include <Lumeda/Resources/TextureManager.h>
 
@@ -29,4 +31,6 @@ void Resources::Init(Graphics& graphics)
   m_TextureManager = std::make_unique<TextureManager>(*this, *m_Graphics);
   m_GpuShaderManager = std::make_unique<GpuShaderManager>(*this, *m_Graphics);
   m_GpuProgramManager = std::make_unique<GpuProgramManager>(*this, *m_Graphics);
+  m_MaterialManager = std::make_unique<MaterialManager>(*this, *m_Graphics);
+  m_ModelManager = std::make_unique<ModelManager>(*this, *m_Graphics);
 }

@@ -17,7 +17,7 @@ public:
       m_Type(type),
       m_Usage(usage),
       m_LowLevelGraphics(lowLevelGraphics),
-      iResourceBase(name, L""),
+      iResourceBase(name, _W("")),
       m_Filtering(eTextureFiltering_Linear),
       m_Wrapping(eTextureWrapping_Clamp)
   {
