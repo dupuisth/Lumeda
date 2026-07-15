@@ -1,13 +1,15 @@
 {
     "editor.renderWhitespace": "all",
-    "C_Cpp.formatting": "vcFormat",
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.clang_format_style": "file",
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
     "editor.tabSize": 2,
     "[cpp]": {
         "editor.wordBasedSuggestions": "off",
         "editor.semanticHighlighting.enabled": true,
         "editor.stickyScroll.defaultModel": "foldingProviderModel",
         "editor.suggest.insertMode": "replace",
-        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.defaultFormatter": "ms-vscode.cpptools",
         "editor.formatOnSave": true
     },
     "C_Cpp.errorSquiggles": "enabled"

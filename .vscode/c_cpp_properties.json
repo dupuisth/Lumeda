@@ -1,31 +1,55 @@
 {
-    "configurations": [
-        {
-            "name": "Linux Debug",
-            "defines": [
-                "LUMEDA_PLATFORM_LINUX",
-                "LUMEDA_DEBUG"
-            ],
-            "includePath": [
-                "${workspaceFolder}/Lumeda/src",
-                "${workspaceFolder}/Sandbox/src",
-                "${workspaceFolder}/Lumeda/vendor/spdlog/include",
-                "${workspaceFolder}/Lumeda/vendor/glad/include",
-                "${workspaceFolder}/Lumeda/vendor/glfw/include",
-                "${workspaceFolder}/Lumeda/vendor/assimp/include",
-                "${workspaceFolder}/Lumeda/vendor/spdlog/include",
-                "${workspaceFolder}/Lumeda/vendor/stb_image",
-                "${workspaceFolder}/Lumeda/vendor/imgui",
-                "${workspaceFolder}/Lumeda/vendor/glm",
-                "${workspaceFolder}/Lumeda/vendor/imgui/backends",
-                "${workspaceFolder}/LumedaTest/vendor/googletest/googletest/include",
-                "${workspaceFolder}/Lumeda/vendor/tracy/public"
-            ],
-            "intelliSenseMode": "linux-gcc-x64",
-            "compilerPath": "/usr/bin/g++",
-            "cStandard": "c17",
-            "cppStandard": "gnu++20"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "Windows MSVC x64",
+      "defines": [
+        "LUMEDA_PLATFORM_WINDOWS",
+        "LUMEDA_DEBUG"
+      ],
+      "includePath": [
+        "${workspaceFolder}/Lumeda/src",
+        "${workspaceFolder}/Sandbox/src",
+        "${workspaceFolder}/Lumeda/vendor/spdlog/include",
+        "${workspaceFolder}/Lumeda/vendor/glad/include",
+        "${workspaceFolder}/Lumeda/vendor/glfw/include",
+        "${workspaceFolder}/Lumeda/vendor/assimp/include",
+        "${workspaceFolder}/Lumeda/vendor/stb_image",
+        "${workspaceFolder}/Lumeda/vendor/imgui",
+        "${workspaceFolder}/Lumeda/vendor/glm",
+        "${workspaceFolder}/Lumeda/vendor/imgui/backends",
+        "${workspaceFolder}/LumedaTest/vendor/googletest/googletest/include",
+        "${workspaceFolder}/Lumeda/vendor/tracy/public"
+      ],
+      "intelliSenseMode": "windows-msvc-x64",
+      "compilerPath": "cl.exe",
+      "cStandard": "c17",
+      "cppStandard": "c++20"
+    },
+    {
+      "name": "Linux GCC x64",
+      "defines": [
+        "LUMEDA_PLATFORM_LINUX",
+        "LUMEDA_DEBUG"
+      ],
+      "includePath": [
+        "${workspaceFolder}/Lumeda/src",
+        "${workspaceFolder}/Sandbox/src",
+        "${workspaceFolder}/Lumeda/vendor/spdlog/include",
+        "${workspaceFolder}/Lumeda/vendor/glad/include",
+        "${workspaceFolder}/Lumeda/vendor/glfw/include",
+        "${workspaceFolder}/Lumeda/vendor/assimp/include",
+        "${workspaceFolder}/Lumeda/vendor/stb_image",
+        "${workspaceFolder}/Lumeda/vendor/imgui",
+        "${workspaceFolder}/Lumeda/vendor/glm",
+        "${workspaceFolder}/Lumeda/vendor/imgui/backends",
+        "${workspaceFolder}/LumedaTest/vendor/googletest/googletest/include",
+        "${workspaceFolder}/Lumeda/vendor/tracy/public"
+      ],
+      "intelliSenseMode": "linux-gcc-x64",
+      "compilerPath": "/usr/bin/g++",
+      "cStandard": "c17",
+      "cppStandard": "gnu++20"
+    }
+  ],
+  "version": 4
 }

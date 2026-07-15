@@ -1,5 +1,6 @@
 project "googletest"
     language "C++"
+    cppdialect "C++20"
     removeconfigurations { "Profiling" }
 
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")

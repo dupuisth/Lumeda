@@ -1,15 +1,65 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "Premake5: Build Debug",
-			"type": "shell",
-			"command": "${workspaceFolder}/sBuildDebug.sh",
-		},
-		{
-			"label": "Premake5: Build Profile",
-			"type": "shell",
-			"command": "${workspaceFolder}/sBuildProfile.sh",
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Lumeda: Build Debug",
+      "type": "process",
+      "command": "${workspaceFolder}\\dev.cmd",
+      "args": ["build", "debug"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Lumeda: Build Release",
+      "type": "process",
+      "command": "${workspaceFolder}\\dev.cmd",
+      "args": ["build", "release"],
+      "group": "build",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Lumeda: Build Profiling",
+      "type": "process",
+      "command": "${workspaceFolder}\\dev.cmd",
+      "args": ["build", "profiling"],
+      "group": "build",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Lumeda: Run Debug",
+      "type": "process",
+      "command": "${workspaceFolder}\\dev.cmd",
+      "args": ["run", "debug"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Lumeda: Clean Debug",
+      "type": "process",
+      "command": "${workspaceFolder}\\dev.cmd",
+      "args": ["clean", "debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Lumeda: Setup Windows",
+      "type": "process",
+      "command": "${workspaceFolder}\\dev.cmd",
+      "args": ["setup"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Premake5: Build Debug (Linux)",
+      "type": "shell",
+      "command": "${workspaceFolder}/sBuildDebug.sh",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Premake5: Build Profile (Linux)",
+      "type": "shell",
+      "command": "${workspaceFolder}/sBuildProfile.sh",
+      "problemMatcher": "$gcc"
+    }
+  ]
 }

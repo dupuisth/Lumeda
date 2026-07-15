@@ -11,4 +11,5 @@ Model* ModelManager::CreateModel(const tString& name)
 Model* Lumeda::ModelManager::CreateModel(const tString& name, const twString& path)
 {
   std::unique_ptr<Model> model = std::make_unique<Model>(name, path);
+  return AddResource(std::move(model));
 }
