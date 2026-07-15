@@ -79,5 +79,10 @@ public:
   // GpuProgram
   ///////////////////////////////////////////
   virtual std::unique_ptr<iGpuProgram> CreateProgram(const tString& name) = 0;
+
+  ///////////////////////////////////////////
+  // Other
+  ///////////////////////////////////////////
+  virtual void SetDrawMode(ePolygonFace face, ePolygonMode mode) = 0;
 };
 } // namespace Lumeda

@@ -9,7 +9,9 @@ class SimpleRenderer : public iRenderer, public iRenderCommandSink
 {
 public:
   SimpleRenderer(iLowLevelGraphics& lowLevelGraphics) : iRenderer("SimpleRenderer"), m_LowLevelGraphics(lowLevelGraphics) {}
-  ~SimpleRenderer() = default;
+  SimpleRenderer(const tString& name, iLowLevelGraphics& lowLevelGraphics) : iRenderer(name), m_LowLevelGraphics(lowLevelGraphics) {}
+
+  virtual ~SimpleRenderer() = default;
 
   ///////////////////////////////////////////
   // Submits
@@ -21,9 +23,21 @@ public:
   ///////////////////////////////////////////
   // Render
   ///////////////////////////////////////////
-  void Flush(UniformMap globalUniforms, bool clearCommands) override;
+  void Flush(UniformMap globalUniforms, bool clearCommands, tClearFrameBufferFlag clearFlag) override;
 
-private:
+  ///////////////////////////////////////////
+  // Additional
+  ///////////////////////////////////////////
+  void SetMode(ePolygonFace face, ePolygonMode mode)
+  {
+    m_Face = face;
+    m_Mode = mode;
+  }
+
+protected:
   iLowLevelGraphics& m_LowLevelGraphics;
+
+  ePolygonFace m_Face = ePolygonFace_Front;
+  ePolygonMode m_Mode = ePolygonMode_Fill;
 };
 } // namespace Lumeda

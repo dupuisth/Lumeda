@@ -56,14 +56,20 @@ void SimpleRenderer::Submit(World& world)
 ///////////////////////////////////////////
 // Render
 ///////////////////////////////////////////
-void SimpleRenderer::Flush(UniformMap globalUniforms, bool clearCommands)
+void SimpleRenderer::Flush(UniformMap globalUniforms, bool clearCommands, tClearFrameBufferFlag clearFlag)
 {
+  m_LowLevelGraphics.SetDrawMode(m_Face, m_Mode);
+
   if (m_TargetFramebuffer != nullptr)
   {
     m_TargetFramebuffer->Bind();
   }
+  // TODO: Should set to 0 if nullptr...
 
-  m_LowLevelGraphics.ClearFrameBuffer(tClearFrameBufferFlag_Color | tClearFrameBufferFlag_Depth);
+  if (clearFlag != 0)
+  {
+    m_LowLevelGraphics.ClearFrameBuffer(clearFlag);
+  }
 
   // No doubt that there is a better way of doing this, but make it work for now..
   // 1. Setup all the programs with the global uniforms

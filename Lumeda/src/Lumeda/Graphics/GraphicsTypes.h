@@ -194,4 +194,23 @@ struct sVertexArrayAttrib
 
 //---------------------------------------//
 
+///////////////////////////////////////////
+// Draw mode
+///////////////////////////////////////////
+
+enum ePolygonMode
+{
+  ePolygonMode_Point,
+  ePolygonMode_Line,
+  ePolygonMode_Fill
+};
+
+enum ePolygonFace
+{
+  ePolygonFace_Front,
+  ePolygonFace_Back,
+  ePolygonFace_FrontBack,
+};
+//---------------------------------------//
+
 } // namespace Lumeda

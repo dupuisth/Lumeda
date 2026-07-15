@@ -75,15 +75,12 @@ void SandboxLayer::OnStart()
     }
   );
   // clang-format on
-
-  engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/icosphere.fbx"));
-
   iLowLevelGraphics& llg = engine.GetGraphics().GetLowLevelGraphics();
   m_FrameBuffer = llg.CreateFrameBuffer("screen");
   m_FrameBufferColor = llg.CreateTexture("screen_color", eTextureType_2D, eTextureUsage_Normal);
-  m_FrameBufferColor->CreateFromRawData(glm::ivec3(400, 400, 0), ePixelFormat_RGB, nullptr);
+  m_FrameBufferColor->CreateFromRawData(glm::ivec3(llg.GetWidth(), llg.GetHeight(), 0), ePixelFormat_RGB, nullptr);
   m_FrameBufferDepthStencil = llg.CreateRenderBuffer("screen_depthstencil");
-  m_FrameBufferDepthStencil->SetStorage(glm::ivec2(400, 400), ePixelFormat_Depth24Stencil8);
+  m_FrameBufferDepthStencil->SetStorage(glm::ivec2(llg.GetWidth(), llg.GetHeight()), ePixelFormat_Depth24Stencil8);
   m_FrameBuffer->AttachTexture2D(eFrameBufferAttachment_Color, *m_FrameBufferColor);
   m_FrameBuffer->AttachRenderBuffer(eFrameBufferAttachment_DepthStencil, *m_FrameBufferDepthStencil);
 
@@ -92,6 +89,9 @@ void SandboxLayer::OnStart()
   m_ScreenMaterial->GetUniformMap().SetUniform("u_ScreenTexture", m_FrameBufferColor.get());
   m_BasicMaterial = std::make_unique<Material>("", _W(""));
   m_BasicMaterial->SetProgram(defaultProgram);
+
+  Model* model = engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/icosphere.fbx"));
+  model->GetItems()[0].material = m_BasicMaterial.get();
 
   m_WorldRenderer->SetFrameBuffer(m_FrameBuffer.get());
 
@@ -109,6 +109,12 @@ void SandboxLayer::OnStart()
   meshEntity2->SetVertexBuffer(m_VertexBuffer.get());
   meshEntity2->SetMaterial(m_BasicMaterial.get());
   m_World->GetRootNode().AddChild(std::move(meshEntity2));
+
+  // Ico model
+  std::unique_ptr<ModelEntity> modelEntity = std::make_unique<ModelEntity>("Icosphere");
+  modelEntity->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+  modelEntity->SetModel(model);
+  m_World->GetRootNode().AddChild(std::move(modelEntity));
 
   std::unique_ptr<CameraEntity> cameraEntity = std::make_unique<CameraEntity>("Camera");
   cameraEntity->GetCamera().SetZNear(0.01f);
@@ -129,10 +135,17 @@ void SandboxLayer::OnDraw()
   UniformMap worldUniforms;
   worldUniforms.SetUniform(tShaderCommonUniform_CameraMatrix, m_CameraEntity->GetCamera().GetProjectionView());
   m_WorldRenderer->Submit(*m_World);
-  m_WorldRenderer->Flush(worldUniforms, true);
 
+  // Render as normal
+  m_WorldRenderer->SetMode(ePolygonFace_Back, ePolygonMode_Fill);
+  m_WorldRenderer->Flush(worldUniforms, false, tClearFrameBufferFlag_Color | tClearFrameBufferFlag_Depth | tClearFrameBufferFlag_Stencil);
+  // Render as wireframe
+  m_WorldRenderer->SetMode(ePolygonFace_FrontBack, ePolygonMode_Line);
+  m_WorldRenderer->Flush(worldUniforms, true, tClearFrameBufferFlag_Depth | tClearFrameBufferFlag_Stencil);
+
+  m_ScreenRenderer->SetMode(ePolygonFace_Back, ePolygonMode_Fill);
   m_ScreenRenderer->Submit(m_QuadBuffer.get(), m_ScreenMaterial.get(), UniformMap());
-  m_ScreenRenderer->Flush(UniformMap(), true);
+  m_ScreenRenderer->Flush(UniformMap(), true, tClearFrameBufferFlag_Color);
 
   if (ImGui::BeginMainMenuBar())
   {

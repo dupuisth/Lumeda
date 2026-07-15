@@ -24,6 +24,8 @@ GLenum VertexAttribTypeToGLType(eVertexAttribType type);
 GLenum ShaderTypeToGLType(eShaderType type);
 GLbitfield ClearFlagsToGLFlag(tClearFrameBufferFlag flag);
 GLenum FrameBufferAttachmentToGL(eFrameBufferAttachment attachment);
+GLenum PolygonFaceToGL(ePolygonFace face);
+GLenum PolygonModeToGL(ePolygonMode mode);
 
 //---------------------------------------//
 
@@ -94,6 +96,11 @@ public:
   // GpuProgram
   ///////////////////////////////////////////
   std::unique_ptr<iGpuProgram> CreateProgram(const tString& name) override;
+
+  ///////////////////////////////////////////
+  // Other
+  ///////////////////////////////////////////
+  void SetDrawMode(ePolygonFace face, ePolygonMode mode) override;
 
   ///////////////////////////////////////////
   // GL

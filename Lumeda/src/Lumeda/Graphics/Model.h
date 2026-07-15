@@ -28,7 +28,7 @@ public:
   void Destroy() {}
 
   void AddItem(std::unique_ptr<iVertexBuffer> vertexBuffer, Material* material) { m_Items.push_back({std::move(vertexBuffer), material}); }
-  const std::vector<ModelItem>& GetItems() { return m_Items; }
+  std::vector<ModelItem>& GetItems() { return m_Items; }
 
 private:
   std::vector<ModelItem> m_Items;

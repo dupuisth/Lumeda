@@ -48,7 +48,7 @@ public:
   ///////////////////////////////////////////
   // Render
   ///////////////////////////////////////////
-  virtual void Flush(UniformMap globalUniforms, bool clearCommands) = 0;
+  virtual void Flush(UniformMap globalUniforms, bool clearCommands, tClearFrameBufferFlag clearFlag) = 0;
 
   ///////////////////////////////////////////
   // Config

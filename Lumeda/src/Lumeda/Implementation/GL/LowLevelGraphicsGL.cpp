@@ -246,6 +246,16 @@ std::unique_ptr<iGpuProgram> LowLevelGraphicsGL::CreateProgram(const tString& na
 //---------------------------------------//
 
 ///////////////////////////////////////////
+// Other
+///////////////////////////////////////////
+void LowLevelGraphicsGL::SetDrawMode(ePolygonFace face, ePolygonMode mode)
+{
+  glPolygonMode(PolygonFaceToGL(face), PolygonModeToGL(mode));
+}
+
+//---------------------------------------//
+
+///////////////////////////////////////////
 // Global functions
 ///////////////////////////////////////////
 
@@ -379,10 +389,38 @@ GLenum Lumeda::FrameBufferAttachmentToGL(eFrameBufferAttachment attachment)
   {
   case eFrameBufferAttachment::eFrameBufferAttachment_Color:
     return GL_COLOR_ATTACHMENT0;
-    break;
   case eFrameBufferAttachment::eFrameBufferAttachment_DepthStencil:
     return GL_DEPTH_STENCIL_ATTACHMENT;
-    break;
+  }
+  LUMEDA_ASSERT(false);
+  return 0;
+}
+
+GLenum Lumeda::PolygonFaceToGL(ePolygonFace face)
+{
+  switch (face)
+  {
+  case ePolygonFace_Front:
+    return GL_FRONT;
+  case ePolygonFace_Back:
+    return GL_BACK;
+  case ePolygonFace_FrontBack:
+    return GL_FRONT_AND_BACK;
+  }
+  LUMEDA_ASSERT(false);
+  return 0;
+}
+
+GLenum Lumeda::PolygonModeToGL(ePolygonMode mode)
+{
+  switch (mode)
+  {
+  case ePolygonMode_Fill:
+    return GL_FILL;
+  case ePolygonMode_Line:
+    return GL_LINE;
+  case ePolygonMode_Point:
+    return GL_POINT;
   }
   LUMEDA_ASSERT(false);
   return 0;
