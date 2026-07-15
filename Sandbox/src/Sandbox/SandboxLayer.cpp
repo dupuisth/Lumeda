@@ -76,6 +76,8 @@ void SandboxLayer::OnStart()
   );
   // clang-format on
 
+  engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/icosphere.fbx"));
+
   iLowLevelGraphics& llg = engine.GetGraphics().GetLowLevelGraphics();
   m_FrameBuffer = llg.CreateFrameBuffer("screen");
   m_FrameBufferColor = llg.CreateTexture("screen_color", eTextureType_2D, eTextureUsage_Normal);
@@ -131,6 +133,102 @@ void SandboxLayer::OnDraw()
 
   m_ScreenRenderer->Submit(m_QuadBuffer.get(), m_ScreenMaterial.get(), UniformMap());
   m_ScreenRenderer->Flush(UniformMap(), true);
+
+  if (ImGui::BeginMainMenuBar())
+  {
+    if (ImGui::BeginMenu("Resources"))
+    {
+      if (ImGui::BeginMenu("Models"))
+      {
+        for (const auto& item : engine.GetResources().GetModelManager().GetResources())
+        {
+          if (ImGui::BeginMenu(item.first.c_str()))
+          {
+            ImGui::LabelText("Label", item.second->GetName().c_str());
+            ImGui::LabelText("Path", item.second->GetPath().c_str());
+
+            ImGui::SeparatorText("Items");
+            for (const auto& modelItem : item.second->GetItems())
+            {
+              ImGui::Separator();
+              ImGui::LabelText("Material", (modelItem.material != nullptr) ? modelItem.material->GetName().c_str() : "NONE");
+              ImGui::LabelText("VertexBuffer", (modelItem.vertexBuffer != nullptr) ? "OK" : "NONE");
+            }
+
+            ImGui::EndMenu();
+          }
+        }
+        ImGui::EndMenu();
+      }
+      if (ImGui::BeginMenu("Materials"))
+      {
+        for (const auto& item : engine.GetResources().GetMaterialManager().GetResources())
+        {
+          if (ImGui::BeginMenu(item.first.c_str()))
+          {
+            ImGui::LabelText("Label", item.second->GetName().c_str());
+            ImGui::LabelText("Path", item.second->GetPath().c_str());
+            ImGui::EndMenu();
+          }
+        }
+        ImGui::EndMenu();
+      }
+      if (ImGui::BeginMenu("Textures"))
+      {
+        for (const auto& item : engine.GetResources().GetTextureManager().GetResources())
+        {
+          if (ImGui::BeginMenu(item.first.c_str()))
+          {
+            ImGui::LabelText("Label", item.second->GetName().c_str());
+            ImGui::LabelText("Path", item.second->GetPath().c_str());
+            ImGui::EndMenu();
+          }
+        }
+        ImGui::EndMenu();
+      }
+      if (ImGui::BeginMenu("Textures"))
+      {
+        for (const auto& item : engine.GetResources().GetTextureManager().GetResources())
+        {
+          if (ImGui::BeginMenu(item.first.c_str()))
+          {
+            ImGui::LabelText("Label", item.second->GetName().c_str());
+            ImGui::LabelText("Path", item.second->GetPath().c_str());
+            ImGui::EndMenu();
+          }
+        }
+        ImGui::EndMenu();
+      }
+      if (ImGui::BeginMenu("Programs"))
+      {
+        for (const auto& item : engine.GetResources().GetGpuProgramManager().GetResources())
+        {
+          if (ImGui::BeginMenu(item.first.c_str()))
+          {
+            ImGui::LabelText("Label", item.second->GetName().c_str());
+            ImGui::LabelText("Path", item.second->GetPath().c_str());
+            ImGui::EndMenu();
+          }
+        }
+        ImGui::EndMenu();
+      }
+      if (ImGui::BeginMenu("Shaders"))
+      {
+        for (const auto& item : engine.GetResources().GetGpuShaderManager().GetResources())
+        {
+          if (ImGui::BeginMenu(item.first.c_str()))
+          {
+            ImGui::LabelText("Label", item.second->GetName().c_str());
+            ImGui::LabelText("Path", item.second->GetPath().c_str());
+            ImGui::EndMenu();
+          }
+        }
+        ImGui::EndMenu();
+      }
+      ImGui::EndMenu();
+    }
+    ImGui::EndMainMenuBar();
+  }
 }
 
 void SandboxLayer::OnPostDraw()

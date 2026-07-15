@@ -16,6 +16,7 @@ public:
   virtual ~iResourceManager() = default;
 
   T* GetResourceByName(const tString& name);
+  const std::unordered_map<tString, std::unique_ptr<T>>& GetResources() { return m_Items; }
 
   T* AddResource(std::unique_ptr<T> resource);
   void DestroyResource(const tString& name);

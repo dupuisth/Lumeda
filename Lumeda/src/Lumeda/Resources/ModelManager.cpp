@@ -1,4 +1,5 @@
 #include <Lumeda/Resources/ModelManager.h>
+#include <Lumeda/Utils/AssimpModelLoader.h>
 
 using namespace Lumeda;
 
@@ -11,5 +12,6 @@ Model* ModelManager::CreateModel(const tString& name)
 Model* Lumeda::ModelManager::CreateModel(const tString& name, const twString& path)
 {
   std::unique_ptr<Model> model = std::make_unique<Model>(name, path);
+  AssimpModelLoader::Load(model.get(), path, m_Graphics, m_Resources);
   return AddResource(std::move(model));
 }

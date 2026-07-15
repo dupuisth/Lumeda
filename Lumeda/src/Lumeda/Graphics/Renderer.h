@@ -7,6 +7,7 @@
 #include <Lumeda/Graphics/GraphicsTypes.h>
 #include <Lumeda/Graphics/LowLevelGraphics.h>
 #include <Lumeda/Graphics/Material.h>
+#include <Lumeda/Graphics/Model.h>
 #include <Lumeda/Graphics/RenderBuffer.h>
 #include <Lumeda/Graphics/Texture.h>
 #include <Lumeda/Graphics/UniformMap.h>
@@ -21,6 +22,12 @@ public:
   UniformMap additionalUniforms;
 };
 
+class iRenderCommandSink
+{
+public:
+  virtual void Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms) = 0;
+};
+
 class World;
 
 class iRenderer : public iUpdateable
@@ -33,6 +40,7 @@ public:
   // Submits / Commands
   ///////////////////////////////////////////
   virtual void Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms) = 0;
+  virtual void Submit(Model& model, UniformMap additionalUniforms) = 0;
   virtual void Submit(World& world) = 0;
 
   virtual void ClearCommands() { m_RenderCommands.clear(); }

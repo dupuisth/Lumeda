@@ -1,3 +1,4 @@
+#include <Lumeda/Graphics/GraphicsTypes.h>
 #include <Lumeda/Scene/Renderable.h>
 
 using namespace Lumeda;

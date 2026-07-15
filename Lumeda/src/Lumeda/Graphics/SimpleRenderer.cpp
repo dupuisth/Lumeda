@@ -16,6 +16,14 @@ void SimpleRenderer::Submit(iVertexBuffer* vertexBuffer, Material* material, Uni
   m_RenderCommands.push_back({.vertexBuffer = vertexBuffer, .material = material, .additionalUniforms = additionalUniforms});
 }
 
+void SimpleRenderer::Submit(Model& model, UniformMap additionalUniforms)
+{
+  for (const auto& item : model.GetItems())
+  {
+    Submit(item.vertexBuffer.get(), item.material, additionalUniforms);
+  }
+}
+
 void SimpleRenderer::Submit(World& world)
 {
   std::queue<LeafNode*> iterationQueue;
@@ -30,7 +38,7 @@ void SimpleRenderer::Submit(World& world)
     iRenderable* renderable = dynamic_cast<iRenderable*>(leafNode);
     if (renderable != nullptr)
     {
-      Submit(renderable->GetVertexBuffer(), renderable->GetMaterial(), renderable->GetAdditionalUniforms());
+      renderable->CollectRenderCommands(*this);
     }
 
     // If has childs, append them

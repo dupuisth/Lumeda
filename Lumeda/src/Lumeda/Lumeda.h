@@ -37,6 +37,8 @@
 ///////////////////////////////////////////
 #include <Lumeda/Resources/GpuProgramManager.h>
 #include <Lumeda/Resources/GpuShaderManager.h>
+#include <Lumeda/Resources/MaterialManager.h>
+#include <Lumeda/Resources/ModelManager.h>
 #include <Lumeda/Resources/ResourceBase.h>
 #include <Lumeda/Resources/ResourceManager.h>
 #include <Lumeda/Resources/Resources.h>
@@ -50,6 +52,7 @@
 #include <Lumeda/Scene/Entity.h>
 #include <Lumeda/Scene/LeafNode.h>
 #include <Lumeda/Scene/MeshEntity.h>
+#include <Lumeda/Scene/ModelEntity.h>
 #include <Lumeda/Scene/Node.h>
 #include <Lumeda/Scene/Renderable.h>
 #include <Lumeda/Scene/Viewport.h>

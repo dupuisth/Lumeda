@@ -1,6 +1,9 @@
 #pragma once
 
 #include <Lumeda/Core/Base.h>
+#include <Lumeda/Graphics/Material.h>
+#include <Lumeda/Graphics/UniformMap.h>
+#include <Lumeda/Graphics/VertexBuffer.h>
 #include <Lumeda/Scene/Renderable.h>
 
 namespace Lumeda
@@ -17,6 +20,8 @@ public:
 
   void SetVertexBuffer(iVertexBuffer* vertexBuffer) { m_VertexBuffer = vertexBuffer; }
   void SetMaterial(Material* material) { m_Material = material; }
+
+  void CollectRenderCommands(iRenderCommandSink& sink);
 
 private:
   iVertexBuffer* m_VertexBuffer;
