@@ -11,7 +11,7 @@ namespace Lumeda
 class MeshEntity : public iRenderable
 {
 public:
-  MeshEntity(const tString& name) : iRenderable(name) {}
+  MeshEntity(const tString& name) : iRenderable(name), m_VertexBuffer(nullptr), m_Material(nullptr) {}
   ~MeshEntity() = default;
 
   iVertexBuffer* GetVertexBuffer() { return m_VertexBuffer; }
