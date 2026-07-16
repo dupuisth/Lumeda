@@ -1,7 +1,9 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <Lumeda/Graphics/LowLevelGraphics.h>
 #include <Lumeda/Implementation/GL/ImGuiLayerGL.h>
+#include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
 
 using namespace Lumeda;
 

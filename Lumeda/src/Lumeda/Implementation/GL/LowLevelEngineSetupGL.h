@@ -10,6 +10,7 @@ class LowLevelSystemGL;
 class ImGuiLayerGL;
 class Graphics;
 class EventManager;
+class InputsGL;
 
 class LowLevelEngineSetupGL : public iLowLevelEngineSetup
 {
@@ -17,17 +18,17 @@ public:
   LowLevelEngineSetupGL();
   ~LowLevelEngineSetupGL();
 
-  std::unique_ptr<Graphics> GetGraphics() override;
+  void Prepare(sLowLevelEngineSetupPrepare prepareData);
 
-  // Call last !!!
-  std::unique_ptr<EventManager> GetEventManager() override;
+  std::unique_ptr<Graphics> GetGraphics() override;
+  std::unique_ptr<iInputs> GetInputs() override;
   std::unique_ptr<iImGuiLayer> GetImGuiLayer() override;
 
 private:
-  std::unique_ptr<LowLevelGraphicsGL> m_LowLevelGraphics;
-  std::unique_ptr<LowLevelSystemGL> m_LowLevelSystem;
+  std::unique_ptr<LowLevelGraphicsGL> m_LowLevelGraphics = nullptr;
+  std::unique_ptr<LowLevelSystemGL> m_LowLevelSystem = nullptr;
+  std::unique_ptr<ImGuiLayerGL> m_ImGuiLayer = nullptr;
 
-  std::unique_ptr<EventManager> m_EventManager;
-  std::unique_ptr<ImGuiLayerGL> m_ImGuiLayer;
+  sLowLevelEngineSetupPrepare m_PrepareData;
 };
 } // namespace Lumeda

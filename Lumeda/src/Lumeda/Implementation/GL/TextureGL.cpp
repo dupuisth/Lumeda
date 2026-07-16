@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
 #include <Lumeda/Implementation/GL/TextureGL.h>
 

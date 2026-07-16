@@ -149,6 +149,22 @@ void SandboxLayer::OnDraw()
 
   if (ImGui::BeginMainMenuBar())
   {
+    if (ImGui::BeginMenu("Performances"))
+    {
+      ImGui::LabelText("Framecount", "%zd", engine.GetTime().GetFrameCount());
+      ImGui::EndMenu();
+    }
+    if (ImGui::BeginMenu("Inputs"))
+    {
+      for (eKeyboardKey i = eKeyboardKey_FirstEnum; i < eKeyboardKey_LastEnum; i = (eKeyboardKey)(i + 1))
+      {
+        char label[8];
+        sprintf(label, "%d", i);
+        ImGui::LabelText(label, "%d", engine.GetInputs().GetKey(i));
+      }
+
+      ImGui::EndMenu();
+    }
     if (ImGui::BeginMenu("Resources"))
     {
       if (ImGui::BeginMenu("Models"))

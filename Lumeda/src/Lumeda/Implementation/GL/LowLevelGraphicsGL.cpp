@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <Lumeda/Implementation/GL/FrameBufferGL.h>
 #include <Lumeda/Implementation/GL/GpuProgramGL.h>
 #include <Lumeda/Implementation/GL/GpuShaderGL.h>
@@ -45,8 +46,10 @@ bool LowLevelGraphicsGL::Init(int width, int height, const tString& windowTitle)
 
   glfwMakeContextCurrent(m_Window);
 
+  // Set Window user pointer
+  m_WindowUserData.lowLevelGraphics = this;
+  glfwSetWindowUserPointer(m_Window, &m_WindowUserData);
   // Callbacks
-  glfwSetWindowUserPointer(m_Window, this);
   glfwSetWindowCloseCallback(m_Window, OnWindowShouldCloseCallback);
   glfwSetWindowSizeCallback(m_Window, OnWindowResizeCallback);
   glfwSetFramebufferSizeCallback(m_Window, OnWindowFrameBufferSizeCallback);
@@ -65,6 +68,8 @@ bool LowLevelGraphicsGL::Init(int width, int height, const tString& windowTitle)
   }
 
   m_InitRan = true;
+
+  LUMEDA_CORE_INFO("[LowLevelGraphicsGL] Init");
   return true;
 }
 
@@ -73,31 +78,31 @@ bool LowLevelGraphicsGL::Init(int width, int height, const tString& windowTitle)
 ///////////////////////////////////////////
 void LowLevelGraphicsGL::OnWindowShouldCloseCallback(GLFWwindow* window)
 {
-  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<sGLFWWindowUserData*>(glfwGetWindowUserPointer(window))->lowLevelGraphics;
   lowLevelGraphicsGL->OnWindowShouldClose();
 }
 
 void LowLevelGraphicsGL::OnWindowResizeCallback(GLFWwindow* window, int width, int height)
 {
-  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<sGLFWWindowUserData*>(glfwGetWindowUserPointer(window))->lowLevelGraphics;
   lowLevelGraphicsGL->OnWindowResize(width, height);
 }
 
 void LowLevelGraphicsGL::OnWindowFrameBufferSizeCallback(GLFWwindow* window, int width, int height)
 {
-  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<sGLFWWindowUserData*>(glfwGetWindowUserPointer(window))->lowLevelGraphics;
   lowLevelGraphicsGL->OnWindowFrameBufferSize(width, height);
 }
 
 void LowLevelGraphicsGL::OnWindowFocusCallback(GLFWwindow* window, int focused)
 {
-  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<sGLFWWindowUserData*>(glfwGetWindowUserPointer(window))->lowLevelGraphics;
   lowLevelGraphicsGL->OnWindowFocus(focused != GL_FALSE);
 }
 
 void LowLevelGraphicsGL::OnWindowPositionCallback(GLFWwindow* window, int x, int y)
 {
-  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<LowLevelGraphicsGL*>(glfwGetWindowUserPointer(window));
+  LowLevelGraphicsGL* lowLevelGraphicsGL = static_cast<sGLFWWindowUserData*>(glfwGetWindowUserPointer(window))->lowLevelGraphics;
   lowLevelGraphicsGL->OnWindowPosition(x, y);
 }
 //---------------------------------------//

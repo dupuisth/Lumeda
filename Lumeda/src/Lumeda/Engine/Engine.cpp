@@ -14,21 +14,26 @@ Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
   LUMEDA_PROFILE;
 
   s_Instance = this;
-  m_Updater = std::make_unique<Updater>();
 
   ///////////////////////////////////////////
-  // Create dependencies
+  // Initialize core
   ///////////////////////////////////////////
+  m_Updater = std::make_unique<Updater>();
+  m_EventManager = std::make_unique<EventManager>();
+  m_Timer = std::make_unique<Timer>();
+
+  // Prepare the engine setup
+  m_LowLevelEngineSetup->Prepare({.eventManager = m_EventManager.get(), .timer = m_Timer.get()});
+
+  // Dependency, will need manual Init (surely be used in Graphics later...)
   m_Resources = std::make_unique<Resources>();
 
   m_Graphics = m_LowLevelEngineSetup->GetGraphics();
-  m_Graphics->GetLowLevelGraphics().Init(800, 600, "Lumeda Engine");
-  m_Resources->Init(*m_Graphics);
-
-  // Last
-  m_EventManager = m_LowLevelEngineSetup->GetEventManager();
+  m_Graphics->GetLowLevelGraphics().Init(600, 600, "Lumeda Engine");
+  m_Inputs = m_LowLevelEngineSetup->GetInputs();
   m_ImGui = m_LowLevelEngineSetup->GetImGuiLayer();
-  //---------------------------------------//
+
+  m_Resources->Init(*m_Graphics);
 
   ///////////////////////////////////////////
   // Register default updateable
@@ -36,6 +41,7 @@ Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
   m_Updater->AddUpdateable(this);
   m_Updater->AddUpdateable(m_Resources.get());
   m_Updater->AddUpdateable(m_Graphics.get());
+  m_Updater->AddUpdateableOverlay(m_Inputs.get());
   m_Updater->AddUpdateableOverlay(m_ImGui.get());
   //---------------------------------------//
 
@@ -58,6 +64,8 @@ void Engine::Run()
   while (!m_ShouldClose)
   {
     LUMEDA_PROFILE_FRAME;
+
+    m_Timer->IncrementFramecount();
 
     ///////////////////////////////////////////
     // Update

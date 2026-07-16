@@ -2,12 +2,11 @@
 
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Engine/EventManager.h>
-#include <Lumeda/Graphics/LowLevelGraphics.h>
 #include <Lumeda/ImGui/ImGuiLayer.h>
-#include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
 
 namespace Lumeda
 {
+class LowLevelGraphicsGL;
 class ImGuiLayerGL : public iImGuiLayer
 {
 public:

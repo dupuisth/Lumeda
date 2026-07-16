@@ -67,9 +67,7 @@ function Invoke-Generate {
 function Invoke-Build {
     param([ValidateSet("Build", "Rebuild", "Clean")] [string] $Target = "Build")
 
-    if (-not (Test-Path $Solution)) {
-        Invoke-Generate
-    }
+    Invoke-Generate
 
     $msbuild = Get-MSBuild
     Invoke-Checked $msbuild @(

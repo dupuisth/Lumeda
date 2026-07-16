@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Engine/EventManager.h>
@@ -10,6 +9,14 @@ namespace Lumeda
 {
 
 class LowLevelSystemGL;
+class LowLevelGraphicsGL;
+class InputsGL;
+
+struct sGLFWWindowUserData
+{
+  LowLevelGraphicsGL* lowLevelGraphics = nullptr;
+  InputsGL* inputsGL = nullptr;
+};
 
 ///////////////////////////////////////////
 // Global functions
@@ -107,6 +114,7 @@ public:
   ///////////////////////////////////////////
   GLFWwindow* GetOpenGLWindow() { return m_Window; }
   tString GetOpenGLShaderVersionHeader() { return "#version 460 core"; }
+  sGLFWWindowUserData& GetGLFWWindowUserData() { return m_WindowUserData; }
 
 private:
   // Events
@@ -137,6 +145,7 @@ private:
   // GLFW Variables
   ///////////////////////////////////////////
   GLFWwindow* m_Window;
+  sGLFWWindowUserData m_WindowUserData;
 };
 
 } // namespace Lumeda
