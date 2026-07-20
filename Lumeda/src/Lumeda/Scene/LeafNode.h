@@ -3,23 +3,28 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <Lumeda/Core/Base.h>
+#include <Lumeda/Engine/Updateable.h>
 
 namespace Lumeda
 {
 class Node;
+class iUpdateable;
+class World;
 
-class LeafNode
+class LeafNode : public iUpdateable
 {
   friend Node;
+  friend World;
 
 public:
   LeafNode(const tString& name) :
+      iUpdateable(""),
       m_Name(name),
       m_Parent(nullptr),
-      m_Position(0.0f),
-      m_Rotation(glm::vec3(0.0f)),
-      m_RotationEulerAngles(0.0f),
-      m_Scale(1.0f),
+      m_LocalPosition(0.0f),
+      m_LocalRotation(glm::vec3(0.0f)),
+      m_LocalRotationEulerAngles(0.0f),
+      m_LocalScale(1.0f),
       m_TransformDirty(true)
   {
   }
@@ -41,31 +46,32 @@ public:
   ///////////////////////////////////////////
   virtual void SetTransformDirty() { m_TransformDirty = true; }
 
-  void SetPosition(const glm::vec3& position)
+  void SetLocalPosition(const glm::vec3& position)
   {
-    m_Position = position;
+    m_LocalPosition = position;
     SetTransformDirty();
   }
-  const glm::vec3& GetPosition() { return m_Position; }
+  void Translate(const glm::vec3 movement) { SetLocalPosition(m_LocalPosition + movement); }
+  const glm::vec3& GetLocalPosition() { return m_LocalPosition; }
 
-  void SetRotation(const glm::quat& rotation)
+  void SetLocalRotation(const glm::quat& rotation)
   {
-    m_Rotation = rotation;
+    m_LocalRotation = rotation;
     SetTransformDirty();
   }
-  void SetRotationEuler(const glm::vec3& rotation)
+  void SetLocalRotationEuler(const glm::vec3& rotation)
   {
-    m_Rotation = glm::quat(glm::radians(rotation));
+    m_LocalRotation = glm::quat(glm::radians(rotation));
     SetTransformDirty();
   }
-  const glm::quat& GetRotation() { return m_Rotation; }
+  const glm::quat& GetLocalRotation() { return m_LocalRotation; }
 
-  void SetScale(const glm::vec3& scale)
+  void SetLocalScale(const glm::vec3& scale)
   {
-    m_Scale = scale;
+    m_LocalScale = scale;
     SetTransformDirty();
   }
-  const glm::vec3& GetScale() { return m_Scale; }
+  const glm::vec3& GetLocalScale() { return m_LocalScale; }
 
   const glm::mat4& GetWorldMatrix()
   {
@@ -74,6 +80,15 @@ public:
       BakeTransform();
     }
     return m_WorldMatrix;
+  }
+
+  const glm::vec3& GetPosition()
+  {
+    if (m_TransformDirty)
+    {
+      BakeTransform();
+    }
+    return m_Position;
   }
 
   const glm::vec3& GetRight()
@@ -104,20 +119,31 @@ public:
   }
 
 protected:
-  void ParentIsChanging(Node* parent) { m_Parent = parent; }
+  virtual void ParentIsChanging(Node* parent) { m_Parent = parent; }
   void BakeTransform();
+  virtual void SetWorld(World* world) { m_World = world; }
 
 protected:
   tString m_Name;
 
+  World* m_World;
+
   Node* m_Parent;
 
-  glm::vec3 m_Position;
-  glm::quat m_Rotation;
-  glm::vec3 m_RotationEulerAngles;
-  glm::vec3 m_Scale;
   bool m_TransformDirty;
 
+  ///////////////////////////////////////////
+  // Local
+  ///////////////////////////////////////////
+  glm::vec3 m_LocalPosition;
+  glm::quat m_LocalRotation;
+  glm::vec3 m_LocalRotationEulerAngles;
+  glm::vec3 m_LocalScale;
+
+  ///////////////////////////////////////////
+  // World
+  ///////////////////////////////////////////
+  glm::vec3 m_Position;
   glm::vec3 m_Forward;
   glm::vec3 m_Right;
   glm::vec3 m_Up;

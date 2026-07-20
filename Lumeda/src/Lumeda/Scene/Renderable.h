@@ -9,6 +9,8 @@ namespace Lumeda
 
 class iRenderCommandSink;
 
+// TODO: Use the SetWorld to register the renderable to the World, this will prevent traversing the whole tree each frame
+// see if it is worth it.
 class iRenderable : public Entity
 {
 public:

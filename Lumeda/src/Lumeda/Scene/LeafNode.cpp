@@ -15,11 +15,11 @@ void LeafNode::BakeTransform()
     parentWorld = m_Parent->GetWorldMatrix();
   }
 
-  m_RotationEulerAngles = glm::degrees(glm::eulerAngles(m_Rotation));
+  m_LocalRotationEulerAngles = glm::degrees(glm::eulerAngles(m_LocalRotation));
 
   // Transform Matrix
   glm::mat4 T = glm::mat4(1.0f);
-  T = glm::translate(T, m_Position);
+  T = glm::translate(T, m_LocalPosition);
 
   // Rotation Matrix
   glm::mat4 R = glm::mat4(1.0f);
@@ -28,18 +28,27 @@ void LeafNode::BakeTransform()
   // R = glm::rotate(R, glm::radians(m_LocalRotationEulerAngles.y), glm::vec3(0.0f, 1.0f, 0.0f));
   // R = glm::rotate(R, glm::radians(m_LocalRotationEulerAngles.z), glm::vec3(0.0f, 0.0f, 1.0f));
   // Using Quaterions
-  R = glm::toMat4(m_Rotation);
+  R = glm::toMat4(m_LocalRotation);
 
   // Scale Matrix
   glm::mat4 S = glm::mat4(1.0f);
-  S = glm::scale(S, m_Scale);
+  S = glm::scale(S, m_LocalScale);
 
   glm::mat4 localWorld = T * R * S;
   m_WorldMatrix = parentWorld * localWorld;
 
-  m_Right = glm::normalize(glm::vec3(m_WorldMatrix[0]));
+  m_Right = -glm::normalize(glm::vec3(m_WorldMatrix[0]));
   m_Up = glm::normalize(glm::vec3(m_WorldMatrix[1]));
   m_Forward = glm::normalize(glm::vec3(m_WorldMatrix[2]));
+
+  if (m_Parent != nullptr)
+  {
+    m_Position = glm::vec3(m_WorldMatrix[3]);
+  }
+  else
+  {
+    m_Position = m_LocalPosition;
+  }
 
   m_TransformDirty = false;
 }

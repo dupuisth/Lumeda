@@ -10,6 +10,8 @@ class World;
 
 class Node : public LeafNode
 {
+  friend World;
+
 public:
   Node(const tString& name) : LeafNode(name) {}
   virtual ~Node() = default;
@@ -28,8 +30,12 @@ public:
   std::unique_ptr<LeafNode> RemoveChild(LeafNode* node);
   /// @brief Destroy a child node (Remove a child from the child list and destroy it)
   void DestroyChild(LeafNode* node);
-
   const std::vector<std::unique_ptr<LeafNode>>& GetChilds() { return m_Childs; }
+
+  void HandleMessage(eUpdateableMessage message) override;
+
+protected:
+  void SetWorld(World* world) override;
 
 protected:
   std::vector<std::unique_ptr<LeafNode>> m_Childs;

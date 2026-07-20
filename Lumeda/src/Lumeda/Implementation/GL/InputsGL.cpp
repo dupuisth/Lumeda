@@ -152,20 +152,40 @@ void InputsGL::OnKey(int GLFWKey, int GLFWScanCode, int GLFWAction, int GLFWMods
 
 int Lumeda::LumedaKeyToGLFW(eKeyboardKey key)
 {
+  if (!LumedaGLFWKeyboardKeyMapping.has_key(key))
+  {
+    LUMEDA_CORE_WARN("[InputsGL] Lumeda key '{0}' has no mapping", (int)key);
+    return GLFW_KEY_A;
+  }
   return LumedaGLFWKeyboardKeyMapping.get_value(key);
 }
 
 int Lumeda::LumedaMouseButtonGLFW(eMouseButton button)
 {
+  if (!LumedaGLFWMouseButtonMapping.has_key(button))
+  {
+    LUMEDA_CORE_WARN("[InputsGL] Lumeda button '{0}' has no mapping", (int)button);
+    return GLFW_MOUSE_BUTTON_LEFT;
+  }
   return LumedaGLFWMouseButtonMapping.get_value(button);
 }
 
 eKeyboardKey Lumeda::GLFWKeyToLumeda(int key)
 {
+  if (!LumedaGLFWKeyboardKeyMapping.has_value(key))
+  {
+    LUMEDA_CORE_WARN("[InputsGL] GLFW key '{0}' has no mapping", key);
+    return eKeyboardKey_A;
+  }
   return LumedaGLFWKeyboardKeyMapping.get_key(key);
 }
 
 eMouseButton Lumeda::GLFWMouseButtonToLumeda(int button)
 {
+  if (!LumedaGLFWMouseButtonMapping.has_value(button))
+  {
+    LUMEDA_CORE_WARN("[InputsGL] GLFW button '{0}' has no mapping", button);
+    return eMouseButton_Left;
+  }
   return LumedaGLFWMouseButtonMapping.get_key(button);
 }

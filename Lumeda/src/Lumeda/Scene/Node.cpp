@@ -26,6 +26,9 @@ LeafNode* Node::AddChild(std::unique_ptr<LeafNode> node)
   // Set the node's parent
   ptr->ParentIsChanging(this);
 
+  // Set the world
+  ptr->SetWorld(m_World);
+
   return ptr;
 }
 
@@ -38,6 +41,7 @@ std::unique_ptr<LeafNode> Node::RemoveChild(LeafNode* node)
       std::unique_ptr<LeafNode> removed = std::move(*it);
       m_Childs.erase(it);
       removed->ParentIsChanging(nullptr);
+      removed->SetWorld(nullptr);
       return std::move(removed);
     }
   }
@@ -54,7 +58,28 @@ void Node::DestroyChild(LeafNode* node)
       std::unique_ptr<LeafNode> removed = std::move(*it);
       m_Childs.erase(it);
       removed->ParentIsChanging(nullptr);
+      removed->SetWorld(nullptr);
       return;
     }
+  }
+}
+
+void Node::HandleMessage(eUpdateableMessage message)
+{
+  iUpdateable::HandleMessage(message);
+
+  for (const auto& child : m_Childs)
+  {
+    child->HandleMessage(message);
+  }
+}
+
+void Node::SetWorld(World* world)
+{
+  LeafNode::SetWorld(world);
+
+  for (const auto& child : m_Childs)
+  {
+    child->SetWorld(world);
   }
 }

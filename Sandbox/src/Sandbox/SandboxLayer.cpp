@@ -105,17 +105,21 @@ void SandboxLayer::OnStart()
 
   // Second triangle
   std::unique_ptr<MeshEntity> meshEntity2 = std::make_unique<MeshEntity>("Triangle2");
-  meshEntity2->SetPosition(glm::vec3(0.0f, 0.2f, 0.3f));
+  meshEntity2->SetLocalPosition(glm::vec3(0.0f, 0.2f, 0.3f));
   meshEntity2->SetVertexBuffer(m_VertexBuffer.get());
   meshEntity2->SetMaterial(m_BasicMaterial.get());
   m_World->GetRootNode().AddChild(std::move(meshEntity2));
 
   // Ico model
   std::unique_ptr<ModelEntity> modelEntity = std::make_unique<ModelEntity>("Icosphere");
-  modelEntity->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+  modelEntity->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
   modelEntity->SetModel(model);
   m_World->GetRootNode().AddChild(std::move(modelEntity));
 
+  // Player entity
+  std::unique_ptr<Node> playerNode = std::make_unique<Node>("PlayerNode");
+
+  // Camera entity
   std::unique_ptr<CameraEntity> cameraEntity = std::make_unique<CameraEntity>("Camera");
   cameraEntity->GetCamera().SetZNear(0.01f);
   cameraEntity->GetCamera().SetZFar(100.0f);
@@ -123,8 +127,15 @@ void SandboxLayer::OnStart()
   cameraEntity->GetCamera().SetAspectRatio(
       (float)engine.GetGraphics().GetLowLevelGraphics().GetWidth() / (float)engine.GetGraphics().GetLowLevelGraphics().GetHeight());
 
-  cameraEntity->SetPosition(glm::vec3(0.0f, 0.0f, -2.0f));
-  m_CameraEntity = static_cast<CameraEntity*>(m_World->GetRootNode().AddChild(std::move(cameraEntity)));
+  cameraEntity->SetLocalPosition(glm::vec3(0.0f, 0.0f, -2.0f));
+  m_CameraEntity = static_cast<CameraEntity*>(playerNode->AddChild(std::move(cameraEntity)));
+
+  // PlayerController entity
+  std::unique_ptr<PlayerControllerEntity> playerControllerEntity =
+      std::make_unique<PlayerControllerEntity>("PlayerController", engine.GetInputs(), engine.GetTimer());
+  playerNode->AddChild(std::move(playerControllerEntity));
+
+  m_World->GetRootNode().AddChild(std::move(playerNode));
 }
 
 void SandboxLayer::OnDraw()
@@ -151,7 +162,7 @@ void SandboxLayer::OnDraw()
   {
     if (ImGui::BeginMenu("Performances"))
     {
-      ImGui::LabelText("Framecount", "%zd", engine.GetTime().GetFrameCount());
+      ImGui::LabelText("Framecount", "%zd", engine.GetTimer().GetFrameCount());
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Inputs"))
@@ -278,4 +289,14 @@ bool SandboxLayer::OnEvent(iEvent& event)
   }
 
   return false;
+}
+
+void SandboxLayer::HandleMessage(eUpdateableMessage message)
+{
+  iUpdateable::HandleMessage(message);
+
+  if (m_World != nullptr)
+  {
+    m_World->HandleMessage(message);
+  }
 }

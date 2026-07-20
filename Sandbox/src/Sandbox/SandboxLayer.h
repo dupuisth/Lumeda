@@ -15,6 +15,8 @@ public:
 
   void OnPostDraw() override;
 
+  void HandleMessage(Lumeda::eUpdateableMessage message) override;
+
   bool OnEvent(Lumeda::iEvent& event);
 
 private:

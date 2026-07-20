@@ -34,7 +34,7 @@ public:
   EventManager& GetEventManager() { return *m_EventManager; }
   iImGuiLayer& GetImGui() { return *m_ImGui; }
   iInputs& GetInputs() { return *m_Inputs; }
-  Timer& GetTime() { return *m_Timer; }
+  Timer& GetTimer() { return *m_Timer; }
   //---------------------------------------//
 
   ///////////////////////////////////////////

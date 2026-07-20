@@ -54,6 +54,7 @@
 #include <Lumeda/Scene/MeshEntity.h>
 #include <Lumeda/Scene/ModelEntity.h>
 #include <Lumeda/Scene/Node.h>
+#include <Lumeda/Scene/PlayerControllerEntity.h>
 #include <Lumeda/Scene/Renderable.h>
 #include <Lumeda/Scene/Viewport.h>
 #include <Lumeda/Scene/World.h>
