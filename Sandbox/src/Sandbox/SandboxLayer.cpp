@@ -286,6 +286,8 @@ bool SandboxLayer::OnEvent(iEvent& event)
 
     m_FrameBufferColor->CreateFromRawData(glm::ivec3(cevent.Width, cevent.Height, 0), ePixelFormat_RGB, nullptr);
     m_FrameBufferDepthStencil->SetStorage(glm::ivec2(cevent.Width, cevent.Height), ePixelFormat_Depth24Stencil8);
+
+    m_CameraEntity->GetCamera().SetAspectRatio((float)cevent.Width / (float)cevent.Height);
   }
 
   return false;
