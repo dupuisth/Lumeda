@@ -33,6 +33,9 @@ stde::bimap<eKeyboardKey, int> LumedaGLFWKeyboardKeyMapping = {
     {eKeyboardKey_Y, GLFW_KEY_Y},
     {eKeyboardKey_Z, GLFW_KEY_Z},
     {eKeyboardKey_Space, GLFW_KEY_SPACE},
+    {eKeyboardKey_LeftShift, GLFW_KEY_LEFT_SHIFT},
+    {eKeyboardKey_LeftAlt, GLFW_KEY_LEFT_ALT},
+    {eKeyboardKey_Ctrl, GLFW_KEY_LEFT_CONTROL},
     {eKeyboardKey_Alpha0, GLFW_KEY_0},
     {eKeyboardKey_Alpha1, GLFW_KEY_1},
     {eKeyboardKey_Alpha2, GLFW_KEY_2},
@@ -56,7 +59,11 @@ stde::bimap<eKeyboardKey, int> LumedaGLFWKeyboardKeyMapping = {
 
 };
 
-stde::bimap<eMouseButton, int> LumedaGLFWMouseButtonMapping = {{}};
+stde::bimap<eMouseButton, int> LumedaGLFWMouseButtonMapping = {
+    {eMouseButton_Left, GLFW_MOUSE_BUTTON_LEFT},
+    {eMouseButton_Middle, GLFW_MOUSE_BUTTON_MIDDLE},
+    {eMouseButton_Right, GLFW_MOUSE_BUTTON_RIGHT},
+};
 
 ///////////////////////////////////////////
 // Constructor
@@ -72,8 +79,15 @@ InputsGL::InputsGL(LowLevelGraphicsGL& lowLevelGraphics, Timer& timer) : iInputs
     m_KeyboardState[i].state = eKeyboardKeyState_Up;
   }
 
+  for (eMouseButton i = eMouseButton_FirstEnum; i < eMouseButton_LastEnum; i = (eMouseButton)(i + 1))
+  {
+    m_MouseButtonState[i].framecount = m_Timer.GetFrameCount();
+    m_MouseButtonState[i].state = eMouseButtonState_Up;
+  }
+
   GLFWwindow* windowHandle = m_LowLevelGraphics.GetOpenGLWindow();
   glfwSetKeyCallback(windowHandle, OnKeyCallback);
+  glfwSetMouseButtonCallback(windowHandle, OnMouseButtonCallback);
 
   LUMEDA_CORE_INFO("[InputsGL] Init");
 }
@@ -118,7 +132,28 @@ eKeyboardKeyState InputsGL::GetKey(eKeyboardKey key)
 ///////////////////////////////////////////
 eMouseButtonState InputsGL::GetMouseButton(eMouseButton button)
 {
-  return eMouseButtonState_Down;
+  sMouseButtonState& state = m_MouseButtonState[button];
+  size_t currentFramecount = m_Timer.GetFrameCount();
+
+  // Check when we want to get a Key if the state should change.
+  if (state.state == eMouseButtonState_Press)
+  {
+    if (currentFramecount > state.framecount)
+    {
+      state.state = eMouseButtonState_Down;
+      state.framecount = currentFramecount;
+    }
+  }
+  else if (state.state == eMouseButtonState_Release)
+  {
+    if (currentFramecount > state.framecount)
+    {
+      state.state = eMouseButtonState_Up;
+      state.framecount = currentFramecount;
+    }
+  }
+
+  return state.state;
 }
 
 ///////////////////////////////////////////
@@ -143,6 +178,28 @@ void InputsGL::OnKey(int GLFWKey, int GLFWScanCode, int GLFWAction, int GLFWMods
   {
     m_KeyboardState[key].framecount = m_Timer.GetFrameCount();
     m_KeyboardState[key].state = eKeyboardKeyState_Release;
+  }
+}
+
+void InputsGL::OnMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+  InputsGL* inputs = static_cast<sGLFWWindowUserData*>(glfwGetWindowUserPointer(window))->inputsGL;
+  inputs->onMouseButton(button, action, mods);
+}
+
+void InputsGL::onMouseButton(int GLFWButton, int GLFWAction, int GLFWMods)
+{
+  eMouseButton button = GLFWMouseButtonToLumeda(GLFWButton);
+
+  if (GLFWAction == GLFW_PRESS)
+  {
+    m_MouseButtonState[button].framecount = m_Timer.GetFrameCount();
+    m_MouseButtonState[button].state = eMouseButtonState_Press;
+  }
+  else if (GLFWAction == GLFW_RELEASE)
+  {
+    m_MouseButtonState[button].framecount = m_Timer.GetFrameCount();
+    m_MouseButtonState[button].state = eMouseButtonState_Release;
   }
 }
 

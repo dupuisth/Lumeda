@@ -30,4 +30,9 @@ void PlayerControllerEntity::Update()
   {
     m_Parent->Translate(movement * m_Timer.GetDeltaTime());
   }
+
+  if (m_Inputs.isMouseButtonPress(eMouseButton_Middle))
+  {
+    m_Parent->SetLocalPosition(glm::vec3(0.0f));
+  }
 }

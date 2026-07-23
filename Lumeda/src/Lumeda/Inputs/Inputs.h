@@ -25,7 +25,7 @@ public:
   // Mouse
   ///////////////////////////////////////////
   virtual eMouseButtonState GetMouseButton(eMouseButton button) = 0;
-  virtual bool isMouseButtonPress(eMouseButton button) { return GetMouseButton(button) == eMouseButtonState_Pressed; }
+  virtual bool isMouseButtonPress(eMouseButton button) { return GetMouseButton(button) == eMouseButtonState_Press; }
   virtual bool isMouseButtonDown(eMouseButton button) { return GetMouseButton(button) == eMouseButtonState_Down; }
   virtual bool isMouseButtonRelease(eMouseButton button) { return GetMouseButton(button) == eMouseButtonState_Release; }
   virtual bool isMouseButtonUp(eMouseButton button) { return GetMouseButton(button) == eMouseButtonState_Up; }

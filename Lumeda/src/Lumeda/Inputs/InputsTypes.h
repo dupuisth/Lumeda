@@ -12,7 +12,7 @@ namespace Lumeda
 enum eKeyboardKey
 {
   eKeyboardKey_FirstEnum = 0,
-  eKeyboardKey_A,
+  eKeyboardKey_A = eKeyboardKey_FirstEnum,
   eKeyboardKey_B,
   eKeyboardKey_C,
   eKeyboardKey_D,
@@ -39,6 +39,9 @@ enum eKeyboardKey
   eKeyboardKey_Y,
   eKeyboardKey_Z,
 
+  eKeyboardKey_LeftShift,
+  eKeyboardKey_Ctrl,
+  eKeyboardKey_LeftAlt,
   eKeyboardKey_Space,
 
   eKeyboardKey_Alpha0,
@@ -80,14 +83,16 @@ enum eKeyboardKeyState
 
 enum eMouseButton
 {
-  eMouseButton_Left,
+  eMouseButton_FirstEnum = 0,
+  eMouseButton_Left = eMouseButton_FirstEnum,
   eMouseButton_Middle,
   eMouseButton_Right,
+  eMouseButton_LastEnum
 };
 
 enum eMouseButtonState
 {
-  eMouseButtonState_Pressed,
+  eMouseButtonState_Press,
   eMouseButtonState_Down,
   eMouseButtonState_Release,
   eMouseButtonState_Up,

@@ -17,11 +17,13 @@ public:
   void Update() override;
 
   void SetSpeed(float speed) { m_Speed = speed; }
+  void SetSensitivity(float sensitivity) { m_Sensitivity = sensitivity; }
 
 protected:
   iInputs& m_Inputs;
   Timer& m_Timer;
 
   float m_Speed = 1.0f;
+  float m_Sensitivity = 1.0f;
 };
 } // namespace Lumeda
