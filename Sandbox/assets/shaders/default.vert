@@ -4,6 +4,8 @@
 // LAYOUT
 ///////////////////////////////////////////
 layout (location = 0) in vec3 v_Pos;
+layout (location = 1) in vec2 v_Uv;
+layout (location = 2) in vec3 v_Norm;
 
 ///////////////////////////////////////////
 // UNIFORMS
@@ -15,7 +17,7 @@ uniform mat4 u_Camera;
 ///////////////////////////////////////////
 // OUT
 ///////////////////////////////////////////
-
+out vec2 f_Uv;
 
 
 ///////////////////////////////////////////
@@ -23,5 +25,8 @@ uniform mat4 u_Camera;
 ///////////////////////////////////////////
 void main()
 {
+    // Forward to the fragment shader
+    f_Uv = v_Uv;
+
     gl_Position = u_Camera * u_World * vec4(v_Pos, 1.0);
 }
