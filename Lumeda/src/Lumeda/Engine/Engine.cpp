@@ -1,3 +1,5 @@
+#include <chrono>
+#include <thread>
 #include <Lumeda/Core/Log.h>
 #include <Lumeda/Engine/Engine.h>
 #include <Lumeda/Graphics/GraphicsTypes.h>

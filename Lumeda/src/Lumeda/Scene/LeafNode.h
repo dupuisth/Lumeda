@@ -46,6 +46,7 @@ public:
   ///////////////////////////////////////////
   virtual void SetTransformDirty() { m_TransformDirty = true; }
 
+  // Position
   void SetLocalPosition(const glm::vec3& position)
   {
     m_LocalPosition = position;
@@ -54,18 +55,29 @@ public:
   void Translate(const glm::vec3 movement) { SetLocalPosition(m_LocalPosition + movement); }
   const glm::vec3& GetLocalPosition() { return m_LocalPosition; }
 
+  // Rotation
   void SetLocalRotation(const glm::quat& rotation)
   {
-    m_LocalRotation = rotation;
+    m_LocalRotation = glm::normalize(rotation);
     SetTransformDirty();
   }
+
   void SetLocalRotationEuler(const glm::vec3& rotation)
   {
-    m_LocalRotation = glm::quat(glm::radians(rotation));
+    m_LocalRotation = glm::normalize(glm::quat(glm::radians(rotation)));
+    SetTransformDirty();
+  }
+
+  void RotateEuler(const glm::vec3& rotation) { Rotate(glm::quat(glm::radians(rotation))); }
+
+  void Rotate(const glm::quat& rotation)
+  {
+    m_LocalRotation = glm::normalize(m_LocalRotation * rotation);
     SetTransformDirty();
   }
   const glm::quat& GetLocalRotation() { return m_LocalRotation; }
 
+  // Scale
   void SetLocalScale(const glm::vec3& scale)
   {
     m_LocalScale = scale;

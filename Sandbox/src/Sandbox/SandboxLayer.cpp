@@ -127,7 +127,7 @@ void SandboxLayer::OnStart()
   cameraEntity->GetCamera().SetAspectRatio(
       (float)engine.GetGraphics().GetLowLevelGraphics().GetWidth() / (float)engine.GetGraphics().GetLowLevelGraphics().GetHeight());
 
-  cameraEntity->SetLocalPosition(glm::vec3(0.0f, 0.0f, -2.0f));
+  cameraEntity->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
   m_CameraEntity = static_cast<CameraEntity*>(playerNode->AddChild(std::move(cameraEntity)));
 
   // PlayerController entity
@@ -136,6 +136,10 @@ void SandboxLayer::OnStart()
   playerNode->AddChild(std::move(playerControllerEntity));
 
   m_World->GetRootNode().AddChild(std::move(playerNode));
+}
+
+void SandboxLayer::Update()
+{
 }
 
 void SandboxLayer::OnDraw()

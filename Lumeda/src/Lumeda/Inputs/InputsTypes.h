@@ -98,4 +98,14 @@ enum eMouseButtonState
   eMouseButtonState_Up,
 };
 
+///////////////////////////////////////////
+// Cursor
+///////////////////////////////////////////
+
+enum eCursorMode
+{
+  eCursorMode_Normal,
+  eCursorMode_Gameplay,
+};
+
 } // namespace Lumeda

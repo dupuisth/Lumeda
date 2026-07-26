@@ -88,6 +88,7 @@ InputsGL::InputsGL(LowLevelGraphicsGL& lowLevelGraphics, Timer& timer) : iInputs
   GLFWwindow* windowHandle = m_LowLevelGraphics.GetOpenGLWindow();
   glfwSetKeyCallback(windowHandle, OnKeyCallback);
   glfwSetMouseButtonCallback(windowHandle, OnMouseButtonCallback);
+  glfwSetCursorPosCallback(windowHandle, OnCursorPosCallback);
 
   LUMEDA_CORE_INFO("[InputsGL] Init");
 }
@@ -156,6 +157,29 @@ eMouseButtonState InputsGL::GetMouseButton(eMouseButton button)
   return state.state;
 }
 
+glm::vec2 InputsGL::GetMouseDelta()
+{
+  if (m_CursorState.framecount == m_Timer.GetFrameCount())
+  {
+    return m_CursorState.screenPos - m_PreviousCursorState.screenPos;
+  }
+  return glm::vec2(0.0f);
+}
+
+glm::vec2 InputsGL::GetMouseScreenPosition()
+{
+  return m_CursorState.screenPos;
+}
+
+///////////////////////////////////////////
+// Cursor
+///////////////////////////////////////////
+void InputsGL::SetCursorMode(eCursorMode mode)
+{
+  int GLFWMode = LumedaCursorModeToGLFW(mode);
+  glfwSetInputMode(m_LowLevelGraphics.GetOpenGLWindow(), GLFW_CURSOR, GLFWMode);
+}
+
 ///////////////////////////////////////////
 // Callback
 ///////////////////////////////////////////
@@ -203,6 +227,24 @@ void InputsGL::onMouseButton(int GLFWButton, int GLFWAction, int GLFWMods)
   }
 }
 
+void InputsGL::OnCursorPosCallback(GLFWwindow* window, double xPos, double yPos)
+{
+  InputsGL* inputs = static_cast<sGLFWWindowUserData*>(glfwGetWindowUserPointer(window))->inputsGL;
+  inputs->OnCursorPos(glm::vec2((float)xPos, (float)yPos));
+}
+
+void InputsGL::OnCursorPos(glm::vec2 pos)
+{
+  size_t framecount = m_Timer.GetFrameCount();
+  if (m_CursorState.framecount != framecount)
+  {
+    m_PreviousCursorState = m_CursorState;
+  }
+
+  m_CursorState.screenPos = pos;
+  m_CursorState.framecount = m_Timer.GetFrameCount();
+}
+
 ///////////////////////////////////////////
 // General functions
 ///////////////////////////////////////////
@@ -245,4 +287,17 @@ eMouseButton Lumeda::GLFWMouseButtonToLumeda(int button)
     return eMouseButton_Left;
   }
   return LumedaGLFWMouseButtonMapping.get_key(button);
+}
+
+int Lumeda::LumedaCursorModeToGLFW(eCursorMode mode)
+{
+  switch (mode)
+  {
+  case eCursorMode_Normal:
+    return GLFW_CURSOR_NORMAL;
+  case eCursorMode_Gameplay:
+    return GLFW_CURSOR_DISABLED;
+  }
+  LUMEDA_ASSERT(false);
+  return 0;
 }

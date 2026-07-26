@@ -11,6 +11,7 @@ public:
   ~SandboxLayer() = default;
 
   void OnStart() override;
+  void Update() override;
   void OnDraw() override;
 
   void OnPostDraw() override;
