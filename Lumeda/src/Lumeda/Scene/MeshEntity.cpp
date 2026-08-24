@@ -5,5 +5,5 @@ using namespace Lumeda;
 
 void MeshEntity::CollectRenderCommands(iRenderCommandSink& sink)
 {
-  sink.Submit(m_VertexBuffer, m_Material, GetAdditionalUniforms());
+  sink.Submit({.vertexBuffer = m_VertexBuffer, .material = m_Material, .additionalUniforms = GetAdditionalUniforms()});
 }

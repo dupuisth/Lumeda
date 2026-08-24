@@ -9,28 +9,16 @@
 #include <Lumeda/Graphics/Material.h>
 #include <Lumeda/Graphics/Model.h>
 #include <Lumeda/Graphics/RenderBuffer.h>
+#include <Lumeda/Graphics/RenderCommand.h>
 #include <Lumeda/Graphics/Texture.h>
 #include <Lumeda/Graphics/UniformMap.h>
 
 namespace Lumeda
 {
-struct RenderCommand
-{
-public:
-  iVertexBuffer* vertexBuffer;
-  Material* material;
-  UniformMap additionalUniforms;
-};
-
-class iRenderCommandSink
-{
-public:
-  virtual void Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms) = 0;
-};
 
 class World;
 
-class iRenderer : public iUpdateable
+class iRenderer : public iUpdateable, public iRenderCommandSink
 {
 public:
   iRenderer(const tString& name) : iUpdateable(name), m_TargetFramebuffer(nullptr) {}
@@ -39,6 +27,7 @@ public:
   ///////////////////////////////////////////
   // Submits / Commands
   ///////////////////////////////////////////
+  virtual void Submit(const sRenderCommand& renderCommand) = 0;
   virtual void Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms) = 0;
   virtual void Submit(Model& model, UniformMap additionalUniforms) = 0;
   virtual void Submit(World& world) = 0;
@@ -59,10 +48,10 @@ public:
   ///////////////////////////////////////////
   // Debugging
   ///////////////////////////////////////////
-  const std::vector<RenderCommand>& GetRenderCommands() { return m_RenderCommands; }
+  const std::vector<sRenderCommand>& GetRenderCommands() { return m_RenderCommands; }
 
 protected:
-  std::vector<RenderCommand> m_RenderCommands;
+  std::vector<sRenderCommand> m_RenderCommands;
 
   iFrameBuffer* m_TargetFramebuffer;
 };

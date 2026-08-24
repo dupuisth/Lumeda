@@ -11,6 +11,12 @@ using namespace Lumeda;
 ///////////////////////////////////////////
 // Submits
 ///////////////////////////////////////////
+void SimpleRenderer::Submit(const sRenderCommand& renderCommand)
+{
+  // Directly add it.
+  m_RenderCommands.push_back(renderCommand);
+}
+
 void SimpleRenderer::Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms)
 {
   m_RenderCommands.push_back({.vertexBuffer = vertexBuffer, .material = material, .additionalUniforms = additionalUniforms});

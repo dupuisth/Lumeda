@@ -5,7 +5,7 @@
 
 namespace Lumeda
 {
-class SimpleRenderer : public iRenderer, public iRenderCommandSink
+class SimpleRenderer : public iRenderer
 {
 public:
   SimpleRenderer(iLowLevelGraphics& lowLevelGraphics) : iRenderer("SimpleRenderer"), m_LowLevelGraphics(lowLevelGraphics) {}
@@ -16,6 +16,7 @@ public:
   ///////////////////////////////////////////
   // Submits
   ///////////////////////////////////////////
+  void Submit(const sRenderCommand& renderCommand) override;
   void Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms) override;
   void Submit(Model& model, UniformMap additionalUniforms) override;
   void Submit(World& world) override;

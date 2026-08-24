@@ -12,6 +12,6 @@ void ModelEntity::CollectRenderCommands(iRenderCommandSink& sink)
 
   for (const auto& item : m_Model->GetItems())
   {
-    sink.Submit(item.vertexBuffer.get(), item.material, GetAdditionalUniforms());
+    sink.Submit({.vertexBuffer = item.vertexBuffer.get(), .material = item.material, .additionalUniforms = GetAdditionalUniforms()});
   }
 }
