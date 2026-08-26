@@ -32,6 +32,8 @@ void OpaquePass::Flush(RenderContext& renderContext, const UniformMap& globalUni
     renderContext.Draw(renderCommand, globalUniforms);
   }
 
+  Clear();
+
   renderContext.EndPass(m_frameBuffer);
 }
 

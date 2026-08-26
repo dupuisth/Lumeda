@@ -11,7 +11,7 @@ class Timer
   friend Engine;
 
 public:
-  Timer() {}
+  Timer();
   ~Timer() = default;
 
   const size_t& GetFrameCount() { return m_Framecount; }
@@ -20,12 +20,14 @@ public:
 
 protected:
   void IncrementFramecount() { m_Framecount++; }
+  void Tick();
 
 private:
   size_t m_Framecount = 0;
 
-  float m_LastFrameTime;
-  float m_DeltaTime = 1.0f / 180.0f;
+  float m_DeltaTime = 0.0f;
+
+  std::chrono::steady_clock::time_point m_PreviousTime;
 };
 
 } // namespace Lumeda

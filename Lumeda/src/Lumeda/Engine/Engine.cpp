@@ -67,7 +67,7 @@ void Engine::Run()
   {
     LUMEDA_PROFILE_FRAME;
 
-    m_Timer->IncrementFramecount();
+    m_Timer->Tick();
 
     ///////////////////////////////////////////
     // Update
