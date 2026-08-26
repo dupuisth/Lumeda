@@ -37,10 +37,11 @@ void SandboxLayer::OnStart()
 
   iGpuProgram* defaultProgram = QuickCreateProgram("default", _W("assets/shaders/default.vert"), _W("assets/shaders/default.frag"));
   iGpuProgram* screenProgram = QuickCreateProgram("core_screen", _W("assets/shaders/core_screen.vert"), _W("assets/shaders/core_screen.frag"));
+  iGpuProgram* unlitProgram = QuickCreateProgram("unlit", _W("assets/shaders/unlit.vert"), _W("assets/shaders/unlit.frag"));
 
-  m_VertexBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
+  m_IcosphereVertexBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
   // clang-format off
-  m_VertexBuffer->SetData(
+  m_IcosphereVertexBuffer->SetData(
     {
       -0.5f, -0.5f, 0.0f,
       0.0f, 0.5f, 0.0f,
@@ -76,28 +77,40 @@ void SandboxLayer::OnStart()
   // clang-format on
   iLowLevelGraphics& llg = engine.GetGraphics().GetLowLevelGraphics();
 
-  m_ScreenMaterial = std::make_unique<Material>("", _W(""));
+  Material* m_ScreenMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("Screen");
   m_ScreenMaterial->SetProgram(screenProgram);
   m_ScreenMaterial->GetUniformMap().SetUniform("u_ScreenTexture", &m_Renderer->GetFrameBufferColor());
-  m_BasicMaterial = std::make_unique<Material>("", _W(""));
+  Material* m_BasicMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("Basic");
   m_BasicMaterial->SetProgram(defaultProgram);
 
+  // Load the icosphere and set the material
   Model* model = engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/icosphere.fbx"));
-  model->GetItems()[0].material = m_BasicMaterial.get();
+  model->GetItems()[0].material = m_BasicMaterial;
+
+  // Load the dirt texture and create the material
+  iTexture* dirtColorTexture = engine.GetResources().GetTextureManager().CreateTexture("dirt_color", eTextureType_2D);
+  dirtColorTexture->CreateFromFile(_W("assets/textures/dirt_color.jpg"));
+  Material* dirtMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("dirt");
+  dirtMaterial->SetProgram(unlitProgram);
+  dirtMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, dirtColorTexture);
+
+  // Load the ground and set the model
+  Model* groundModel = engine.GetResources().GetModelManager().CreateModel("ground_plane", _W("assets/models/ground_plane.obj"));
+  groundModel->GetItems()[0].material = dirtMaterial;
 
   m_World = std::make_unique<World>();
 
   // First triangle
   std::unique_ptr<MeshEntity> meshEntity = std::make_unique<MeshEntity>("Triangle");
-  meshEntity->SetVertexBuffer(m_VertexBuffer.get());
-  meshEntity->SetMaterial(m_BasicMaterial.get());
+  meshEntity->SetVertexBuffer(m_IcosphereVertexBuffer.get());
+  meshEntity->SetMaterial(m_BasicMaterial);
   m_World->GetRootNode().AddChild(std::move(meshEntity));
 
   // Second triangle
   std::unique_ptr<MeshEntity> meshEntity2 = std::make_unique<MeshEntity>("Triangle2");
   meshEntity2->SetLocalPosition(glm::vec3(0.0f, 0.2f, 0.3f));
-  meshEntity2->SetVertexBuffer(m_VertexBuffer.get());
-  meshEntity2->SetMaterial(m_BasicMaterial.get());
+  meshEntity2->SetVertexBuffer(m_IcosphereVertexBuffer.get());
+  meshEntity2->SetMaterial(m_BasicMaterial);
   m_World->GetRootNode().AddChild(std::move(meshEntity2));
 
   // Ico model
@@ -105,6 +118,11 @@ void SandboxLayer::OnStart()
   modelEntity->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
   modelEntity->SetModel(model);
   m_World->GetRootNode().AddChild(std::move(modelEntity));
+
+  // Ground model
+  std::unique_ptr<ModelEntity> groundEntity = std::make_unique<ModelEntity>("Ground");
+  groundEntity->SetModel(groundModel);
+  m_World->GetRootNode().AddChild(std::move(groundEntity));
 
   // Player entity
   std::unique_ptr<Node> playerNode = std::make_unique<Node>("PlayerNode");
@@ -142,7 +160,7 @@ void SandboxLayer::OnDraw()
   m_Renderer->Submit(*m_World);
 
   sRenderItem renderItem = {.vertexBuffer = m_QuadBuffer.get(),
-      .material = m_ScreenMaterial.get(),
+      .material = engine.GetResources().GetMaterialManager().GetResourceByName("Screen"),
       .additionalUniforms = UniformMap(),
       .featureFlags = eRenderItemFeatureFlag_ScreenSpace};
   m_Renderer->Submit(renderItem);

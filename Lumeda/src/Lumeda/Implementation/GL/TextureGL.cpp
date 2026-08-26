@@ -1,3 +1,4 @@
+#include <stb_image.h>
 #include <glad/glad.h>
 #include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
 #include <Lumeda/Implementation/GL/TextureGL.h>
@@ -40,6 +41,51 @@ void TextureGL::CreateFromRawData(const glm::ivec3& size, ePixelFormat pixelForm
   glGenerateMipmap(GLTarget);
 
   glBindTexture(GLTarget, 0);
+}
+
+void TextureGL::CreateFromFile(const twString& path)
+{
+  if (!HasData())
+  {
+    glGenTextures(1, &m_HandleGL);
+  }
+
+  int width, height, nrChannels;
+  unsigned char* pixels = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
+  if (pixels == nullptr)
+  {
+    LUMEDA_CORE_WARN("[TextureGL] Failed to read the given texture ({0})!", path.c_str());
+    return;
+  }
+
+  // Only load Texture2D for now
+  m_Size = glm::ivec3(width, height, 0);
+
+  if (nrChannels == 3)
+  {
+    m_PixelFormat = ePixelFormat_RGB;
+  }
+  else if (nrChannels == 4)
+  {
+    m_PixelFormat = ePixelFormat_RGBA;
+  }
+  else
+  {
+    stbi_image_free(pixels);
+    LUMEDA_CORE_WARN("[TextureGL] Couldn't determine pixel format for {0} color channels!", nrChannels);
+    return;
+  }
+
+  GLenum GLTarget = TextureTypeToGLTarget(m_Type);
+  glBindTexture(GLTarget, m_HandleGL);
+
+  CopyTextureDataToGL(pixels);
+  ApplyProperties();
+  glGenerateMipmap(GLTarget);
+
+  glBindTexture(GLTarget, 0);
+
+  stbi_image_free(pixels);
 }
 
 void TextureGL::SetWrapping(eTextureWrapping wrapping)

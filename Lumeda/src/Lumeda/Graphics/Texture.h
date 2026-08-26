@@ -30,6 +30,7 @@ public:
   virtual void Bind(unsigned int slot) = 0;
 
   virtual void CreateFromRawData(const glm::ivec3& size, ePixelFormat pixelFormat, unsigned char* data) = 0;
+  virtual void CreateFromFile(const twString& path) = 0;
 
   eTextureUsage GetUsage() const { return m_Usage; }
   eTextureType GetType() const { return m_Type; }

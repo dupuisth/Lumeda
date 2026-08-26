@@ -21,11 +21,9 @@ public:
   bool OnEvent(Lumeda::iEvent& event);
 
 private:
-  std::unique_ptr<Lumeda::iVertexBuffer> m_VertexBuffer;
+  std::unique_ptr<Lumeda::iVertexBuffer> m_IcosphereVertexBuffer;
+  std::unique_ptr<Lumeda::iVertexBuffer> m_GroundVertexBuffer;
   std::unique_ptr<Lumeda::iVertexBuffer> m_QuadBuffer;
-
-  std::unique_ptr<Lumeda::Material> m_BasicMaterial;
-  std::unique_ptr<Lumeda::Material> m_ScreenMaterial;
 
   std::unique_ptr<Lumeda::SimpleRenderer> m_Renderer;
 

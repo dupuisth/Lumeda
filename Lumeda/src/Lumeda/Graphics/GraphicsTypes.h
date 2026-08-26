@@ -173,6 +173,8 @@ enum eShaderType
 #define tShaderCommonUniform_ObjectRotation ("u_Rotation")
 #define tShaderCommonUniform_ObjectScale ("u_Scale")
 
+#define tShaderCommonUniform_TextureDiffuse0 ("u_DiffuseTexture0")
+
 //---------------------------------------//
 
 ///////////////////////////////////////////

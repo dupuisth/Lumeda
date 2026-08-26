@@ -18,6 +18,7 @@ public:
   void Bind(unsigned int slot);
 
   void CreateFromRawData(const glm::ivec3& size, ePixelFormat pixelFormat, unsigned char* data) override;
+  void CreateFromFile(const twString& path) override;
 
   void SetWrapping(eTextureWrapping wrapping) override;
   void SetFiltering(eTextureFiltering filtering) override;
