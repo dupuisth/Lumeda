@@ -9,7 +9,7 @@
 #include <Lumeda/Graphics/Material.h>
 #include <Lumeda/Graphics/Model.h>
 #include <Lumeda/Graphics/RenderBuffer.h>
-#include <Lumeda/Graphics/RenderCommand.h>
+#include <Lumeda/Graphics/RendererTypes.h>
 #include <Lumeda/Graphics/Texture.h>
 #include <Lumeda/Graphics/UniformMap.h>
 
@@ -18,41 +18,24 @@ namespace Lumeda
 
 class World;
 
-class iRenderer : public iUpdateable, public iRenderCommandSink
+class iRenderer : public iUpdateable, public iRenderItemSink
 {
 public:
-  iRenderer(const tString& name) : iUpdateable(name), m_TargetFramebuffer(nullptr) {}
+  iRenderer(const tString& name) : iUpdateable(name) {}
   virtual ~iRenderer() = default;
 
   ///////////////////////////////////////////
   // Submits / Commands
   ///////////////////////////////////////////
-  virtual void Submit(const sRenderCommand& renderCommand) = 0;
-  virtual void Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms) = 0;
-  virtual void Submit(Model& model, UniformMap additionalUniforms) = 0;
+  virtual void Submit(const sRenderItem& item) = 0;
   virtual void Submit(World& world) = 0;
-
-  virtual void ClearCommands() { m_RenderCommands.clear(); }
 
   ///////////////////////////////////////////
   // Render
   ///////////////////////////////////////////
-  virtual void Flush(UniformMap globalUniforms, bool clearCommands, tClearFrameBufferFlag clearFlag) = 0;
-
-  ///////////////////////////////////////////
-  // Config
-  ///////////////////////////////////////////
-  void SetFrameBuffer(iFrameBuffer* framebuffer) { m_TargetFramebuffer = framebuffer; }
-  iFrameBuffer* GetFrameBuffer() { return m_TargetFramebuffer; }
-
-  ///////////////////////////////////////////
-  // Debugging
-  ///////////////////////////////////////////
-  const std::vector<sRenderCommand>& GetRenderCommands() { return m_RenderCommands; }
+  virtual void Flush(const UniformMap& globalUniforms) = 0;
 
 protected:
   std::vector<sRenderCommand> m_RenderCommands;
-
-  iFrameBuffer* m_TargetFramebuffer;
 };
 } // namespace Lumeda

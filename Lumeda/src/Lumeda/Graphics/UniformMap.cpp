@@ -22,7 +22,7 @@ void UniformMap::Clear()
     gpuProgram.SetUniform(item.first, item.second);                                                                                                  \
   }
 
-void UniformMap::Apply(iGpuProgram& gpuProgram)
+void UniformMap::Apply(iGpuProgram& gpuProgram) const
 {
   LUMEDA_UNIFORM_MAP_APPLY(m_UniformFloat, gpuProgram)
   LUMEDA_UNIFORM_MAP_APPLY(m_UniformVec2, gpuProgram)

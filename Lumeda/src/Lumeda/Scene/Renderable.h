@@ -7,7 +7,7 @@
 namespace Lumeda
 {
 
-class iRenderCommandSink;
+class iRenderItemSink;
 
 // TODO: Use the SetWorld to register the renderable to the World, this will prevent traversing the whole tree each frame
 // see if it is worth it.
@@ -17,7 +17,7 @@ public:
   iRenderable(const tString& name) : Entity(name) {}
   virtual ~iRenderable() = default;
 
-  virtual void CollectRenderCommands(iRenderCommandSink& sink) = 0;
+  virtual void CollectRenderCommands(iRenderItemSink& sink) = 0;
 
   virtual UniformMap GetAdditionalUniforms();
 };

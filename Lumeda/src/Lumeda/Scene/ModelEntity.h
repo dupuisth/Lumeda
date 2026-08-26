@@ -13,7 +13,7 @@ public:
   ModelEntity(const tString& name) : iRenderable(name), m_Model(nullptr) {}
   ~ModelEntity() = default;
 
-  void CollectRenderCommands(iRenderCommandSink& sink) override;
+  void CollectRenderCommands(iRenderItemSink& sink) override;
 
   void SetModel(Model* model) { m_Model = model; }
 

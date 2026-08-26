@@ -21,7 +21,7 @@ public:
   void SetVertexBuffer(iVertexBuffer* vertexBuffer) { m_VertexBuffer = vertexBuffer; }
   void SetMaterial(Material* material) { m_Material = material; }
 
-  void CollectRenderCommands(iRenderCommandSink& sink);
+  void CollectRenderCommands(iRenderItemSink& sink);
 
 private:
   iVertexBuffer* m_VertexBuffer;

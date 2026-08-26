@@ -71,6 +71,8 @@ public:
   // FrameBuffer
   ///////////////////////////////////////////
   std::unique_ptr<iFrameBuffer> CreateFrameBuffer(const tString& name) override;
+  void BindFrameBuffer(iFrameBuffer& framebuffer);
+  void UnBindFrameBuffer();
   void ClearFrameBuffer(tClearFrameBufferFlag flags) override;
   void SwapBuffers() override;
 

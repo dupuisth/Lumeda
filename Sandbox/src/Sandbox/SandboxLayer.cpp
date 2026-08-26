@@ -33,8 +33,7 @@ void SandboxLayer::OnStart()
 
   engine.GetGraphics().GetLowLevelGraphics().SetVSync(true);
 
-  m_WorldRenderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
-  m_ScreenRenderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
+  m_Renderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
 
   iGpuProgram* defaultProgram = QuickCreateProgram("default", _W("assets/shaders/default.vert"), _W("assets/shaders/default.frag"));
   iGpuProgram* screenProgram = QuickCreateProgram("core_screen", _W("assets/shaders/core_screen.vert"), _W("assets/shaders/core_screen.frag"));
@@ -76,24 +75,17 @@ void SandboxLayer::OnStart()
   );
   // clang-format on
   iLowLevelGraphics& llg = engine.GetGraphics().GetLowLevelGraphics();
-  m_FrameBuffer = llg.CreateFrameBuffer("screen");
-  m_FrameBufferColor = llg.CreateTexture("screen_color", eTextureType_2D, eTextureUsage_Normal);
-  m_FrameBufferColor->CreateFromRawData(glm::ivec3(llg.GetWidth(), llg.GetHeight(), 0), ePixelFormat_RGB, nullptr);
-  m_FrameBufferDepthStencil = llg.CreateRenderBuffer("screen_depthstencil");
-  m_FrameBufferDepthStencil->SetStorage(glm::ivec2(llg.GetWidth(), llg.GetHeight()), ePixelFormat_Depth24Stencil8);
-  m_FrameBuffer->AttachTexture2D(eFrameBufferAttachment_Color, *m_FrameBufferColor);
-  m_FrameBuffer->AttachRenderBuffer(eFrameBufferAttachment_DepthStencil, *m_FrameBufferDepthStencil);
 
   m_ScreenMaterial = std::make_unique<Material>("", _W(""));
   m_ScreenMaterial->SetProgram(screenProgram);
-  m_ScreenMaterial->GetUniformMap().SetUniform("u_ScreenTexture", m_FrameBufferColor.get());
+  m_ScreenMaterial->GetUniformMap().SetUniform("u_ScreenTexture", &m_Renderer->GetFrameBufferColor());
   m_BasicMaterial = std::make_unique<Material>("", _W(""));
   m_BasicMaterial->SetProgram(defaultProgram);
 
   Model* model = engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/icosphere.fbx"));
   model->GetItems()[0].material = m_BasicMaterial.get();
 
-  m_WorldRenderer->SetFrameBuffer(m_FrameBuffer.get());
+  // m_Renderer->SetResultFrameBuffer(m_FrameBuffer.get());
 
   m_World = std::make_unique<World>();
 
@@ -149,18 +141,26 @@ void SandboxLayer::OnDraw()
 
   UniformMap worldUniforms;
   worldUniforms.SetUniform(tShaderCommonUniform_CameraMatrix, m_CameraEntity->GetCamera().GetProjectionView());
-  m_WorldRenderer->Submit(*m_World);
+  m_Renderer->Submit(*m_World);
 
-  // Render as normal
-  m_WorldRenderer->SetMode(ePolygonFace_Back, ePolygonMode_Fill);
-  m_WorldRenderer->Flush(worldUniforms, false, tClearFrameBufferFlag_Color | tClearFrameBufferFlag_Depth | tClearFrameBufferFlag_Stencil);
-  // Render as wireframe
-  m_WorldRenderer->SetMode(ePolygonFace_FrontBack, ePolygonMode_Line);
-  m_WorldRenderer->Flush(worldUniforms, true, tClearFrameBufferFlag_Depth | tClearFrameBufferFlag_Stencil);
+  sRenderItem renderItem = {.vertexBuffer = m_QuadBuffer.get(),
+      .material = m_ScreenMaterial.get(),
+      .additionalUniforms = UniformMap(),
+      .featureFlags = eRenderItemFeatureFlag_ScreenSpace};
+  m_Renderer->Submit(renderItem);
 
-  m_ScreenRenderer->SetMode(ePolygonFace_Back, ePolygonMode_Fill);
-  m_ScreenRenderer->Submit(m_QuadBuffer.get(), m_ScreenMaterial.get(), UniformMap());
-  m_ScreenRenderer->Flush(UniformMap(), true, tClearFrameBufferFlag_Color);
+  // // Render as normal
+  // m_Renderer->SetMode(ePolygonFace_Back, ePolygonMode_Fill);
+  // m_Renderer->Flush(worldUniforms, false, tClearFrameBufferFlag_Color | tClearFrameBufferFlag_Depth | tClearFrameBufferFlag_Stencil);
+  // // Render as wireframe
+  // m_Renderer->SetMode(ePolygonFace_FrontBack, ePolygonMode_Line);
+  // m_Renderer->Flush(worldUniforms, true, tClearFrameBufferFlag_Depth | tClearFrameBufferFlag_Stencil);
+
+  m_Renderer->Flush(worldUniforms);
+
+  // m_ScreenRenderer->SetMode(ePolygonFace_Back, ePolygonMode_Fill);
+  // m_ScreenRenderer->Submit(m_QuadBuffer.get(), m_ScreenMaterial.get(), UniformMap());
+  // m_ScreenRenderer->Flush(UniformMap(), true, tClearFrameBufferFlag_Color);
 
   if (ImGui::BeginMainMenuBar())
   {
@@ -288,8 +288,10 @@ bool SandboxLayer::OnEvent(iEvent& event)
   {
     WindowFrameBufferSizeEvent& cevent = static_cast<WindowFrameBufferSizeEvent&>(event);
 
-    m_FrameBufferColor->CreateFromRawData(glm::ivec3(cevent.Width, cevent.Height, 0), ePixelFormat_RGB, nullptr);
-    m_FrameBufferDepthStencil->SetStorage(glm::ivec2(cevent.Width, cevent.Height), ePixelFormat_Depth24Stencil8);
+    // Maybe later on make a function to resize inside the render??
+    // Or directly inside the framebuffer which will resize everything?
+    m_Renderer->GetFrameBufferColor().CreateFromRawData(glm::ivec3(cevent.Width, cevent.Height, 0), ePixelFormat_RGB, nullptr);
+    m_Renderer->GetFrameBufferDepthStencil().SetStorage(glm::ivec2(cevent.Width, cevent.Height), ePixelFormat_Depth24Stencil8);
 
     m_CameraEntity->GetCamera().SetAspectRatio((float)cevent.Width / (float)cevent.Height);
   }

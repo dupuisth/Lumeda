@@ -3,7 +3,7 @@
 
 using namespace Lumeda;
 
-void MeshEntity::CollectRenderCommands(iRenderCommandSink& sink)
+void MeshEntity::CollectRenderCommands(iRenderItemSink& sink)
 {
   sink.Submit({.vertexBuffer = m_VertexBuffer, .material = m_Material, .additionalUniforms = GetAdditionalUniforms()});
 }

@@ -170,6 +170,16 @@ std::unique_ptr<iFrameBuffer> LowLevelGraphicsGL::CreateFrameBuffer(const tStrin
   return std::move(framebuffer);
 }
 
+void LowLevelGraphicsGL::BindFrameBuffer(iFrameBuffer& framebuffer)
+{
+  framebuffer.Bind();
+}
+
+void LowLevelGraphicsGL::UnBindFrameBuffer()
+{
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void LowLevelGraphicsGL::ClearFrameBuffer(tClearFrameBufferFlag flags)
 {
   glClear(ClearFlagsToGLFlag(flags));

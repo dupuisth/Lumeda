@@ -47,6 +47,9 @@ public:
   // FrameBuffer
   ///////////////////////////////////////////
   virtual std::unique_ptr<iFrameBuffer> CreateFrameBuffer(const tString& name) = 0;
+  virtual void BindFrameBuffer(iFrameBuffer& framebuffer) = 0;
+  /// @brief Ensure there is a way to unbind a framebuffer without a reference to any
+  virtual void UnBindFrameBuffer() = 0;
   virtual void ClearFrameBuffer(tClearFrameBufferFlag flags) = 0;
   virtual void SwapBuffers() = 0;
 

@@ -3,7 +3,7 @@
 
 using namespace Lumeda;
 
-void ModelEntity::CollectRenderCommands(iRenderCommandSink& sink)
+void ModelEntity::CollectRenderCommands(iRenderItemSink& sink)
 {
   if (m_Model == nullptr)
   {

@@ -23,7 +23,7 @@ public:
   ~UniformMap() = default;
 
   void Clear();
-  void Apply(iGpuProgram& gpuProgram);
+  void Apply(iGpuProgram& gpuProgram) const;
 
   LUMEDA_UNIFORM_MAP_FUNCTION(float, float, m_UniformFloat)
   LUMEDA_UNIFORM_MAP_FUNCTION(glm::vec2, const glm::vec2&, m_UniformVec2)

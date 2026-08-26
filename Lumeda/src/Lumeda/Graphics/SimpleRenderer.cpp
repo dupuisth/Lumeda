@@ -8,26 +8,31 @@
 
 using namespace Lumeda;
 
+SimpleRenderer::SimpleRenderer(iLowLevelGraphics& lowLevelGraphics) : iRenderer("SimpleRenderer"), m_LowLevelGraphics(lowLevelGraphics)
+{
+  glm::ivec2 screenSize = glm::ivec2(m_LowLevelGraphics.GetWidth(), m_LowLevelGraphics.GetHeight());
+
+  m_FrameBuffer = m_LowLevelGraphics.CreateFrameBuffer("SimpleRenderer_FrameBuffer");
+  m_FrameBufferColor = m_LowLevelGraphics.CreateTexture("SimpleRenderer_ScreenColor", eTextureType_2D, eTextureUsage_Normal);
+  m_FrameBufferColor->CreateFromRawData(glm::ivec3(screenSize, 0), ePixelFormat_RGB, nullptr);
+  m_FrameBufferDepthStencil = m_LowLevelGraphics.CreateRenderBuffer("SimpleRenderer_ColorDepthStencil");
+  m_FrameBufferDepthStencil->SetStorage(screenSize, ePixelFormat_Depth24Stencil8);
+  m_FrameBuffer->AttachTexture2D(eFrameBufferAttachment_Color, *m_FrameBufferColor);
+  m_FrameBuffer->AttachRenderBuffer(eFrameBufferAttachment_DepthStencil, *m_FrameBufferDepthStencil);
+
+  m_OpaquePass = std::make_unique<OpaquePass>(m_FrameBuffer.get());
+  m_ScreenPass = std::make_unique<ScreenPass>();
+
+  m_RenderContext = std::make_unique<RenderContext>(lowLevelGraphics);
+}
+
 ///////////////////////////////////////////
 // Submits
 ///////////////////////////////////////////
-void SimpleRenderer::Submit(const sRenderCommand& renderCommand)
+void SimpleRenderer::Submit(const sRenderItem& item)
 {
-  // Directly add it.
-  m_RenderCommands.push_back(renderCommand);
-}
-
-void SimpleRenderer::Submit(iVertexBuffer* vertexBuffer, Material* material, UniformMap additionalUniforms)
-{
-  m_RenderCommands.push_back({.vertexBuffer = vertexBuffer, .material = material, .additionalUniforms = additionalUniforms});
-}
-
-void SimpleRenderer::Submit(Model& model, UniformMap additionalUniforms)
-{
-  for (const auto& item : model.GetItems())
-  {
-    Submit(item.vertexBuffer.get(), item.material, additionalUniforms);
-  }
+  m_OpaquePass->Submit(item);
+  m_ScreenPass->Submit(item);
 }
 
 void SimpleRenderer::Submit(World& world)
@@ -62,60 +67,8 @@ void SimpleRenderer::Submit(World& world)
 ///////////////////////////////////////////
 // Render
 ///////////////////////////////////////////
-void SimpleRenderer::Flush(UniformMap globalUniforms, bool clearCommands, tClearFrameBufferFlag clearFlag)
+void SimpleRenderer::Flush(const UniformMap& globalUniforms)
 {
-  m_LowLevelGraphics.SetDrawMode(m_Face, m_Mode);
-
-  if (m_TargetFramebuffer != nullptr)
-  {
-    m_TargetFramebuffer->Bind();
-  }
-  // TODO: Should set to 0 if nullptr...
-
-  if (clearFlag != 0)
-  {
-    m_LowLevelGraphics.ClearFrameBuffer(clearFlag);
-  }
-
-  // No doubt that there is a better way of doing this, but make it work for now..
-  // 1. Setup all the programs with the global uniforms
-  std::set<iGpuProgram*> programs;
-  for (const auto& renderCommand : m_RenderCommands)
-  {
-    programs.insert(renderCommand.material->GetProgram());
-  }
-  for (iGpuProgram* program : programs)
-  {
-    program->Bind();
-    globalUniforms.Apply(*program);
-    program->UnBind();
-  }
-
-  // 2. Apply the render commands
-  for (auto& renderCommand : m_RenderCommands)
-  {
-
-    if (renderCommand.material == nullptr || renderCommand.material->GetProgram() == nullptr || renderCommand.vertexBuffer == nullptr)
-    {
-      LUMEDA_CORE_WARN("[SimpleRenderer] The given rendercommand is not complete");
-    }
-
-    iGpuProgram* program = renderCommand.material->GetProgram();
-
-    program->Bind();
-    renderCommand.material->GetUniformMap().Apply(*program);
-    renderCommand.additionalUniforms.Apply(*program);
-    renderCommand.vertexBuffer->Draw();
-    program->UnBind();
-  }
-
-  if (m_TargetFramebuffer != nullptr)
-  {
-    m_TargetFramebuffer->UnBind();
-  }
-
-  if (clearCommands)
-  {
-    ClearCommands();
-  }
+  m_OpaquePass->Flush(*m_RenderContext, globalUniforms);
+  m_ScreenPass->Flush(*m_RenderContext, globalUniforms);
 }
