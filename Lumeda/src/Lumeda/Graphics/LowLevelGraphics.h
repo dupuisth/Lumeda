@@ -87,5 +87,6 @@ public:
   // Other
   ///////////////////////////////////////////
   virtual void SetDrawMode(ePolygonFace face, ePolygonMode mode) = 0;
+  virtual void EnableDepthTest(bool enable) = 0;
 };
 } // namespace Lumeda

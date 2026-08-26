@@ -16,6 +16,7 @@ void ScreenPass::Submit(const sRenderItem& item)
 void ScreenPass::Flush(RenderContext& renderContext, const UniformMap& globalUniforms)
 {
   renderContext.BeginPass(nullptr, tClearFrameBufferFlag_Color);
+  renderContext.GetLowLevelGraphics().EnableDepthTest(false);
 
   for (sRenderCommand& command : m_RenderCommands)
   {

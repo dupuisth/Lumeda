@@ -268,6 +268,17 @@ void LowLevelGraphicsGL::SetDrawMode(ePolygonFace face, ePolygonMode mode)
   glPolygonMode(PolygonFaceToGL(face), PolygonModeToGL(mode));
 }
 
+void LowLevelGraphicsGL::EnableDepthTest(bool enable)
+{
+  if (enable)
+  {
+    glEnable(GL_DEPTH_TEST);
+  }
+  else
+  {
+    glDisable(GL_DEPTH_TEST);
+  }
+}
 //---------------------------------------//
 
 ///////////////////////////////////////////

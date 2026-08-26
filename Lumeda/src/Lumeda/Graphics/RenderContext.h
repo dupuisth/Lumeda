@@ -18,6 +18,8 @@ public:
   void Draw(sRenderCommand& command, const UniformMap& globalUniforms);
   void EndPass(iFrameBuffer* target);
 
+  iLowLevelGraphics& GetLowLevelGraphics() { return m_LowLevelGraphics; }
+
 private:
   iLowLevelGraphics& m_LowLevelGraphics;
 

@@ -25,6 +25,7 @@ void OpaquePass::Submit(const sRenderItem& item)
 void OpaquePass::Flush(RenderContext& renderContext, const UniformMap& globalUniforms)
 {
   renderContext.BeginPass(m_frameBuffer, tClearFrameBufferFlag_Color | tClearFrameBufferFlag_Depth);
+  renderContext.GetLowLevelGraphics().EnableDepthTest(true);
 
   for (sRenderCommand& renderCommand : m_renderCommands)
   {
