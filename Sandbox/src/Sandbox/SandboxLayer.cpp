@@ -47,7 +47,7 @@ void SandboxLayer::OnStart()
       0.5f, -0.5f, 0.0f
     }, 
     {
-      0, 1, 2
+      0, 2, 1
     },
     {
       {0, 3, eVertexAttribType_Float}
@@ -65,8 +65,8 @@ void SandboxLayer::OnStart()
       1.0f, -1.0f, 1.0f, 0.0f,
     }, 
     {
-      0, 1, 2,
-      0, 2, 3
+      0, 2, 1,
+      0, 3, 2
     },
     {
       {0, 2, eVertexAttribType_Float},
@@ -84,8 +84,6 @@ void SandboxLayer::OnStart()
 
   Model* model = engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/icosphere.fbx"));
   model->GetItems()[0].material = m_BasicMaterial.get();
-
-  // m_Renderer->SetResultFrameBuffer(m_FrameBuffer.get());
 
   m_World = std::make_unique<World>();
 
@@ -148,19 +146,7 @@ void SandboxLayer::OnDraw()
       .additionalUniforms = UniformMap(),
       .featureFlags = eRenderItemFeatureFlag_ScreenSpace};
   m_Renderer->Submit(renderItem);
-
-  // // Render as normal
-  // m_Renderer->SetMode(ePolygonFace_Back, ePolygonMode_Fill);
-  // m_Renderer->Flush(worldUniforms, false, tClearFrameBufferFlag_Color | tClearFrameBufferFlag_Depth | tClearFrameBufferFlag_Stencil);
-  // // Render as wireframe
-  // m_Renderer->SetMode(ePolygonFace_FrontBack, ePolygonMode_Line);
-  // m_Renderer->Flush(worldUniforms, true, tClearFrameBufferFlag_Depth | tClearFrameBufferFlag_Stencil);
-
   m_Renderer->Flush(worldUniforms);
-
-  // m_ScreenRenderer->SetMode(ePolygonFace_Back, ePolygonMode_Fill);
-  // m_ScreenRenderer->Submit(m_QuadBuffer.get(), m_ScreenMaterial.get(), UniformMap());
-  // m_ScreenRenderer->Flush(UniformMap(), true, tClearFrameBufferFlag_Color);
 
   if (ImGui::BeginMainMenuBar())
   {

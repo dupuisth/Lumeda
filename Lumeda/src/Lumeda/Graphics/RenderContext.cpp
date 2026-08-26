@@ -20,6 +20,9 @@ void RenderContext::BeginPass(iFrameBuffer* target, tClearFrameBufferFlag clearF
   {
     m_LowLevelGraphics.ClearFrameBuffer(clearFlag);
   }
+
+  // Make sure we're in sync with the actual mode
+  m_LowLevelGraphics.SetDrawMode(m_Face, m_Mode);
 }
 
 void RenderContext::Draw(sRenderCommand& command, const UniformMap& globalUniforms)
@@ -41,10 +44,9 @@ void RenderContext::Draw(sRenderCommand& command, const UniformMap& globalUnifor
   // Check if the current settings match
   if (m_Face != command.face || m_Mode != command.mode)
   {
-    m_LowLevelGraphics.SetDrawMode(command.face, command.mode);
-
     m_Face = command.face;
     m_Mode = command.mode;
+    m_LowLevelGraphics.SetDrawMode(command.face, command.mode);
   }
 
   gpuProgram->Bind();

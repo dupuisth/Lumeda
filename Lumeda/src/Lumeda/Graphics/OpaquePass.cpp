@@ -10,7 +10,16 @@ void OpaquePass::Submit(const sRenderItem& item)
     return;
   }
 
-  m_renderCommands.push_back({.vertexBuffer = item.vertexBuffer, .material = item.material, .additionalUniforms = item.additionalUniforms});
+  ePolygonFace face = ePolygonFace_Front;
+  ePolygonMode mode = ePolygonMode_Fill;
+  if (item.wireframe)
+  {
+    face = ePolygonFace_FrontBack;
+    mode = ePolygonMode_Line;
+  }
+
+  m_renderCommands.push_back(
+      {.vertexBuffer = item.vertexBuffer, .material = item.material, .additionalUniforms = item.additionalUniforms, .face = face, .mode = mode});
 }
 
 void OpaquePass::Flush(RenderContext& renderContext, const UniformMap& globalUniforms)

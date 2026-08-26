@@ -33,6 +33,7 @@ public:
   UniformMap additionalUniforms;
 
   uint32_t featureFlags = 0;
+  bool wireframe = false;
 };
 
 class iRenderItemSink

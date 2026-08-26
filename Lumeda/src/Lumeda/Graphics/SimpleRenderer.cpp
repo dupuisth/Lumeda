@@ -32,6 +32,14 @@ SimpleRenderer::SimpleRenderer(iLowLevelGraphics& lowLevelGraphics) : iRenderer(
 void SimpleRenderer::Submit(const sRenderItem& item)
 {
   m_OpaquePass->Submit(item);
+  // Debugging, Also submit as an wireframe!
+  if (!item.wireframe)
+  {
+    sRenderItem copy = item;
+    copy.wireframe = true;
+    m_OpaquePass->Submit(copy);
+  }
+
   m_ScreenPass->Submit(item);
 }
 
