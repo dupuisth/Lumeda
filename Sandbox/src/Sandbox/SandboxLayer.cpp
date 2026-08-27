@@ -38,6 +38,7 @@ void SandboxLayer::OnStart()
   iGpuProgram* defaultProgram = QuickCreateProgram("default", _W("assets/shaders/default.vert"), _W("assets/shaders/default.frag"));
   iGpuProgram* screenProgram = QuickCreateProgram("core_screen", _W("assets/shaders/core_screen.vert"), _W("assets/shaders/core_screen.frag"));
   iGpuProgram* unlitProgram = QuickCreateProgram("unlit", _W("assets/shaders/unlit.vert"), _W("assets/shaders/unlit.frag"));
+  iGpuProgram* litProgram = QuickCreateProgram("lit", _W("assets/shaders/lit.vert"), _W("assets/shaders/lit.frag"));
 
   m_QuadBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
   // clang-format off
@@ -60,6 +61,15 @@ void SandboxLayer::OnStart()
   // clang-format on
   iLowLevelGraphics& llg = engine.GetGraphics().GetLowLevelGraphics();
 
+  // Load the dirt texture and create the material
+  iTexture* dirtColorTexture = engine.GetResources().GetTextureManager().CreateTexture("dirt_color", eTextureType_2D);
+  dirtColorTexture->CreateFromFile(_W("assets/textures/dirt_color.jpg"));
+  dirtColorTexture->SetWrapping(eTextureWrapping_Repeat);
+  dirtColorTexture->SetFiltering(eTextureFiltering_Nearest);
+  Material* dirtMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("dirt");
+  dirtMaterial->SetProgram(litProgram);
+  dirtMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, dirtColorTexture);
+
   Material* m_ScreenMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("Screen");
   m_ScreenMaterial->SetProgram(screenProgram);
   m_ScreenMaterial->GetUniformMap().SetUniform("u_ScreenTexture", &m_Renderer->GetFrameBufferColor());
@@ -67,15 +77,8 @@ void SandboxLayer::OnStart()
   m_BasicMaterial->SetProgram(defaultProgram);
 
   // Load the icosphere and set the material
-  Model* model = engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/icosphere.fbx"));
-  model->GetItems()[0].material = m_BasicMaterial;
-
-  // Load the dirt texture and create the material
-  iTexture* dirtColorTexture = engine.GetResources().GetTextureManager().CreateTexture("dirt_color", eTextureType_2D);
-  dirtColorTexture->CreateFromFile(_W("assets/textures/dirt_color.jpg"));
-  Material* dirtMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("dirt");
-  dirtMaterial->SetProgram(unlitProgram);
-  dirtMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, dirtColorTexture);
+  Model* model = engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/high_icosphere.fbx"));
+  model->GetItems()[0].material = dirtMaterial;
 
   // Load the ground and set the model
   Model* groundModel = engine.GetResources().GetModelManager().CreateModel("ground_plane", _W("assets/models/ground_plane.obj"));
@@ -86,9 +89,10 @@ void SandboxLayer::OnStart()
   // Ico model
   {
     std::unique_ptr<Node> icoNode = std::make_unique<Node>("Icosphere");
+    icoNode->SetLocalPosition(glm::vec3(0.0f, 0.0f, 2.0f));
 
     std::unique_ptr<ModelEntity> modelEntity = std::make_unique<ModelEntity>("Icosphere");
-    modelEntity->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    modelEntity->SetLocalPosition(glm::vec3(0.0, -0.5f, 1.0f));
     modelEntity->SetModel(model);
     icoNode->AddChild(std::move(modelEntity));
 
@@ -106,6 +110,7 @@ void SandboxLayer::OnStart()
 
   // Player entity
   std::unique_ptr<Node> playerNode = std::make_unique<Node>("PlayerNode");
+  playerNode->SetLocalPosition(glm::vec3(0.0f, 0.35f, -2.5f));
 
   // Camera entity
   std::unique_ptr<CameraEntity> cameraEntity = std::make_unique<CameraEntity>("Camera");
@@ -137,6 +142,13 @@ void SandboxLayer::OnDraw()
 
   UniformMap worldUniforms;
   worldUniforms.SetUniform(tShaderCommonUniform_CameraMatrix, m_CameraEntity->GetCamera().GetProjectionView());
+  worldUniforms.SetUniform(tShaderCommonUniform_CameraPosition, m_CameraEntity->GetCamera().GetPosition());
+  worldUniforms.SetUniform(tShaderCommonUniform_CameraForward, m_CameraEntity->GetCamera().GetForward());
+
+  tString buffer = tString(tShaderCommonUniform_MainDirectionalLight).append(".").append(tShaderCommonUniform_StructDirectionalLight_Color);
+  worldUniforms.SetUniform(buffer, glm::vec3(1.0f, 1.0f, 1.0f));
+  buffer = tString(tShaderCommonUniform_MainDirectionalLight).append(".").append(tShaderCommonUniform_StructDirectionalLight_Direction);
+  worldUniforms.SetUniform(buffer, glm::normalize(glm::vec3(0.5f, -1.0f, 0.1f)));
   m_Renderer->Submit(*m_World);
 
   sRenderItem renderItem = {.vertexBuffer = m_QuadBuffer.get(),
