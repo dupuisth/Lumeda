@@ -84,10 +84,20 @@ void SandboxLayer::OnStart()
   m_World = std::make_unique<World>();
 
   // Ico model
-  std::unique_ptr<ModelEntity> modelEntity = std::make_unique<ModelEntity>("Icosphere");
-  modelEntity->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-  modelEntity->SetModel(model);
-  m_World->GetRootNode().AddChild(std::move(modelEntity));
+  {
+    std::unique_ptr<Node> icoNode = std::make_unique<Node>("Icosphere");
+
+    std::unique_ptr<ModelEntity> modelEntity = std::make_unique<ModelEntity>("Icosphere");
+    modelEntity->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    modelEntity->SetModel(model);
+    icoNode->AddChild(std::move(modelEntity));
+
+    std::unique_ptr<RotatingEntity> rotatingEntity = std::make_unique<RotatingEntity>("Rotating", engine.GetTimer());
+    rotatingEntity->SetRotating(glm::vec3(0.0f, 45.0f, 0.0f));
+    icoNode->AddChild(std::move(rotatingEntity));
+
+    m_World->GetRootNode().AddChild(std::move(icoNode));
+  }
 
   // Ground model
   std::unique_ptr<ModelEntity> groundEntity = std::make_unique<ModelEntity>("Ground");
@@ -141,6 +151,8 @@ void SandboxLayer::OnDraw()
     if (ImGui::BeginMenu("Performances"))
     {
       ImGui::LabelText("Framecount", "%zd", engine.GetTimer().GetFrameCount());
+      ImGui::LabelText("DeltaTime", "%f", engine.GetTimer().GetDeltaTime());
+      ImGui::LabelText("1/DeltaTime", "%.2f", 1.0f / engine.GetTimer().GetDeltaTime());
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Inputs"))

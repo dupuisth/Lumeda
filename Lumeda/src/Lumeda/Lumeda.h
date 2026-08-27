@@ -56,6 +56,7 @@
 #include <Lumeda/Scene/Node.h>
 #include <Lumeda/Scene/PlayerControllerEntity.h>
 #include <Lumeda/Scene/Renderable.h>
+#include <Lumeda/Scene/RotatingEntity.h>
 #include <Lumeda/Scene/Viewport.h>
 #include <Lumeda/Scene/World.h>
 
