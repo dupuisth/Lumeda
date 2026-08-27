@@ -39,23 +39,6 @@ void SandboxLayer::OnStart()
   iGpuProgram* screenProgram = QuickCreateProgram("core_screen", _W("assets/shaders/core_screen.vert"), _W("assets/shaders/core_screen.frag"));
   iGpuProgram* unlitProgram = QuickCreateProgram("unlit", _W("assets/shaders/unlit.vert"), _W("assets/shaders/unlit.frag"));
 
-  m_IcosphereVertexBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
-  // clang-format off
-  m_IcosphereVertexBuffer->SetData(
-    {
-      -0.5f, -0.5f, 0.0f,
-      0.0f, 0.5f, 0.0f,
-      0.5f, -0.5f, 0.0f
-    }, 
-    {
-      0, 2, 1
-    },
-    {
-      {0, 3, eVertexAttribType_Float}
-    }
-  );
-  // clang-format on
-
   m_QuadBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
   // clang-format off
   m_QuadBuffer->SetData(
@@ -99,19 +82,6 @@ void SandboxLayer::OnStart()
   groundModel->GetItems()[0].material = dirtMaterial;
 
   m_World = std::make_unique<World>();
-
-  // First triangle
-  std::unique_ptr<MeshEntity> meshEntity = std::make_unique<MeshEntity>("Triangle");
-  meshEntity->SetVertexBuffer(m_IcosphereVertexBuffer.get());
-  meshEntity->SetMaterial(m_BasicMaterial);
-  m_World->GetRootNode().AddChild(std::move(meshEntity));
-
-  // Second triangle
-  std::unique_ptr<MeshEntity> meshEntity2 = std::make_unique<MeshEntity>("Triangle2");
-  meshEntity2->SetLocalPosition(glm::vec3(0.0f, 0.2f, 0.3f));
-  meshEntity2->SetVertexBuffer(m_IcosphereVertexBuffer.get());
-  meshEntity2->SetMaterial(m_BasicMaterial);
-  m_World->GetRootNode().AddChild(std::move(meshEntity2));
 
   // Ico model
   std::unique_ptr<ModelEntity> modelEntity = std::make_unique<ModelEntity>("Icosphere");

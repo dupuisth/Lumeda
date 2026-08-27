@@ -21,7 +21,6 @@ public:
   bool OnEvent(Lumeda::iEvent& event);
 
 private:
-  std::unique_ptr<Lumeda::iVertexBuffer> m_IcosphereVertexBuffer;
   std::unique_ptr<Lumeda::iVertexBuffer> m_GroundVertexBuffer;
   std::unique_ptr<Lumeda::iVertexBuffer> m_QuadBuffer;
 
