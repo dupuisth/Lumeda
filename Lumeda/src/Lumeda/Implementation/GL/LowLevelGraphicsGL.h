@@ -23,6 +23,7 @@ struct sGLFWWindowUserData
 ///////////////////////////////////////////
 
 GLenum TextureTypeToGLTarget(eTextureType type);
+GLenum PixelFormatToGLType(ePixelFormat format);
 GLenum PixelFormatToGLFormat(ePixelFormat format);
 GLenum PixelFormatToGLInternalFormat(ePixelFormat format);
 GLenum WrappingToGLWrapping(eTextureWrapping wrapping);

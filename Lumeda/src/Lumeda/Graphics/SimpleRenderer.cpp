@@ -15,10 +15,12 @@ SimpleRenderer::SimpleRenderer(iLowLevelGraphics& lowLevelGraphics) : iRenderer(
   m_FrameBuffer = m_LowLevelGraphics.CreateFrameBuffer("SimpleRenderer_FrameBuffer");
   m_FrameBufferColor = m_LowLevelGraphics.CreateTexture("SimpleRenderer_ScreenColor", eTextureType_2D, eTextureUsage_Normal);
   m_FrameBufferColor->CreateFromRawData(glm::ivec3(screenSize, 0), ePixelFormat_RGB, nullptr);
-  m_FrameBufferDepthStencil = m_LowLevelGraphics.CreateRenderBuffer("SimpleRenderer_ColorDepthStencil");
-  m_FrameBufferDepthStencil->SetStorage(screenSize, ePixelFormat_Depth24Stencil8);
+  m_FrameBufferDepthStencil = m_LowLevelGraphics.CreateTexture("SimpleRenderer_DepthStencil", eTextureType_2D, eTextureUsage_Normal);
+  m_FrameBufferDepthStencil->CreateFromRawData(glm::ivec3(screenSize, 0), ePixelFormat_Depth24Stencil8, nullptr);
+  // m_FrameBufferDepthStencil = m_LowLevelGraphics.CreateRenderBuffer("SimpleRenderer_DepthStencil");
+  // m_FrameBufferDepthStencil->SetStorage(screenSize, ePixelFormat_Depth24Stencil8);
   m_FrameBuffer->AttachTexture2D(eFrameBufferAttachment_Color, *m_FrameBufferColor);
-  m_FrameBuffer->AttachRenderBuffer(eFrameBufferAttachment_DepthStencil, *m_FrameBufferDepthStencil);
+  m_FrameBuffer->AttachTexture2D(eFrameBufferAttachment_DepthStencil, *m_FrameBufferDepthStencil);
 
   m_OpaquePass = std::make_unique<OpaquePass>(m_FrameBuffer.get());
   m_ScreenPass = std::make_unique<ScreenPass>();

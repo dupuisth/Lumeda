@@ -31,14 +31,14 @@ public:
   // FrameBuffer
   ///////////////////////////////////////////
   iFrameBuffer& GetFrameBuffer() { return *m_FrameBuffer; }
-  iRenderBuffer& GetFrameBufferDepthStencil() { return *m_FrameBufferDepthStencil; }
+  iTexture& GetFrameBufferDepthStencil() { return *m_FrameBufferDepthStencil; }
   iTexture& GetFrameBufferColor() { return *m_FrameBufferColor; }
 
 protected:
   iLowLevelGraphics& m_LowLevelGraphics;
 
   std::unique_ptr<iTexture> m_FrameBufferColor;
-  std::unique_ptr<iRenderBuffer> m_FrameBufferDepthStencil;
+  std::unique_ptr<iTexture> m_FrameBufferDepthStencil;
   std::unique_ptr<iFrameBuffer> m_FrameBuffer;
 
   std::unique_ptr<RenderContext> m_RenderContext;

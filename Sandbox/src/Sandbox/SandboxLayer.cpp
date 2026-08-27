@@ -295,7 +295,7 @@ bool SandboxLayer::OnEvent(iEvent& event)
     // Maybe later on make a function to resize inside the render??
     // Or directly inside the framebuffer which will resize everything?
     m_Renderer->GetFrameBufferColor().CreateFromRawData(glm::ivec3(cevent.Width, cevent.Height, 0), ePixelFormat_RGB, nullptr);
-    m_Renderer->GetFrameBufferDepthStencil().SetStorage(glm::ivec2(cevent.Width, cevent.Height), ePixelFormat_Depth24Stencil8);
+    m_Renderer->GetFrameBufferDepthStencil().CreateFromRawData(glm::ivec3(cevent.Width, cevent.Height, 0), ePixelFormat_Depth24Stencil8, nullptr);
 
     m_CameraEntity->GetCamera().SetAspectRatio((float)cevent.Width / (float)cevent.Height);
   }

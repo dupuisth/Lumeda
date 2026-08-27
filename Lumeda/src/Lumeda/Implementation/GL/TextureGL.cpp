@@ -105,7 +105,7 @@ void TextureGL::CopyTextureDataToGL(unsigned char* data)
   GLenum GLTarget = TextureTypeToGLTarget(m_Type);
   GLenum GLFormat = PixelFormatToGLFormat(m_PixelFormat);
   GLenum GLInternalFormat = PixelFormatToGLInternalFormat(m_PixelFormat);
-  GLenum GLType = GL_UNSIGNED_BYTE;
+  GLenum GLType = PixelFormatToGLType(m_PixelFormat);
 
   if (m_Type == eTextureType_1D)
   {

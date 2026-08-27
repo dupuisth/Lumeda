@@ -317,6 +317,21 @@ GLenum Lumeda::PixelFormatToGLFormat(ePixelFormat format)
   return 0;
 }
 
+GLenum Lumeda::PixelFormatToGLType(ePixelFormat format)
+{
+  switch (format)
+  {
+  case ePixelFormat_RGB:
+    return GL_UNSIGNED_BYTE;
+  case ePixelFormat_RGBA:
+    return GL_UNSIGNED_BYTE;
+  case ePixelFormat_Depth24Stencil8:
+    return GL_UNSIGNED_INT_24_8;
+  }
+  LUMEDA_ASSERT(false);
+  return 0;
+}
+
 GLenum Lumeda::PixelFormatToGLInternalFormat(ePixelFormat format)
 {
   switch (format)
