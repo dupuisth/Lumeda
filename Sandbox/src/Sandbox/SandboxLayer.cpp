@@ -66,9 +66,16 @@ void SandboxLayer::OnStart()
   dirtColorTexture->CreateFromFile(_W("assets/textures/dirt_color.jpg"));
   dirtColorTexture->SetWrapping(eTextureWrapping_Repeat);
   dirtColorTexture->SetFiltering(eTextureFiltering_Nearest);
+  iTexture* armchairTexture = engine.GetResources().GetTextureManager().CreateTexture("armchair_color", eTextureType_2D);
+  armchairTexture->CreateFromFile(_W("assets/amnesia/textures/armchair.jpg"));
+  armchairTexture->SetWrapping(eTextureWrapping_Repeat);
+  armchairTexture->SetFiltering(eTextureFiltering_Nearest);
   Material* dirtMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("dirt");
   dirtMaterial->SetProgram(litProgram);
   dirtMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, dirtColorTexture);
+  Material* armchairMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("armchairMaterial");
+  armchairMaterial->SetProgram(litProgram);
+  armchairMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, armchairTexture);
 
   Material* m_ScreenMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("Screen");
   m_ScreenMaterial->SetProgram(screenProgram);
@@ -83,6 +90,10 @@ void SandboxLayer::OnStart()
   // Load the ground and set the model
   Model* groundModel = engine.GetResources().GetModelManager().CreateModel("ground_plane", _W("assets/models/ground_plane.obj"));
   groundModel->GetItems()[0].material = dirtMaterial;
+
+  // Load the armchair
+  Model* armchairModel = engine.GetResources().GetModelManager().CreateModel("armchair_model", _W("assets/amnesia/models/armchair.fbx"));
+  armchairModel->GetItems()[0].material = armchairMaterial;
 
   m_World = std::make_unique<World>();
 
@@ -101,6 +112,17 @@ void SandboxLayer::OnStart()
     icoNode->AddChild(std::move(rotatingEntity));
 
     m_World->GetRootNode().AddChild(std::move(icoNode));
+  }
+
+  // Armchair
+  {
+    std::unique_ptr<Node> armchairNode = std::make_unique<Node>("Armchair");
+    std::unique_ptr<ModelEntity> modelEntity = std::make_unique<ModelEntity>("Model");
+    modelEntity->SetLocalPosition(glm::vec3(0.0, -0.5f, 1.0f));
+    modelEntity->SetModel(armchairModel);
+    armchairNode->AddChild(std::move(modelEntity));
+
+    m_World->GetRootNode().AddChild(std::move(armchairNode));
   }
 
   // Ground model
