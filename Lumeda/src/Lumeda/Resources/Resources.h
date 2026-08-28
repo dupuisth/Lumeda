@@ -42,6 +42,9 @@ public:
   //---------------------------------------//
 
 private:
+  void PreLoadAllWorker(const twString& root, bool recursive);
+
+private:
   Graphics* m_Graphics;
 
   ///////////////////////////////////////////

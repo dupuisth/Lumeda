@@ -40,6 +40,18 @@ void Resources::Init(Graphics& graphics)
 
 void Resources::LoadAll(const twString& root, bool recursive)
 {
+  // Preload all
+  PreLoadAllWorker(root, recursive);
+
+  // Load everything.
+  for (const auto& loader : m_Loaders)
+  {
+    loader->LoadPending();
+  }
+}
+
+void Lumeda::Resources::PreLoadAllWorker(const twString& root, bool recursive)
+{
   for (const auto& entry : std::filesystem::directory_iterator(root))
   {
     // If it's a directory, explore
@@ -47,19 +59,13 @@ void Resources::LoadAll(const twString& root, bool recursive)
     {
       if (recursive)
       {
-        LoadAll(entry.path().string(), recursive);
+        PreLoadAllWorker(entry.path().string(), recursive);
       }
       continue;
     }
 
     // Else, try to load it
     PreLoad(entry.path().string());
-  }
-
-  // Load everything.
-  for (const auto& loader : m_Loaders)
-  {
-    loader->LoadPending();
   }
 }
 
