@@ -54,6 +54,7 @@ project "Lumeda"
         "%{IncludeDir.imgui}",
         "%{IncludeDir.imgui}" .. "/backends",
         "%{IncludeDir.assimp}",
+        "%{IncludeDir.tinyxml2}",
     }
 
     libdirs 
@@ -157,6 +158,7 @@ project "Sandbox"
         "%{IncludeDir.imgui}",
         "%{IncludeDir.glfw}",
         "%{IncludeDir.glad}",
+        "%{IncludeDir.tinyxml2}",
     }
 
     libdirs 

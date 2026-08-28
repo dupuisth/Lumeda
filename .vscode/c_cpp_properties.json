@@ -18,7 +18,8 @@
         "${workspaceFolder}/Lumeda/vendor/glm",
         "${workspaceFolder}/Lumeda/vendor/imgui/backends",
         "${workspaceFolder}/LumedaTest/vendor/googletest/googletest/include",
-        "${workspaceFolder}/Lumeda/vendor/tracy/public"
+        "${workspaceFolder}/Lumeda/vendor/tracy/public",
+        "${workspaceFolder}/Lumeda/vendor/tinyxml2"
       ],
       "intelliSenseMode": "windows-msvc-x64",
       "compilerPath": "cl.exe",
@@ -43,7 +44,8 @@
         "${workspaceFolder}/Lumeda/vendor/glm",
         "${workspaceFolder}/Lumeda/vendor/imgui/backends",
         "${workspaceFolder}/LumedaTest/vendor/googletest/googletest/include",
-        "${workspaceFolder}/Lumeda/vendor/tracy/public"
+        "${workspaceFolder}/Lumeda/vendor/tracy/public",
+        "${workspaceFolder}/Lumeda/vendor/tinyxml2"
       ],
       "intelliSenseMode": "linux-gcc-x64",
       "compilerPath": "/usr/bin/g++",
