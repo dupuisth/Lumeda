@@ -40,8 +40,10 @@
 #include <Lumeda/Resources/MaterialManager.h>
 #include <Lumeda/Resources/ModelManager.h>
 #include <Lumeda/Resources/ResourceBase.h>
+#include <Lumeda/Resources/ResourceLoader.h>
 #include <Lumeda/Resources/ResourceManager.h>
 #include <Lumeda/Resources/Resources.h>
+#include <Lumeda/Resources/TextureLoader.h>
 #include <Lumeda/Resources/TextureManager.h>
 
 ///////////////////////////////////////////

@@ -118,13 +118,13 @@ enum ePixelFormat
 
 enum eTextureFiltering
 {
-  eTextureFiltering_Nearest,
+  eTextureFiltering_Nearest = 0,
   eTextureFiltering_Linear
 };
 
 enum eTextureWrapping
 {
-  eTextureWrapping_Repeat,
+  eTextureWrapping_Repeat = 0,
   eTextureWrapping_Clamp
 };
 

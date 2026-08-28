@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Texture>
+  <Name>dirt_color</Name>
+  <File>assets/textures/dirt_color.jpg</File>
+  <Filtering>0</Filtering>
+  <Wrapping>0</Wrapping>
+</Texture>

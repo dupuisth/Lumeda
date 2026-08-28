@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Material>
+  <Name>amnesia_armchair</Name>
+  <Path>assets/materials/amnesia_armchair.xml</Path>
+  <ShaderProgram>lit</ShaderProgram>
+  <Uniforms>
+    <UniformTexture>
+      <Name>u_DiffuseColor0</Name>
+      <Value>amnesia_armchair_color</Value>
+    </UniformTexture>
+  </Uniforms>
+</Material>

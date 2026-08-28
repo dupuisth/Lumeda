@@ -11,6 +11,7 @@ class GpuShaderManager;
 class MaterialManager;
 class ModelManager;
 class Graphics;
+class iResourceLoader;
 
 class Resources : public iUpdateable
 {
@@ -30,6 +31,16 @@ public:
   ModelManager& GetModelManager() { return *m_ModelManager; }
   //---------------------------------------//
 
+  ///////////////////////////////////////////
+  // Loaders
+  ///////////////////////////////////////////
+  void LoadAll(const twString& root, bool recursive);
+  void PreLoad(const twString& path);
+
+  /// @brief Push a loader, order is important (first pushed loaded first)
+  void PushLoader(std::unique_ptr<iResourceLoader> loader);
+  //---------------------------------------//
+
 private:
   Graphics* m_Graphics;
 
@@ -41,6 +52,12 @@ private:
   std::unique_ptr<GpuShaderManager> m_GpuShaderManager;
   std::unique_ptr<MaterialManager> m_MaterialManager;
   std::unique_ptr<ModelManager> m_ModelManager;
+  //---------------------------------------//
+
+  ///////////////////////////////////////////
+  // Loaders
+  ///////////////////////////////////////////
+  std::vector<std::unique_ptr<iResourceLoader>> m_Loaders;
   //---------------------------------------//
 };
 } // namespace Lumeda

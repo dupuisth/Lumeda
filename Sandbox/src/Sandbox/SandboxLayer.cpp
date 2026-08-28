@@ -33,6 +33,9 @@ void SandboxLayer::OnStart()
 
   engine.GetGraphics().GetLowLevelGraphics().SetVSync(true);
 
+  engine.GetResources().PushLoader(std::make_unique<TextureLoader>(engine.GetResources()));
+  engine.GetResources().LoadAll("assets", true);
+
   m_Renderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
 
   iGpuProgram* defaultProgram = QuickCreateProgram("default", _W("assets/shaders/default.vert"), _W("assets/shaders/default.frag"));
@@ -61,21 +64,16 @@ void SandboxLayer::OnStart()
   // clang-format on
   iLowLevelGraphics& llg = engine.GetGraphics().GetLowLevelGraphics();
 
-  // Load the dirt texture and create the material
-  iTexture* dirtColorTexture = engine.GetResources().GetTextureManager().CreateTexture("dirt_color", eTextureType_2D);
-  dirtColorTexture->CreateFromFile(_W("assets/textures/dirt_color.jpg"));
-  dirtColorTexture->SetWrapping(eTextureWrapping_Repeat);
-  dirtColorTexture->SetFiltering(eTextureFiltering_Nearest);
-  iTexture* armchairTexture = engine.GetResources().GetTextureManager().CreateTexture("armchair_color", eTextureType_2D);
-  armchairTexture->CreateFromFile(_W("assets/amnesia/textures/armchair.jpg"));
-  armchairTexture->SetWrapping(eTextureWrapping_Repeat);
-  armchairTexture->SetFiltering(eTextureFiltering_Nearest);
+  // Get the textures that are already loaded
+  iTexture* dirtColorTexture = engine.GetResources().GetTextureManager().GetResourceByName("dirt_color");
+  iTexture* armchairColorTexture = engine.GetResources().GetTextureManager().GetResourceByName("armchair_color");
+
   Material* dirtMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("dirt");
   dirtMaterial->SetProgram(litProgram);
   dirtMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, dirtColorTexture);
   Material* armchairMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("armchairMaterial");
   armchairMaterial->SetProgram(litProgram);
-  armchairMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, armchairTexture);
+  armchairMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, armchairColorTexture);
 
   Material* m_ScreenMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("Screen");
   m_ScreenMaterial->SetProgram(screenProgram);
