@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GpuProgram>
+  <Name>core_screen</Name>
+  <Vertex>assets/shaders/core_screen.vert</Vertex>
+  <Fragment>assets/shaders/core_screen.frag</Fragment>
+</GpuProgram>

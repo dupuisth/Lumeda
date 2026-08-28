@@ -6,25 +6,6 @@
 using namespace Lumeda;
 using namespace Sandbox;
 
-iGpuProgram* QuickCreateProgram(const tString& programName, const twString& vPath, const twString& fPath)
-{
-  SandboxBase& base = GetSandboxBase();
-  Engine& engine = base.GetEngine();
-
-  iGpuShader* vertexShader = engine.GetResources().GetGpuShaderManager().CreateShader(programName + "_vert", _W(""), eShaderType_Vertex);
-  vertexShader->CreateFromFile(vPath);
-
-  iGpuShader* fragmentShader = engine.GetResources().GetGpuShaderManager().CreateShader(programName + "_frag", _W(""), eShaderType_Fragment);
-  fragmentShader->CreateFromFile(fPath);
-
-  iGpuProgram* gpuProgram = engine.GetResources().GetGpuProgramManager().CreateProgram(programName);
-  gpuProgram->AttachShader(vertexShader);
-  gpuProgram->AttachShader(fragmentShader);
-  gpuProgram->Link();
-
-  return gpuProgram;
-}
-
 void SandboxLayer::OnStart()
 {
   SandboxBase& base = GetSandboxBase();
@@ -34,14 +15,16 @@ void SandboxLayer::OnStart()
   engine.GetGraphics().GetLowLevelGraphics().SetVSync(true);
 
   engine.GetResources().PushLoader(std::make_unique<TextureLoader>(engine.GetResources()));
+  engine.GetResources().PushLoader(std::make_unique<GpuProgramLoader>(engine.GetResources()));
+  engine.GetResources().PushLoader(std::make_unique<MaterialLoader>(engine.GetResources()));
   engine.GetResources().LoadAll("assets", true);
 
   m_Renderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
 
-  iGpuProgram* defaultProgram = QuickCreateProgram("default", _W("assets/shaders/default.vert"), _W("assets/shaders/default.frag"));
-  iGpuProgram* screenProgram = QuickCreateProgram("core_screen", _W("assets/shaders/core_screen.vert"), _W("assets/shaders/core_screen.frag"));
-  iGpuProgram* unlitProgram = QuickCreateProgram("unlit", _W("assets/shaders/unlit.vert"), _W("assets/shaders/unlit.frag"));
-  iGpuProgram* litProgram = QuickCreateProgram("lit", _W("assets/shaders/lit.vert"), _W("assets/shaders/lit.frag"));
+  iGpuProgram* defaultProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("default");
+  iGpuProgram* screenProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("core_screen");
+  iGpuProgram* unlitProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("unlit");
+  iGpuProgram* litProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("lit");
 
   m_QuadBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
   // clang-format off

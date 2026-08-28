@@ -35,8 +35,10 @@
 ///////////////////////////////////////////
 // Resources
 ///////////////////////////////////////////
+#include <Lumeda/Resources/GpuProgramLoader.h>
 #include <Lumeda/Resources/GpuProgramManager.h>
 #include <Lumeda/Resources/GpuShaderManager.h>
+#include <Lumeda/Resources/MaterialLoader.h>
 #include <Lumeda/Resources/MaterialManager.h>
 #include <Lumeda/Resources/ModelManager.h>
 #include <Lumeda/Resources/ResourceBase.h>
