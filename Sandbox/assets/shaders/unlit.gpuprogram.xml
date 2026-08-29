@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GpuProgram>
+  <Name>unlit</Name>
+  <Vertex>assets/shaders/unlit.vert</Vertex>
+  <Fragment>assets/shaders/unlit.frag</Fragment>
+</GpuProgram>

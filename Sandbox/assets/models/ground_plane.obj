@@ -1,6 +1,5 @@
 # Blender 4.5.3 LTS
 # www.blender.org
-mtllib ground_plane.mtl
 o Plane
 v -1.000000 0.000000 1.000000
 v 1.000000 0.000000 1.000000

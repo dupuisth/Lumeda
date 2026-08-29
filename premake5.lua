@@ -39,6 +39,9 @@ project "Lumeda"
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/vendor/stb_image/stb_image.h",
         "%{prj.name}/vendor/stb_image/stb_image.cpp",
+        "%{prj.name}/vendor/tinyxml2/tinyxml2.h",
+        "%{prj.name}/vendor/tinyxml2/tinyxml2.cpp",
+        "%{prj.name}/vendor/stb_image/stb_image.cpp",
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
@@ -54,6 +57,7 @@ project "Lumeda"
         "%{IncludeDir.imgui}",
         "%{IncludeDir.imgui}" .. "/backends",
         "%{IncludeDir.assimp}",
+        "%{IncludeDir.tinyxml2}",
     }
 
     libdirs 
@@ -157,6 +161,7 @@ project "Sandbox"
         "%{IncludeDir.imgui}",
         "%{IncludeDir.glfw}",
         "%{IncludeDir.glad}",
+        "%{IncludeDir.tinyxml2}",
     }
 
     libdirs 

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GpuProgram>
+  <Name>default</Name>
+  <Vertex>assets/shaders/default.vert</Vertex>
+  <Fragment>assets/shaders/default.frag</Fragment>
+</GpuProgram>

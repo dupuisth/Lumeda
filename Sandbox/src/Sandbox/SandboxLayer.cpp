@@ -6,25 +6,6 @@
 using namespace Lumeda;
 using namespace Sandbox;
 
-iGpuProgram* QuickCreateProgram(const tString& programName, const twString& vPath, const twString& fPath)
-{
-  SandboxBase& base = GetSandboxBase();
-  Engine& engine = base.GetEngine();
-
-  iGpuShader* vertexShader = engine.GetResources().GetGpuShaderManager().CreateShader(programName + "_vert", _W(""), eShaderType_Vertex);
-  vertexShader->CreateFromFile(vPath);
-
-  iGpuShader* fragmentShader = engine.GetResources().GetGpuShaderManager().CreateShader(programName + "_frag", _W(""), eShaderType_Fragment);
-  fragmentShader->CreateFromFile(fPath);
-
-  iGpuProgram* gpuProgram = engine.GetResources().GetGpuProgramManager().CreateProgram(programName);
-  gpuProgram->AttachShader(vertexShader);
-  gpuProgram->AttachShader(fragmentShader);
-  gpuProgram->Link();
-
-  return gpuProgram;
-}
-
 void SandboxLayer::OnStart()
 {
   SandboxBase& base = GetSandboxBase();
@@ -33,12 +14,17 @@ void SandboxLayer::OnStart()
 
   engine.GetGraphics().GetLowLevelGraphics().SetVSync(true);
 
+  // Order is important!
+  engine.GetResources().PushLoader(std::make_unique<TextureLoader>(engine.GetResources()));
+  engine.GetResources().PushLoader(std::make_unique<GpuProgramLoader>(engine.GetResources()));
+  engine.GetResources().PushLoader(std::make_unique<MaterialLoader>(engine.GetResources()));
+  engine.GetResources().PushLoader(std::make_unique<ModelLoader>(engine.GetResources()));
+  engine.GetResources().LoadAll("assets", true);
+
   m_Renderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
 
-  iGpuProgram* defaultProgram = QuickCreateProgram("default", _W("assets/shaders/default.vert"), _W("assets/shaders/default.frag"));
-  iGpuProgram* screenProgram = QuickCreateProgram("core_screen", _W("assets/shaders/core_screen.vert"), _W("assets/shaders/core_screen.frag"));
-  iGpuProgram* unlitProgram = QuickCreateProgram("unlit", _W("assets/shaders/unlit.vert"), _W("assets/shaders/unlit.frag"));
-  iGpuProgram* litProgram = QuickCreateProgram("lit", _W("assets/shaders/lit.vert"), _W("assets/shaders/lit.frag"));
+  iGpuProgram* defaultProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("default");
+  iGpuProgram* screenProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("core_screen");
 
   m_QuadBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
   // clang-format off
@@ -61,22 +47,6 @@ void SandboxLayer::OnStart()
   // clang-format on
   iLowLevelGraphics& llg = engine.GetGraphics().GetLowLevelGraphics();
 
-  // Load the dirt texture and create the material
-  iTexture* dirtColorTexture = engine.GetResources().GetTextureManager().CreateTexture("dirt_color", eTextureType_2D);
-  dirtColorTexture->CreateFromFile(_W("assets/textures/dirt_color.jpg"));
-  dirtColorTexture->SetWrapping(eTextureWrapping_Repeat);
-  dirtColorTexture->SetFiltering(eTextureFiltering_Nearest);
-  iTexture* armchairTexture = engine.GetResources().GetTextureManager().CreateTexture("armchair_color", eTextureType_2D);
-  armchairTexture->CreateFromFile(_W("assets/amnesia/textures/armchair.jpg"));
-  armchairTexture->SetWrapping(eTextureWrapping_Repeat);
-  armchairTexture->SetFiltering(eTextureFiltering_Nearest);
-  Material* dirtMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("dirt");
-  dirtMaterial->SetProgram(litProgram);
-  dirtMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, dirtColorTexture);
-  Material* armchairMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("armchairMaterial");
-  armchairMaterial->SetProgram(litProgram);
-  armchairMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, armchairTexture);
-
   Material* m_ScreenMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("Screen");
   m_ScreenMaterial->SetProgram(screenProgram);
   m_ScreenMaterial->GetUniformMap().SetUniform("u_ScreenTexture", &m_Renderer->GetFrameBufferColor());
@@ -84,23 +54,16 @@ void SandboxLayer::OnStart()
   m_BasicMaterial->SetProgram(defaultProgram);
 
   // Load the icosphere and set the material
-  Model* model = engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/high_icosphere.fbx"));
-  model->GetItems()[0].material = dirtMaterial;
-
-  // Load the ground and set the model
-  Model* groundModel = engine.GetResources().GetModelManager().CreateModel("ground_plane", _W("assets/models/ground_plane.obj"));
-  groundModel->GetItems()[0].material = dirtMaterial;
-
-  // Load the armchair
-  Model* armchairModel = engine.GetResources().GetModelManager().CreateModel("armchair_model", _W("assets/amnesia/models/armchair.fbx"));
-  armchairModel->GetItems()[0].material = armchairMaterial;
+  Model* model = engine.GetResources().GetModelManager().GetResourceByName("icosphere");
+  Model* groundModel = engine.GetResources().GetModelManager().GetResourceByName("ground");
+  Model* armchairModel = engine.GetResources().GetModelManager().GetResourceByName("armchair");
 
   m_World = std::make_unique<World>();
 
   // Ico model
   {
     std::unique_ptr<Node> icoNode = std::make_unique<Node>("Icosphere");
-    icoNode->SetLocalPosition(glm::vec3(0.0f, 0.0f, 2.0f));
+    icoNode->SetLocalPosition(glm::vec3(0.0f, 0.0f, 15.0f));
 
     std::unique_ptr<ModelEntity> modelEntity = std::make_unique<ModelEntity>("Icosphere");
     modelEntity->SetLocalPosition(glm::vec3(0.0, -0.5f, 1.0f));
@@ -127,6 +90,7 @@ void SandboxLayer::OnStart()
 
   // Ground model
   std::unique_ptr<ModelEntity> groundEntity = std::make_unique<ModelEntity>("Ground");
+  groundEntity->SetLocalPosition(glm::vec3(0.0f, -1.0f, 0.0f));
   groundEntity->SetModel(groundModel);
   m_World->GetRootNode().AddChild(std::move(groundEntity));
 
@@ -215,7 +179,7 @@ void SandboxLayer::OnDraw()
             for (const auto& modelItem : item.second->GetItems())
             {
               ImGui::Separator();
-              ImGui::LabelText("Material", (modelItem.material != nullptr) ? modelItem.material->GetName().c_str() : "NONE");
+              // ImGui::LabelText("Material", (modelItem.material != nullptr) ? modelItem.material->GetName().c_str() : "NONE");
               ImGui::LabelText("VertexBuffer", (modelItem.vertexBuffer != nullptr) ? "OK" : "NONE");
             }
 

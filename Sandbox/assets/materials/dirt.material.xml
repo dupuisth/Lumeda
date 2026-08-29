@@ -1,0 +1,7 @@
+<Material>
+    <Name>dirt</Name>
+    <GpuProgram>lit</GpuProgram>
+    <Uniform Name="u_DiffuseTexture0" Type="4">
+        <Value>dirt_color</Value>
+    </Uniform>
+</Material>

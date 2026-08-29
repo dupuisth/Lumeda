@@ -1,0 +1,5 @@
+<Model>
+  <Name>icosphere</Name>
+  <Geometry>assets/models/icosphere.fbx</Geometry>
+  <Material>dirt</Material>
+</Model>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Texture>
+  <Name>armchair_color</Name>
+  <File>assets/amnesia/textures/armchair.jpg</File>
+  <Filtering>1</Filtering>
+  <Wrapping>0</Wrapping>
+</Texture>

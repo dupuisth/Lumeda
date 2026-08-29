@@ -30,14 +30,12 @@ public:
   void SetName(const tString& name);
 
   const twString& GetPath() { return m_Path; }
+  void SetPath(const twString& path) { m_Path = path; }
 
   unsigned int GetUserCount() { return m_UserCount; }
   bool HasUsers() { return m_UserCount > 0; }
   void IncrementUserCount();
   void DecrementUserCount();
-
-protected:
-  void SetPath(const twString& path) { m_Path = path; }
 
 private:
   tString m_Name;

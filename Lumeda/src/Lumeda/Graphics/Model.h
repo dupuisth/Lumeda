@@ -12,7 +12,7 @@ class ModelItem
 {
 public:
   std::unique_ptr<iVertexBuffer> vertexBuffer;
-  Material* material;
+  int materialIndex;
 };
 
 class Model : public iResourceBase
@@ -27,11 +27,13 @@ public:
   void Unload() {}
   void Destroy() {}
 
-  void AddItem(std::unique_ptr<iVertexBuffer> vertexBuffer, Material* material) { m_Items.push_back({std::move(vertexBuffer), material}); }
+  void AddItem(std::unique_ptr<iVertexBuffer> vertexBuffer, int materialIndex) { m_Items.push_back({std::move(vertexBuffer), materialIndex}); }
   std::vector<ModelItem>& GetItems() { return m_Items; }
+  std::vector<Material*>& GetMaterials() { return m_Materials; }
 
 private:
   std::vector<ModelItem> m_Items;
+  std::vector<Material*> m_Materials;
 };
 
 } // namespace Lumeda

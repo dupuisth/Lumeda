@@ -1,0 +1,5 @@
+<Model>
+  <Name>armchair</Name>
+  <Geometry>assets/amnesia/models/armchair.fbx</Geometry>
+  <Material>armchair</Material>
+</Model>

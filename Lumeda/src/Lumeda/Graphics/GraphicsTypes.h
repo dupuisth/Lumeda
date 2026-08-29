@@ -118,13 +118,13 @@ enum ePixelFormat
 
 enum eTextureFiltering
 {
-  eTextureFiltering_Nearest,
+  eTextureFiltering_Nearest = 0,
   eTextureFiltering_Linear
 };
 
 enum eTextureWrapping
 {
-  eTextureWrapping_Repeat,
+  eTextureWrapping_Repeat = 0,
   eTextureWrapping_Clamp
 };
 
@@ -159,6 +159,17 @@ enum eShaderType
   eShaderType_Fragment,
   eShaderType_Geometry,
   eShaderType_LastEnum
+};
+
+// Changing order will brake the MaterialXML
+enum eShaderUniformType
+{
+  eShaderUniformType_Float = 0,
+  eShaderUniformType_Vec2,
+  eShaderUniformType_Vec3,
+  eShaderUniformType_Vec4,
+  eShaderUniformType_Texture2D,
+  eShaderUniformType_LastEnum,
 };
 
 #define tShaderCommonUniform_CameraMatrix "u_Camera"

@@ -1,0 +1,5 @@
+<Model>
+  <Name>ground</Name>
+  <Geometry>assets/models/plane.fbx</Geometry>
+  <Material>dirt</Material>
+</Model>
