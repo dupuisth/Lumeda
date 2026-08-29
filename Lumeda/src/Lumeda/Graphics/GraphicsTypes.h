@@ -193,6 +193,8 @@ enum eShaderUniformType
 #define tShaderCommonUniform_StructDirectionalLight_Direction "Direction"
 #define tShaderCommonUniform_StructDirectionalLight_Color "Color"
 
+#define tShaderCommonUniform_UvScale "u_UvScale";
+
 //---------------------------------------//
 
 ///////////////////////////////////////////

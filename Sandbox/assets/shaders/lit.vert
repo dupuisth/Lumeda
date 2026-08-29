@@ -13,6 +13,7 @@ layout (location = 2) in vec3 v_Norm;
 uniform mat4 u_World;
 uniform vec3 u_Position;
 uniform mat4 u_Camera;
+uniform float u_UvScale;
 
 ///////////////////////////////////////////
 // OUT
@@ -29,7 +30,7 @@ out vec2 f_ScreenPosition;
 ///////////////////////////////////////////
 void main()
 {
-    f_Uv = v_Uv;
+    f_Uv = v_Uv * u_UvScale;
     // Thanks https://learnopengl.com/Lighting/Basic-Lighting
     f_Normal = mat3(transpose(inverse(u_World))) * v_Norm;
     f_LocalPosition = v_Pos;

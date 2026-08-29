@@ -189,24 +189,24 @@ void MaterialLoader::LoadPending()
       if (uni.type == eShaderUniformType_Texture2D)
       {
         iTexture* texture = m_Resources.GetTextureManager().GetResourceByName(uni.value);
-        material->GetUniformMap().SetUniform(uni.value, texture);
+        material->GetUniformMap().SetUniform(uni.name, texture);
       }
       else if (uni.type == eShaderUniformType_Float)
       {
-        material->GetUniformMap().SetUniform(uni.value, std::stof(uni.value));
+        material->GetUniformMap().SetUniform(uni.name, std::stof(uni.value));
       }
       else if (uni.type == eShaderUniformType_Vec2)
       {
-        material->GetUniformMap().SetUniform(uni.value, glm::vec2(std::stof(uni.valueAttributes.at("x")), std::stof(uni.valueAttributes.at("y"))));
+        material->GetUniformMap().SetUniform(uni.name, glm::vec2(std::stof(uni.valueAttributes.at("x")), std::stof(uni.valueAttributes.at("y"))));
       }
       else if (uni.type == eShaderUniformType_Vec3)
       {
-        material->GetUniformMap().SetUniform(uni.value,
+        material->GetUniformMap().SetUniform(uni.name,
             glm::vec3(std::stof(uni.valueAttributes.at("x")), std::stof(uni.valueAttributes.at("y")), std::stof(uni.valueAttributes.at("z"))));
       }
       else if (uni.type == eShaderUniformType_Vec4)
       {
-        material->GetUniformMap().SetUniform(uni.value,
+        material->GetUniformMap().SetUniform(uni.name,
             glm::vec4(std::stof(uni.valueAttributes.at("x")),
                 std::stof(uni.valueAttributes.at("y")),
                 std::stof(uni.valueAttributes.at("z")),
