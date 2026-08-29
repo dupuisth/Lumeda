@@ -15,6 +15,7 @@ void EditorStack::OnDraw()
   {
     DrawHierarchy();
     DrawSelected();
+    DrawResources();
   }
 }
 
@@ -22,14 +23,12 @@ void EditorStack::DrawHierarchy()
 {
   ImGuiIO& io = ImGui::GetIO();
 
-  const float panelWidth = 280.0f;
+  ImGui::SetNextWindowPos(ImVec2(0, MainMenuBarHeight));
+  ImGui::SetNextWindowSize(ImVec2(HierarchyWidth, io.DisplaySize.y - MainMenuBarHeight - ResourcesHeight));
 
-  ImGui::SetNextWindowPos(ImVec2(0, 50));
-  ImGui::SetNextWindowSize(ImVec2(panelWidth, io.DisplaySize.y - 50 * 2));
+  ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
 
-  ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
-
-  ImGui::Begin("Hierarchy", nullptr, flags);
+  ImGui::Begin("Scene", nullptr, flags);
 
   DrawHierarchyWorker(m_World->GetRootNode());
 
@@ -41,7 +40,7 @@ void EditorStack::DrawHierarchyWorker(LeafNode& leafnode)
   // Check if is a Node.
   Node* node = dynamic_cast<Node*>(&leafnode);
 
-  ImGuiTreeNodeFlags flags = 0;
+  ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow;
 
   bool selected = &leafnode == m_SelectedNode;
 
@@ -72,44 +71,55 @@ void EditorStack::DrawHierarchyWorker(LeafNode& leafnode)
   }
 }
 
+void EditorStack::DrawResources()
+{
+  ImGuiIO& io = ImGui::GetIO();
+
+  ImGui::SetNextWindowPos(ImVec2(0, io.DisplaySize.y - ResourcesHeight));
+  ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, ResourcesHeight));
+
+  ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
+
+  ImGui::Begin("Assets", nullptr, flags);
+
+  ImGui::End();
+}
+
 void EditorStack::DrawSelected()
 {
-  if (m_SelectedNode == nullptr)
-  {
-    return;
-  }
 
   ImGuiIO& io = ImGui::GetIO();
 
-  const float panelWidth = 400.0f;
+  ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - InspectorWidth, MainMenuBarHeight));
+  ImGui::SetNextWindowSize(ImVec2(InspectorWidth, io.DisplaySize.y - MainMenuBarHeight - ResourcesHeight));
 
-  ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - panelWidth, 50));
-  ImGui::SetNextWindowSize(ImVec2(panelWidth, io.DisplaySize.y - 50 * 2));
+  ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
 
-  ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
+  ImGui::Begin("Inspector", nullptr, flags);
 
-  ImGui::Begin("Entity Editor", nullptr, flags);
-
-  ImGui::SeparatorText(m_SelectedNode->GetName().c_str());
-
-  // Dispatch to the registered handlers.
-  for (const auto& handler : m_NodeHandlers)
+  if (m_SelectedNode != nullptr)
   {
-    if (handler->SupportNodeType(*m_SelectedNode))
-    {
-      handler->DrawNodeEditor(*this, *m_SelectedNode);
-    }
-  }
+    ImGui::SeparatorText(m_SelectedNode->GetName().c_str());
 
-  // For now use a list like that (don't want to mess with dialogs for now)
-  Node* node = dynamic_cast<Node*>(m_SelectedNode);
-  if (node != nullptr && ImGui::CollapsingHeader("Add child"))
-  {
+    // Dispatch to the registered handlers.
     for (const auto& handler : m_NodeHandlers)
     {
-      if (ImGui::Button(handler->GetNodeTypeName().c_str()))
+      if (handler->SupportNodeType(*m_SelectedNode))
       {
-        m_SelectedNode = &handler->AddToNode(*this, *node);
+        handler->DrawNodeEditor(*this, *m_SelectedNode);
+      }
+    }
+
+    // For now use a list like that (don't want to mess with dialogs for now)
+    Node* node = dynamic_cast<Node*>(m_SelectedNode);
+    if (node != nullptr && ImGui::CollapsingHeader("Add child"))
+    {
+      for (const auto& handler : m_NodeHandlers)
+      {
+        if (ImGui::Button(handler->GetNodeTypeName().c_str()))
+        {
+          m_SelectedNode = &handler->AddToNode(*this, *node);
+        }
       }
     }
   }

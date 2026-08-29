@@ -13,7 +13,7 @@ bool EditorRotatingEntityHandler::SupportNodeType(LeafNode& node)
 
 void EditorRotatingEntityHandler::DrawNodeEditor(EditorStack& stack, LeafNode& node)
 {
-  if (ImGui::CollapsingHeader("RotatingEntity"))
+  if (ImGui::CollapsingHeader("RotatingEntity", ImGuiTreeNodeFlags_DefaultOpen))
   {
     ImGui::Indent(1.0f);
 

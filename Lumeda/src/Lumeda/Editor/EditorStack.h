@@ -27,6 +27,7 @@ public:
 private:
   void DrawHierarchy();
   void DrawHierarchyWorker(LeafNode& leafnode);
+  void DrawResources();
 
   void DrawSelected();
 
@@ -36,5 +37,10 @@ private:
   LeafNode* m_SelectedNode = nullptr;
 
   std::vector<std::unique_ptr<iEditorNodeHandler>> m_NodeHandlers;
+
+  inline static const float HierarchyWidth = 280.0f;
+  inline static const float InspectorWidth = 400.0f;
+  inline static const float ResourcesHeight = 200.0f;
+  inline static const float MainMenuBarHeight = 20.0f;
 };
 } // namespace Lumeda

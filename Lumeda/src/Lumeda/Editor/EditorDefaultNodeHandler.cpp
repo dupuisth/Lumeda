@@ -13,7 +13,7 @@ bool EditorDefaultNodeHandler::SupportNodeType(LeafNode& node)
 
 void EditorDefaultNodeHandler::DrawNodeEditor(EditorStack& stack, LeafNode& node)
 {
-  if (ImGui::CollapsingHeader("Transform"))
+  if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
   {
     ImGui::Indent(1.0f);
     glm::vec3 dummyVec3 = node.GetLocalPosition();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <imgui.h>
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Engine/EventManager.h>
 #include <Lumeda/ImGui/ImGuiLayer.h>
@@ -24,6 +25,8 @@ public:
 private:
   EventManager& m_EventManager;
   LowLevelGraphicsGL& m_LowLevelGraphics;
+
+  ImFont* m_DefaultFont;
 
   bool m_IsInitialized;
 };
