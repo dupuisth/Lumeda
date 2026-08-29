@@ -56,9 +56,11 @@ void AssimpModelLoader::Load(Model* model, const twString& path, Graphics& graph
     return;
   }
 
-  // Will have to change that later on.
-  // Reserve a slot for each existing material in the file, then populate via the model loader.
-  Material* material = resources.GetMaterialManager().CreateMaterial(model->GetName() + "_material");
+  // Prepare the material slots
+  for (int i = 0; i < scene->mNumMaterials; i++)
+  {
+    model->GetMaterials().push_back(nullptr);
+  }
 
   int numModelsItem = 0;
   std::queue<aiNode*> nodes;
@@ -73,7 +75,7 @@ void AssimpModelLoader::Load(Model* model, const twString& path, Graphics& graph
 
       std::string name = model->GetName() + "_" + std::to_string(numModelsItem++);
       std::unique_ptr<iVertexBuffer> mesh = ProcessMesh(name, aiMesh, graphics, resources);
-      model->AddItem(std::move(mesh), material);
+      model->AddItem(std::move(mesh), aiMesh->mMaterialIndex);
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++)

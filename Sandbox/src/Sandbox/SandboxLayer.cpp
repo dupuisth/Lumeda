@@ -18,14 +18,13 @@ void SandboxLayer::OnStart()
   engine.GetResources().PushLoader(std::make_unique<TextureLoader>(engine.GetResources()));
   engine.GetResources().PushLoader(std::make_unique<GpuProgramLoader>(engine.GetResources()));
   engine.GetResources().PushLoader(std::make_unique<MaterialLoader>(engine.GetResources()));
+  engine.GetResources().PushLoader(std::make_unique<ModelLoader>(engine.GetResources()));
   engine.GetResources().LoadAll("assets", true);
 
   m_Renderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
 
   iGpuProgram* defaultProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("default");
   iGpuProgram* screenProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("core_screen");
-  iGpuProgram* unlitProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("unlit");
-  iGpuProgram* litProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("lit");
 
   m_QuadBuffer = engine.GetGraphics().GetLowLevelGraphics().CreateVertexBuffer();
   // clang-format off
@@ -48,9 +47,6 @@ void SandboxLayer::OnStart()
   // clang-format on
   iLowLevelGraphics& llg = engine.GetGraphics().GetLowLevelGraphics();
 
-  Material* dirtMaterial = engine.GetResources().GetMaterialManager().GetResourceByName("dirt");
-  Material* armchairMaterial = engine.GetResources().GetMaterialManager().GetResourceByName("armchair");
-
   Material* m_ScreenMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("Screen");
   m_ScreenMaterial->SetProgram(screenProgram);
   m_ScreenMaterial->GetUniformMap().SetUniform("u_ScreenTexture", &m_Renderer->GetFrameBufferColor());
@@ -58,23 +54,16 @@ void SandboxLayer::OnStart()
   m_BasicMaterial->SetProgram(defaultProgram);
 
   // Load the icosphere and set the material
-  Model* model = engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/high_icosphere.fbx"));
-  model->GetItems()[0].material = dirtMaterial;
-
-  // Load the ground and set the material
-  Model* groundModel = engine.GetResources().GetModelManager().CreateModel("ground_plane", _W("assets/models/ground_plane.obj"));
-  groundModel->GetItems()[0].material = dirtMaterial;
-
-  // Load the armchair and set the material
-  Model* armchairModel = engine.GetResources().GetModelManager().CreateModel("armchair_model", _W("assets/amnesia/models/armchair.fbx"));
-  armchairModel->GetItems()[0].material = armchairMaterial;
+  Model* model = engine.GetResources().GetModelManager().GetResourceByName("icosphere");
+  Model* groundModel = engine.GetResources().GetModelManager().GetResourceByName("ground");
+  Model* armchairModel = engine.GetResources().GetModelManager().GetResourceByName("armchair");
 
   m_World = std::make_unique<World>();
 
   // Ico model
   {
     std::unique_ptr<Node> icoNode = std::make_unique<Node>("Icosphere");
-    icoNode->SetLocalPosition(glm::vec3(0.0f, 0.0f, 2.0f));
+    icoNode->SetLocalPosition(glm::vec3(0.0f, 0.0f, 15.0f));
 
     std::unique_ptr<ModelEntity> modelEntity = std::make_unique<ModelEntity>("Icosphere");
     modelEntity->SetLocalPosition(glm::vec3(0.0, -0.5f, 1.0f));
@@ -101,6 +90,7 @@ void SandboxLayer::OnStart()
 
   // Ground model
   std::unique_ptr<ModelEntity> groundEntity = std::make_unique<ModelEntity>("Ground");
+  groundEntity->SetLocalPosition(glm::vec3(0.0f, -1.0f, 0.0f));
   groundEntity->SetModel(groundModel);
   m_World->GetRootNode().AddChild(std::move(groundEntity));
 
@@ -189,7 +179,7 @@ void SandboxLayer::OnDraw()
             for (const auto& modelItem : item.second->GetItems())
             {
               ImGui::Separator();
-              ImGui::LabelText("Material", (modelItem.material != nullptr) ? modelItem.material->GetName().c_str() : "NONE");
+              // ImGui::LabelText("Material", (modelItem.material != nullptr) ? modelItem.material->GetName().c_str() : "NONE");
               ImGui::LabelText("VertexBuffer", (modelItem.vertexBuffer != nullptr) ? "OK" : "NONE");
             }
 
