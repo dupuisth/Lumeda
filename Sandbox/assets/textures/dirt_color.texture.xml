@@ -2,6 +2,6 @@
 <Texture>
   <Name>dirt_color</Name>
   <File>assets/textures/dirt_color.jpg</File>
-  <Filtering>0</Filtering>
+  <Filtering>1</Filtering>
   <Wrapping>0</Wrapping>
 </Texture>

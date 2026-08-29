@@ -161,6 +161,17 @@ enum eShaderType
   eShaderType_LastEnum
 };
 
+// Changing order will brake the MaterialXML
+enum eShaderUniformType
+{
+  eShaderUniformType_Float = 0,
+  eShaderUniformType_Vec2,
+  eShaderUniformType_Vec3,
+  eShaderUniformType_Vec4,
+  eShaderUniformType_Texture2D,
+  eShaderUniformType_LastEnum,
+};
+
 #define tShaderCommonUniform_CameraMatrix "u_Camera"
 #define tShaderCommonUniform_CameraProject "u_CameraProj"
 #define tShaderCommonUniform_CameraView "u_CameraView"

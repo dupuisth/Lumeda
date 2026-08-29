@@ -8,11 +8,26 @@ namespace Lumeda
 {
 class Resources;
 
+struct sMaterialUniformDefinition
+{
+  tString name;
+  eShaderUniformType type;
+  tString value;
+  std::unordered_map<tString, tString> valueAttributes;
+};
+
 struct sMaterialDefinition
 {
+public:
   twString descriptorPath;
 
   tString name;
+  tString gpuProgramName;
+
+  std::vector<sMaterialUniformDefinition> uniforms;
+
+public:
+  static sMaterialDefinition FromMaterial(Material& material, Resources& resources);
 };
 
 class MaterialDefinitionXml
@@ -24,6 +39,11 @@ public:
 private:
   inline static const char* ElementName = "Material";
   inline static const char* NameField = "Name";
+  inline static const char* GpuProgramField = "GpuProgram";
+  inline static const char* UniformElement = "Uniform";
+  inline static const char* UniformNameField = "Name";
+  inline static const char* UniformValueElement = "Value";
+  inline static const char* UniformTypeField = "Type";
 };
 
 // Load a texture from its definition (xml)

@@ -56,6 +56,8 @@ void AssimpModelLoader::Load(Model* model, const twString& path, Graphics& graph
     return;
   }
 
+  // Will have to change that later on.
+  // Reserve a slot for each existing material in the file, then populate via the model loader.
   Material* material = resources.GetMaterialManager().CreateMaterial(model->GetName() + "_material");
 
   int numModelsItem = 0;

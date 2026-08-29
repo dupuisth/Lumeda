@@ -14,6 +14,7 @@ void SandboxLayer::OnStart()
 
   engine.GetGraphics().GetLowLevelGraphics().SetVSync(true);
 
+  // Order is important!
   engine.GetResources().PushLoader(std::make_unique<TextureLoader>(engine.GetResources()));
   engine.GetResources().PushLoader(std::make_unique<GpuProgramLoader>(engine.GetResources()));
   engine.GetResources().PushLoader(std::make_unique<MaterialLoader>(engine.GetResources()));
@@ -47,16 +48,8 @@ void SandboxLayer::OnStart()
   // clang-format on
   iLowLevelGraphics& llg = engine.GetGraphics().GetLowLevelGraphics();
 
-  // Get the textures that are already loaded
-  iTexture* dirtColorTexture = engine.GetResources().GetTextureManager().GetResourceByName("dirt_color");
-  iTexture* armchairColorTexture = engine.GetResources().GetTextureManager().GetResourceByName("armchair_color");
-
-  Material* dirtMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("dirt");
-  dirtMaterial->SetProgram(litProgram);
-  dirtMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, dirtColorTexture);
-  Material* armchairMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("armchairMaterial");
-  armchairMaterial->SetProgram(litProgram);
-  armchairMaterial->GetUniformMap().SetUniform(tShaderCommonUniform_TextureDiffuse0, armchairColorTexture);
+  Material* dirtMaterial = engine.GetResources().GetMaterialManager().GetResourceByName("dirt");
+  Material* armchairMaterial = engine.GetResources().GetMaterialManager().GetResourceByName("armchair");
 
   Material* m_ScreenMaterial = engine.GetResources().GetMaterialManager().CreateMaterial("Screen");
   m_ScreenMaterial->SetProgram(screenProgram);
@@ -68,11 +61,11 @@ void SandboxLayer::OnStart()
   Model* model = engine.GetResources().GetModelManager().CreateModel("icosphere", _W("assets/models/high_icosphere.fbx"));
   model->GetItems()[0].material = dirtMaterial;
 
-  // Load the ground and set the model
+  // Load the ground and set the material
   Model* groundModel = engine.GetResources().GetModelManager().CreateModel("ground_plane", _W("assets/models/ground_plane.obj"));
   groundModel->GetItems()[0].material = dirtMaterial;
 
-  // Load the armchair
+  // Load the armchair and set the material
   Model* armchairModel = engine.GetResources().GetModelManager().CreateModel("armchair_model", _W("assets/amnesia/models/armchair.fbx"));
   armchairModel->GetItems()[0].material = armchairMaterial;
 

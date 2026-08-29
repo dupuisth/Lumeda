@@ -1,0 +1,7 @@
+<Material>
+    <Name>armchair</Name>
+    <GpuProgram>lit</GpuProgram>
+    <Uniform Name="u_DiffuseTexture0" Type="4">
+        <Value>armchair_color</Value>
+    </Uniform>
+</Material>
