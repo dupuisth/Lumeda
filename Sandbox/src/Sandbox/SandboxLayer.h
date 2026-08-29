@@ -21,12 +21,16 @@ public:
   bool OnEvent(Lumeda::iEvent& event);
 
 private:
+  void DrawImGui();
+
+private:
   std::unique_ptr<Lumeda::iVertexBuffer> m_GroundVertexBuffer;
   std::unique_ptr<Lumeda::iVertexBuffer> m_QuadBuffer;
 
   std::unique_ptr<Lumeda::SimpleRenderer> m_Renderer;
 
   std::unique_ptr<Lumeda::World> m_World;
+  std::unique_ptr<Lumeda::EditorStack> m_Editor;
 
   Lumeda::CameraEntity* m_CameraEntity;
 };

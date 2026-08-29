@@ -12,6 +12,11 @@ void SandboxLayer::OnStart()
   Engine& engine = base.GetEngine();
   engine.GetEventManager().AddReceiver(this);
 
+  m_Editor = std::make_unique<EditorStack>(engine);
+  m_Editor->PushNodeHandler(std::make_unique<EditorDefaultNodeHandler>());
+  m_Editor->PushNodeHandler(std::make_unique<EditorRotatingEntityHandler>());
+  engine.GetUpdater().AddUpdateable(m_Editor.get());
+
   engine.GetGraphics().GetLowLevelGraphics().SetVSync(true);
 
   // Order is important!
@@ -59,6 +64,7 @@ void SandboxLayer::OnStart()
   Model* armchairModel = engine.GetResources().GetModelManager().GetResourceByName("armchair");
 
   m_World = std::make_unique<World>();
+  m_Editor->SetWorld(m_World.get());
 
   // Ico model
   {
@@ -144,6 +150,51 @@ void SandboxLayer::OnDraw()
   m_Renderer->Submit(renderItem);
   m_Renderer->Flush(worldUniforms);
 
+  DrawImGui();
+}
+
+void SandboxLayer::OnPostDraw()
+{
+  SandboxBase& base = GetSandboxBase();
+  Engine& engine = base.GetEngine();
+  engine.GetGraphics().GetLowLevelGraphics().SwapBuffers();
+}
+
+bool SandboxLayer::OnEvent(iEvent& event)
+{
+  if (event.GetType() == eGraphicsEvent_WindowFrameBufferSize)
+  {
+    WindowFrameBufferSizeEvent& cevent = static_cast<WindowFrameBufferSizeEvent&>(event);
+
+    // Maybe later on make a function to resize inside the render??
+    // Or directly inside the framebuffer which will resize everything?
+    m_Renderer->GetFrameBufferColor().CreateFromRawData(glm::ivec3(cevent.Width, cevent.Height, 0), ePixelFormat_RGB, nullptr);
+    m_Renderer->GetFrameBufferDepthStencil().CreateFromRawData(glm::ivec3(cevent.Width, cevent.Height, 0), ePixelFormat_Depth24Stencil8, nullptr);
+
+    m_CameraEntity->GetCamera().SetAspectRatio((float)cevent.Width / (float)cevent.Height);
+  }
+
+  return false;
+}
+
+void SandboxLayer::HandleMessage(eUpdateableMessage message)
+{
+  iUpdateable::HandleMessage(message);
+
+  if (m_World != nullptr)
+  {
+    m_World->HandleMessage(message);
+  }
+}
+
+void SandboxLayer::DrawImGui()
+{
+
+  SandboxBase& base = GetSandboxBase();
+  Engine& engine = base.GetEngine();
+
+  // TODO: Move this.
+  // Editor code, should be moved once everything is prepared
   if (ImGui::BeginMainMenuBar())
   {
     if (ImGui::BeginMenu("Performances"))
@@ -175,11 +226,17 @@ void SandboxLayer::OnDraw()
             ImGui::LabelText("Label", item.second->GetName().c_str());
             ImGui::LabelText("Path", item.second->GetPath().c_str());
 
+            ImGui::SeparatorText("Materials");
+            for (Material* material : item.second->GetMaterials())
+            {
+
+              ImGui::LabelText("Slot", (material != nullptr ? material->GetName().c_str() : "NONE"));
+            }
+
             ImGui::SeparatorText("Items");
             for (const auto& modelItem : item.second->GetItems())
             {
               ImGui::Separator();
-              // ImGui::LabelText("Material", (modelItem.material != nullptr) ? modelItem.material->GetName().c_str() : "NONE");
               ImGui::LabelText("VertexBuffer", (modelItem.vertexBuffer != nullptr) ? "OK" : "NONE");
             }
 
@@ -209,19 +266,14 @@ void SandboxLayer::OnDraw()
           {
             ImGui::LabelText("Label", item.second->GetName().c_str());
             ImGui::LabelText("Path", item.second->GetPath().c_str());
-            ImGui::EndMenu();
-          }
-        }
-        ImGui::EndMenu();
-      }
-      if (ImGui::BeginMenu("Textures"))
-      {
-        for (const auto& item : engine.GetResources().GetTextureManager().GetResources())
-        {
-          if (ImGui::BeginMenu(item.first.c_str()))
-          {
-            ImGui::LabelText("Label", item.second->GetName().c_str());
-            ImGui::LabelText("Path", item.second->GetPath().c_str());
+
+            const char* filteringItems[]{"Nearest", "Linear"};
+            int selectedItem = item.second->GetFiltering();
+            if (ImGui::Combo("Filtering", &selectedItem, filteringItems, IM_ARRAYSIZE(filteringItems)))
+            {
+              item.second->SetFiltering((eTextureFiltering)selectedItem);
+            }
+
             ImGui::EndMenu();
           }
         }
@@ -256,39 +308,5 @@ void SandboxLayer::OnDraw()
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
-  }
-}
-
-void SandboxLayer::OnPostDraw()
-{
-  SandboxBase& base = GetSandboxBase();
-  Engine& engine = base.GetEngine();
-  engine.GetGraphics().GetLowLevelGraphics().SwapBuffers();
-}
-
-bool SandboxLayer::OnEvent(iEvent& event)
-{
-  if (event.GetType() == eGraphicsEvent_WindowFrameBufferSize)
-  {
-    WindowFrameBufferSizeEvent& cevent = static_cast<WindowFrameBufferSizeEvent&>(event);
-
-    // Maybe later on make a function to resize inside the render??
-    // Or directly inside the framebuffer which will resize everything?
-    m_Renderer->GetFrameBufferColor().CreateFromRawData(glm::ivec3(cevent.Width, cevent.Height, 0), ePixelFormat_RGB, nullptr);
-    m_Renderer->GetFrameBufferDepthStencil().CreateFromRawData(glm::ivec3(cevent.Width, cevent.Height, 0), ePixelFormat_Depth24Stencil8, nullptr);
-
-    m_CameraEntity->GetCamera().SetAspectRatio((float)cevent.Width / (float)cevent.Height);
-  }
-
-  return false;
-}
-
-void SandboxLayer::HandleMessage(eUpdateableMessage message)
-{
-  iUpdateable::HandleMessage(message);
-
-  if (m_World != nullptr)
-  {
-    m_World->HandleMessage(message);
   }
 }

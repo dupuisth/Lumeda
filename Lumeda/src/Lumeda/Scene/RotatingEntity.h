@@ -24,6 +24,6 @@ public:
 private:
   Timer& m_Timer;
 
-  glm::vec3 m_Rotation;
+  glm::vec3 m_Rotation = glm::vec3(0.0f);
 };
 } // namespace Lumeda

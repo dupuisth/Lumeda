@@ -31,7 +31,7 @@ Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
   m_Resources = std::make_unique<Resources>();
 
   m_Graphics = m_LowLevelEngineSetup->GetGraphics();
-  m_Graphics->GetLowLevelGraphics().Init(600, 600, "Lumeda Engine");
+  m_Graphics->GetLowLevelGraphics().Init(1600, 800, "Lumeda Engine");
   m_Inputs = m_LowLevelEngineSetup->GetInputs();
   m_ImGui = m_LowLevelEngineSetup->GetImGuiLayer();
 

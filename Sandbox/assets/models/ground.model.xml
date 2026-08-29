@@ -1,5 +1,5 @@
 <Model>
   <Name>ground</Name>
   <Geometry>assets/models/plane.fbx</Geometry>
-  <Material>dirt</Material>
+  <Material>dirt_100x</Material>
 </Model>

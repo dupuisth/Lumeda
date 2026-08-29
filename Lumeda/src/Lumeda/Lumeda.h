@@ -75,3 +75,11 @@
 // ImGui
 ///////////////////////////////////////////
 #include <Lumeda/ImGui/ImGuiLayer.h>
+
+///////////////////////////////////////////
+// Editor
+///////////////////////////////////////////
+#include <Lumeda/Editor/EditorDefaultNodeHandler.h>
+#include <Lumeda/Editor/EditorNodeHandler.h>
+#include <Lumeda/Editor/EditorRotatingNodeHandler.h>
+#include <Lumeda/Editor/EditorStack.h>

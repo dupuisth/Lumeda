@@ -1,10 +1,10 @@
 <Material>
-    <Name>dirt</Name>
+    <Name>dirt_100x</Name>
     <GpuProgram>lit</GpuProgram>
     <Uniform Name="u_DiffuseTexture0" Type="4">
         <Value>dirt_color</Value>
     </Uniform>
     <Uniform Name="u_UvScale" Type="0">
-        <Value>10.0000</Value>
+        <Value>100.0000</Value>
     </Uniform>
 </Material>
