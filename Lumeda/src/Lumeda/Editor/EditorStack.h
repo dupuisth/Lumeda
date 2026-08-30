@@ -41,6 +41,6 @@ private:
   inline static const float HierarchyWidth = 280.0f;
   inline static const float InspectorWidth = 400.0f;
   inline static const float ResourcesHeight = 200.0f;
-  inline static const float MainMenuBarHeight = 20.0f;
+  inline static const float MainMenuBarHeight = 23.0f;
 };
 } // namespace Lumeda
