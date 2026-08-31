@@ -2,6 +2,9 @@
 
 #include <Lumeda/Core/Base.h>
 #include <Lumeda/Engine/LowLevelEngineSetup.h>
+#include <Lumeda/Implementation/GL/ImGuiLayerGL.h>
+#include <Lumeda/Implementation/GL/LowLevelGraphicsGL.h>
+#include <Lumeda/Implementation/GL/LowLevelSystemGL.h>
 
 namespace Lumeda
 {
