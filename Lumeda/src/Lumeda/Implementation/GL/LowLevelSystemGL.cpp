@@ -1,3 +1,4 @@
+#include <GLFW/glfw3.h>
 #include <Lumeda/Implementation/GL/LowLevelSystemGL.h>
 
 using namespace Lumeda;
@@ -19,3 +20,8 @@ int main(int argc, char* argv[])
 }
 #endif
 //---------------------------------------//
+
+float LowLevelSystemGL::GetElapsedTime()
+{
+  return static_cast<float>(glfwGetTime());
+}

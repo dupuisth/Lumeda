@@ -22,10 +22,9 @@ Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
   ///////////////////////////////////////////
   m_Updater = std::make_unique<Updater>();
   m_EventManager = std::make_unique<EventManager>();
-  m_Timer = std::make_unique<Timer>();
 
   // Prepare the engine setup
-  m_LowLevelEngineSetup->Prepare({.eventManager = m_EventManager.get(), .timer = m_Timer.get()});
+  m_LowLevelEngineSetup->Prepare({.eventManager = m_EventManager.get()});
 
   // Dependency, will need manual Init (surely be used in Graphics later...)
   m_Resources = std::make_unique<Resources>();
@@ -34,6 +33,7 @@ Engine::Engine(std::unique_ptr<iLowLevelEngineSetup> lowLevelEngineSetup) :
   m_Graphics->GetLowLevelGraphics().Init(1600, 800, "Lumeda Engine");
   m_Inputs = m_LowLevelEngineSetup->GetInputs();
   m_ImGui = m_LowLevelEngineSetup->GetImGuiLayer();
+  m_Timer = m_LowLevelEngineSetup->GetTimer();
 
   m_Resources->Init(*m_Graphics);
 

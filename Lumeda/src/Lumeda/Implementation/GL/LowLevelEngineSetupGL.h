@@ -14,6 +14,7 @@ class ImGuiLayerGL;
 class Graphics;
 class EventManager;
 class InputsGL;
+class Timer;
 
 class LowLevelEngineSetupGL : public iLowLevelEngineSetup
 {
@@ -26,11 +27,13 @@ public:
   std::unique_ptr<Graphics> GetGraphics() override;
   std::unique_ptr<iInputs> GetInputs() override;
   std::unique_ptr<iImGuiLayer> GetImGuiLayer() override;
+  std::unique_ptr<Timer> GetTimer() override;
 
 private:
   std::unique_ptr<LowLevelGraphicsGL> m_LowLevelGraphics = nullptr;
   std::unique_ptr<LowLevelSystemGL> m_LowLevelSystem = nullptr;
   std::unique_ptr<ImGuiLayerGL> m_ImGuiLayer = nullptr;
+  std::unique_ptr<Timer> m_Timer = nullptr;
 
   sLowLevelEngineSetupPrepare m_PrepareData;
 };

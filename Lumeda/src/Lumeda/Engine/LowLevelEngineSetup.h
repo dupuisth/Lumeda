@@ -14,7 +14,6 @@ class Timer;
 struct sLowLevelEngineSetupPrepare
 {
   EventManager* eventManager = nullptr;
-  Timer* timer = nullptr;
 };
 
 class iLowLevelEngineSetup
@@ -25,5 +24,6 @@ public:
   virtual std::unique_ptr<Graphics> GetGraphics() = 0;
   virtual std::unique_ptr<iInputs> GetInputs() = 0;
   virtual std::unique_ptr<iImGuiLayer> GetImGuiLayer() = 0;
+  virtual std::unique_ptr<Timer> GetTimer() = 0;
 };
 } // namespace Lumeda

@@ -16,6 +16,7 @@ void LowLevelEngineSetupGL::Prepare(sLowLevelEngineSetupPrepare prepareData)
   m_PrepareData = prepareData;
 
   m_LowLevelSystem = std::make_unique<LowLevelSystemGL>();
+  m_Timer = std::make_unique<Timer>(*m_LowLevelSystem);
   m_LowLevelGraphics = std::make_unique<LowLevelGraphicsGL>(*m_PrepareData.eventManager, *m_LowLevelSystem);
   m_ImGuiLayer = std::make_unique<ImGuiLayerGL>(*m_PrepareData.eventManager, *m_LowLevelGraphics);
 }
@@ -27,10 +28,15 @@ std::unique_ptr<Graphics> LowLevelEngineSetupGL::GetGraphics()
 
 std::unique_ptr<iInputs> Lumeda::LowLevelEngineSetupGL::GetInputs()
 {
-  return std::make_unique<InputsGL>(*m_LowLevelGraphics, *m_PrepareData.timer);
+  return std::make_unique<InputsGL>(*m_LowLevelGraphics, *m_Timer);
 }
 
 std::unique_ptr<iImGuiLayer> LowLevelEngineSetupGL::GetImGuiLayer()
 {
   return std::move(m_ImGuiLayer);
+}
+
+std::unique_ptr<Timer> LowLevelEngineSetupGL::GetTimer()
+{
+  return std::move(m_Timer);
 }

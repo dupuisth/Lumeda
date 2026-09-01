@@ -58,7 +58,6 @@ private:
 
   std::unique_ptr<EventManager> m_EventManager;
   std::unique_ptr<Updater> m_Updater;
-  std::unique_ptr<Timer> m_Timer;
 
   std::unique_ptr<iLowLevelEngineSetup> m_LowLevelEngineSetup;
 
@@ -68,6 +67,7 @@ private:
   std::unique_ptr<Graphics> m_Graphics;
   std::unique_ptr<Resources> m_Resources;
   std::unique_ptr<iImGuiLayer> m_ImGui;
+  std::unique_ptr<Timer> m_Timer;
   std::unique_ptr<iInputs> m_Inputs;
   //---------------------------------------//
 };
