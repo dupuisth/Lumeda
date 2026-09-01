@@ -23,6 +23,11 @@ public:
 
   void CollectRenderCommands(iRenderItemSink& sink);
 
+  tString GetTypeId() const { return TypeId; }
+
+public:
+  inline static const tString TypeId = "MeshEntity";
+
 private:
   iVertexBuffer* m_VertexBuffer;
   Material* m_Material;

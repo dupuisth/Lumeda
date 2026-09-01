@@ -130,6 +130,8 @@ public:
     return m_Up;
   }
 
+  virtual tString GetTypeId() const = 0;
+
 protected:
   virtual void ParentIsChanging(Node* parent) { m_Parent = parent; }
   void BakeTransform();

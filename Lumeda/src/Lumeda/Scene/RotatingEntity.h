@@ -21,6 +21,11 @@ public:
   // For ImGui
   glm::vec3& GetRotatingRef() { return m_Rotation; }
 
+  tString GetTypeId() const { return TypeId; }
+
+public:
+  inline static const tString TypeId = "RotatingEntity";
+
 private:
   Timer& m_Timer;
 

@@ -19,6 +19,11 @@ public:
   void SetSpeed(float speed) { m_Speed = speed; }
   void SetSensitivity(float sensitivity) { m_Sensitivity = sensitivity; }
 
+  tString GetTypeId() const { return TypeId; }
+
+public:
+  inline static const tString TypeId = "PlayerControllerEntity";
+
 protected:
   iInputs& m_Inputs;
   Timer& m_Timer;

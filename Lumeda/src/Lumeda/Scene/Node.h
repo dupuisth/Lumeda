@@ -34,8 +34,13 @@ public:
 
   void HandleMessage(eUpdateableMessage message) override;
 
+  tString GetTypeId() const { return TypeId; }
+
 protected:
   void SetWorld(World* world) override;
+
+public:
+  inline static const tString TypeId = "Node";
 
 protected:
   std::vector<std::unique_ptr<LeafNode>> m_Childs;

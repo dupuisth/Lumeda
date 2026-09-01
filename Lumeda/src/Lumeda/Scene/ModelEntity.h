@@ -20,6 +20,11 @@ public:
   UniformMap GetAdditionalUniforms() { return iRenderable::GetAdditionalUniforms(); }
   Model* GetModel() { return m_Model; }
 
+  tString GetTypeId() const { return TypeId; }
+
+public:
+  inline static const tString TypeId = "ModelEntity";
+
 private:
   Model* m_Model;
 };
