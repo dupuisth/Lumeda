@@ -26,6 +26,10 @@ void SandboxLayer::OnStart()
   engine.GetResources().PushLoader(std::make_unique<ModelLoader>(engine.GetResources()));
   engine.GetResources().LoadAll("assets", true);
 
+  engine.GetResources().GetWorldHandler().PushHandler(std::make_unique<RotatingEntityHandler>());
+  engine.GetResources().GetWorldHandler().PushHandler(std::make_unique<NodeHandler>(engine.GetResources().GetWorldHandler()));
+  engine.GetResources().GetWorldHandler().PushHandler(std::make_unique<ModelEntityHandler>(engine.GetResources().GetModelManager()));
+
   m_Renderer = std::make_unique<SimpleRenderer>(engine.GetGraphics().GetLowLevelGraphics());
 
   iGpuProgram* defaultProgram = engine.GetResources().GetGpuProgramManager().GetResourceByName("default");
@@ -121,6 +125,8 @@ void SandboxLayer::OnStart()
   playerNode->AddChild(std::move(playerControllerEntity));
 
   m_World->GetRootNode().AddChild(std::move(playerNode));
+
+  engine.GetResources().GetWorldHandler().WriteWorld(*m_World, "assets/test.world.xml");
 }
 
 void SandboxLayer::Update()

@@ -12,6 +12,7 @@ class MaterialManager;
 class ModelManager;
 class Graphics;
 class iResourceLoader;
+class WorldHandler;
 
 class Resources : public iUpdateable
 {
@@ -41,6 +42,8 @@ public:
   void PushLoader(std::unique_ptr<iResourceLoader> loader);
   //---------------------------------------//
 
+  WorldHandler& GetWorldHandler();
+
 private:
   void PreLoadAllWorker(const twString& root, bool recursive);
 
@@ -62,5 +65,10 @@ private:
   ///////////////////////////////////////////
   std::vector<std::unique_ptr<iResourceLoader>> m_Loaders;
   //---------------------------------------//
+
+  ///////////////////////////////////////////
+  // Handlers
+  //////////////////////////////////////////
+  std::unique_ptr<WorldHandler> m_WorldHandler;
 };
 } // namespace Lumeda

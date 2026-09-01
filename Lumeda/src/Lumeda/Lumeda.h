@@ -42,12 +42,14 @@
 #include <Lumeda/Resources/MaterialManager.h>
 #include <Lumeda/Resources/ModelLoader.h>
 #include <Lumeda/Resources/ModelManager.h>
+#include <Lumeda/Resources/NodeHandler.h>
 #include <Lumeda/Resources/ResourceBase.h>
 #include <Lumeda/Resources/ResourceLoader.h>
 #include <Lumeda/Resources/ResourceManager.h>
 #include <Lumeda/Resources/Resources.h>
 #include <Lumeda/Resources/TextureLoader.h>
 #include <Lumeda/Resources/TextureManager.h>
+#include <Lumeda/Resources/WorldHandler.h>
 
 ///////////////////////////////////////////
 // Scene
@@ -59,6 +61,9 @@
 #include <Lumeda/Scene/MeshEntity.h>
 #include <Lumeda/Scene/ModelEntity.h>
 #include <Lumeda/Scene/Node.h>
+#include <Lumeda/Scene/NodeHandler_ModelEntity.h>
+#include <Lumeda/Scene/NodeHandler_Node.h>
+#include <Lumeda/Scene/NodeHandler_RotatingEntity.h>
 #include <Lumeda/Scene/PlayerControllerEntity.h>
 #include <Lumeda/Scene/Renderable.h>
 #include <Lumeda/Scene/RotatingEntity.h>

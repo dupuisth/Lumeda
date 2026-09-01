@@ -10,6 +10,7 @@
 #include <Lumeda/Resources/ResourceLoader.h>
 #include <Lumeda/Resources/Resources.h>
 #include <Lumeda/Resources/TextureManager.h>
+#include <Lumeda/Resources/WorldHandler.h>
 
 using namespace Lumeda;
 
@@ -36,6 +37,8 @@ void Resources::Init(Graphics& graphics)
   m_GpuProgramManager = std::make_unique<GpuProgramManager>(*this, *m_Graphics);
   m_MaterialManager = std::make_unique<MaterialManager>(*this, *m_Graphics);
   m_ModelManager = std::make_unique<ModelManager>(*this, *m_Graphics);
+
+  m_WorldHandler = std::make_unique<WorldHandler>();
 }
 
 void Resources::LoadAll(const twString& root, bool recursive)
@@ -95,4 +98,9 @@ void Resources::PreLoad(const twString& path)
 void Resources::PushLoader(std::unique_ptr<iResourceLoader> loader)
 {
   m_Loaders.push_back(std::move(loader));
+}
+
+WorldHandler& Resources::GetWorldHandler()
+{
+  return *m_WorldHandler;
 }

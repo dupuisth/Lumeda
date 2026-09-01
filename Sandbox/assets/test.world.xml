@@ -1,0 +1,52 @@
+<World>
+    <Node Name="RootNode">
+        <LocalPosition x="0" y="0" z="0"/>
+        <LocalRotation x="0" y="0" z="0" w="1"/>
+        <LocalScale x="1" y="1" z="1"/>
+        <Childs>
+            <Node Name="Icosphere">
+                <LocalPosition x="0" y="0" z="15"/>
+                <LocalRotation x="0" y="0" z="0" w="1"/>
+                <LocalScale x="1" y="1" z="1"/>
+                <Childs>
+                    <ModelEntity Name="Icosphere">
+                        <LocalPosition x="0" y="-0.5" z="1"/>
+                        <LocalRotation x="0" y="0" z="0" w="1"/>
+                        <LocalScale x="1" y="1" z="1"/>
+                        <Model>icosphere</Model>
+                    </ModelEntity>
+                    <RotatingEntity Name="Rotating">
+                        <LocalPosition x="0" y="0" z="0"/>
+                        <LocalRotation x="0" y="0" z="0" w="1"/>
+                        <LocalScale x="1" y="1" z="1"/>
+                    </RotatingEntity>
+                </Childs>
+            </Node>
+            <Node Name="Armchair">
+                <LocalPosition x="0" y="0" z="0"/>
+                <LocalRotation x="0" y="0" z="0" w="1"/>
+                <LocalScale x="1" y="1" z="1"/>
+                <Childs>
+                    <ModelEntity Name="Model">
+                        <LocalPosition x="0" y="-0.5" z="1"/>
+                        <LocalRotation x="0" y="0" z="0" w="1"/>
+                        <LocalScale x="1" y="1" z="1"/>
+                        <Model>armchair</Model>
+                    </ModelEntity>
+                </Childs>
+            </Node>
+            <ModelEntity Name="Ground">
+                <LocalPosition x="0" y="-1" z="0"/>
+                <LocalRotation x="0" y="0" z="0" w="1"/>
+                <LocalScale x="1" y="1" z="1"/>
+                <Model>ground</Model>
+            </ModelEntity>
+            <Node Name="PlayerNode">
+                <LocalPosition x="0" y="0.34999999" z="-2.5"/>
+                <LocalRotation x="0" y="0" z="0" w="1"/>
+                <LocalScale x="1" y="1" z="1"/>
+                <Childs/>
+            </Node>
+        </Childs>
+    </Node>
+</World>
